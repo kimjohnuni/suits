@@ -7,13 +7,29 @@ const dropdownContent = document.querySelector('.dropdown-content');
 const menuItems = document.querySelectorAll('.menu-item, .dropdown-content a');
 let isAnimating = false;
 
+// iOS specific check
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
 function toggleBodyScroll(disable) {
-    document.body.style.overflow = disable ? 'hidden' : '';
+    if (isIOS) {
+        document.body.style.position = disable ? 'fixed' : '';
+        document.body.style.top = disable ? `-${window.scrollY}px` : '';
+    } else {
+        document.body.style.overflow = disable ? 'hidden' : '';
+    }
 }
 
 function closeMenu() {
     mobileMenu.classList.remove('active');
     toggleBodyScroll(false);
+
+    if (isIOS) {
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+
     setTimeout(() => {
         mobileMenu.style.display = 'none';
         isAnimating = false;
@@ -26,6 +42,26 @@ document.addEventListener('click', function(event) {
         !hamburger.contains(event.target) &&
         mobileMenu.classList.contains('active')) {
         closeMenu();
+    }
+});
+
+// Dropdown functionality
+dropdownTrigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const dropdown = dropdownTrigger.closest('.dropdown');
+    dropdown.classList.toggle('active');
+
+    if (dropdown.classList.contains('active')) {
+        dropdownContent.style.display = 'block';
+        requestAnimationFrame(() => {
+            dropdownContent.style.opacity = '1';
+        });
+    } else {
+        dropdownContent.style.opacity = '0';
+        setTimeout(() => {
+            dropdownContent.style.display = 'none';
+        }, 300);
     }
 });
 
@@ -55,6 +91,65 @@ menuItems.forEach(item => {
         }
     });
 });
+
+// iOS specific touch event handlers
+if (isIOS) {
+    mobileMenu.addEventListener('touchstart', function(e) {
+        if (e.target === mobileMenu) {
+            e.preventDefault();
+        }
+    }, false);
+
+    document.addEventListener('touchmove', function(e) {
+        if (mobileMenu.classList.contains('active')) {
+            if (e.target !== mobileMenu && !mobileMenu.contains(e.target)) {
+                e.preventDefault();
+            }
+        }
+    }, { passive: false });
+}
+
+// Smooth scrolling functionality
+document.querySelectorAll('.menu a, .mobile-menu a').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        if(this.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+
+            if(targetSection) {
+                smoothScroll(targetSection);
+            }
+        }
+    });
+});
+
+function smoothScroll(element) {
+    const headerOffset = 50;
+    const targetPosition = element.offsetTop - headerOffset;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 1000;
+    let start = null;
+
+    function animation(currentTime) {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const run = linearThenEase(timeElapsed, startPosition, distance, duration);
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+    }
+
+    function linearThenEase(t, b, c, d) {
+        t /= d;
+        if (t < 0.2) {
+            return c * (5 * t) + b;
+        }
+        return c * (0.8 * Math.pow(t, 2) + 0.2) + b;
+    }
+
+    requestAnimationFrame(animation);
+}
 
 
 
