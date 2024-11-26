@@ -293,7 +293,7 @@ window.addEventListener('scroll', () => {
 
 
 
-
+/*
 // Image Loading
 document.querySelectorAll('.portraits__gallery img').forEach(img => {
     const aspectRatio = 1;
@@ -314,3 +314,4 @@ document.addEventListener('DOMContentLoaded', () => {
         sections[currentIndex].logo.style.opacity = '1';
     }
 });
+*/
