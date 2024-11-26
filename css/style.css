@@ -3,7 +3,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    outline: 1px solid red;
 }
 
 html, body {
@@ -21,45 +20,37 @@ body {
 
 /* Header Styles */
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(6px);
-    z-index: 1000;
-    overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  overflow: hidden;
 }
 
-.logo-container {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 80px;
-    overflow: hidden;
-    width: 100%;
-}
+
+
 
 .logo {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: max-content;
     text-align: center;
-    white-space: nowrap;
-    font-family: 'Rockwell Nova Cond', sans-serif;
+    font-family: 'Rockwell Nova', sans-serif;
     font-weight: 700;
     font-size: 56px;
     letter-spacing: 1px;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .main-logo {
-    transform: translate(-50%, 0);
     opacity: 1;
 }
 
@@ -89,7 +80,7 @@ body {
 .video-container {
     position: relative;
     height: 100vh;
-    width: 100%;
+    width: 100vw;
     overflow: hidden;
 }
 
@@ -267,7 +258,7 @@ video {
 
 /* ARTIST STATEMENT */
 #artist-statement {
-    scroll-margin-top: 50px;
+    scroll-margin-top: 10px;
 }
 
 .main-logo, .artist-statement-logo, .busan-logo, .hongkong-logo,
@@ -354,54 +345,50 @@ video {
     margin-bottom: 200px; /* Increase this value for more white space at the bottom */
 }
 
+.main-logo,
+.artist-statement-logo,
+.busan-logo,
+.hongkong-logo,
+.iceland-logo,
+.myanmar-logo,
+.peru-logo,
+.manila-logo,
+.seoul-logo,
+.singapore-logo,
+.tibet-logo {
+    opacity: 0;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+}
 
 
 
 
+/*PORTRAITS*/
+.image-flex {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+}
 
-/*BUSAN PORTRAITS*/
-.portraits {
-    padding: 2rem 0;
+.image-flex img {
+    width: calc(100% / 5); /* Adjust the number based on desired columns */
+    height: auto;
+    margin: 0;
 }
 
 .portraits h2 {
   font-family: 'Rockwell Nova', sans-serif;
     text-align: center;
+    margin-top:100px;
     margin-bottom: 2rem;
     font-size: 3em;
     transition: opacity 0.1s ease;
-}
-
-
-.portraits__gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0;
-    width: 100%;
-    contain: paint;
-}
-
-.portraits__gallery img {
-    background-color: #A9A9A9; /* Light grey color */
-    flex: 1 1 200px;
-    max-width: 20%;
-    height: auto;
-    object-fit: cover;
-    min-height: 200px; /* Add this to ensure placeholder height */
-    background: #eeeeee; /* Placeholder color */
-    animation: placeholderPulse 2s ease-in-out infinite;
-}
-
-@keyframes placeholderPulse {
-    0% { background-color: #eeeeee; }
-    50% { background-color: #cccccc; }
-    100% { background-color: #eeeeee; }
-}
-
-/* Once image loads, remove the animation */
-.portraits__gallery img.loaded {
-    animation: none;
-    background: none;
+    opacity: 1; /* Add this line */
 }
 
 
@@ -434,9 +421,33 @@ video {
     }
 }
 
+
+
+
+
+
+
+
 @media screen and (max-width: 900px) {
     :root {
         overscroll-behavior: none;
+    }
+
+    .main-logo,
+    .artist-statement-logo,
+    .busan-logo,
+    .hongkong-logo,
+    .iceland-logo,
+    .myanmar-logo,
+    .peru-logo,
+    .manila-logo,
+    .seoul-logo,
+    .singapore-logo,
+    .tibet-logo {
+        left: 20px;
+        top: 10%; /* Changed from 30% to 20% to raise it higher */
+        transform: translateY(-50%);
+        text-align: left;
     }
 
     .hamburger {
@@ -630,12 +641,18 @@ video {
         width: calc(100% - 40px);
         padding: 50px 20px;
     }
-
-    .portraits__gallery img {
-        max-width: 25%; /* 4 images per row on tablets */
-    }
-
+    .image-flex img {
+            width: calc(100% / 2);
+        }
 }
+
+
+
+
+
+
+
+
 
 @media screen and (max-width: 576px) {
     .logo {
@@ -666,8 +683,8 @@ video {
         font-size: 32px;
         margin: 0 auto 20px;
     }
+    .image-flex img {
+            width: 100%;
+        }
 
-    .portraits__gallery img {
-        max-width: 100%; /* 2 images per row on mobile */
-    }
 }
