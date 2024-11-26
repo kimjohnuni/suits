@@ -577,6 +577,7 @@ video {
     display: none;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* For iOS smooth scrolling */
+    transition: all 0.3s ease;
 }
 
     .mobile-menu.active {
