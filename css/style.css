@@ -114,26 +114,25 @@ video {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
+    width: auto;
+    height: 50px;
+    padding: 0 5px;
     background-color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    height: 50px;
+    border-radius: 25px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    border-radius: 25px;
-    padding: 0; /* Removed padding */
-    width: auto;
     white-space: nowrap;
+    z-index: 1000;
 }
-
 
 .menu {
     list-style-type: none;
     margin: 0;
-    padding: 0; /* Ensure no padding */
+    padding: 0;
     display: flex;
     height: 100%;
 }
@@ -147,82 +146,122 @@ video {
 .menu a {
     font-family: 'Rockwell Nova', sans-serif;
     font-weight: 700;
-    text-decoration: none;
     color: black;
-    padding: 0 15px;
+    padding: 0 30px;
     height: 100%;
     display: flex;
     align-items: center;
-    transition: background-color 0.3s ease;
+    text-decoration: none;
     white-space: nowrap;
+    transition: background-color 0.3s ease;
 }
 
-.menu a:hover {
+.menu > li > a:hover {
     background-color: rgba(255, 255, 0, 0.8);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    border-radius: 0;
 }
 
 .menu img {
-    vertical-align: middle;
     height: 36px;
+    vertical-align: middle;
     transition: background-color 0.3s ease;
 }
 
-.menu li:first-child a:hover,
+/* Button Order and Hover States */
+.menu li:nth-last-child(2) {
+    order: 1;
+}
+
+.menu li:last-child {
+    order: 2;
+}
+
+.menu li:nth-last-child(2) a:hover,
 .menu li:last-child a:hover {
     background-color: rgba(255, 255, 0, 0.8);
 }
 
+/* Border Radius and Padding for Edge Items */
 .menu li:first-child a {
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    margin-left: -5px;
+    padding-left: 20px;
 }
 
 .menu li:last-child a {
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
+    margin-right: -5px;
+    padding-right: 20px;
 }
 
-.menu li:first-child a,
+.menu li:nth-last-child(2) a,
 .menu li:last-child a {
-    padding: 0 15px; /* Adjust this value as needed */
+    padding: 0 10px;
 }
 
-/* Desktop Dropdown Styles */
+/* Dropdown Styles */
 .dropdown {
     position: relative;
 }
 
 .dropdown-content {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
     position: absolute;
     bottom: 100%;
     left: 0;
+    min-width: 200px;
+    padding: 15px 0;
     background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    min-width: 200px;
+    border-radius: 10px;
     box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
+
 .dropdown-content a {
-    font-size: 24px;
+    display: block;
+    font-size: 18px;
+    padding: 5px 20px;
+    color: black;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.dropdown-content a:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.dropdown-content a:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .dropdown:hover .dropdown-content {
-    display: block;
+    visibility: visible;
+    opacity: 1;
 }
 
+/* Modified hover effect for dropdown items */
 .dropdown-content a:hover {
     background-color: rgba(255, 255, 0, 0.8);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
 }
 
+/* Add this to ensure dropdown items don't inherit main menu hover styles */
+
+
+.menu .dropdown .dropdown-content a:hover {
+    background-color: rgba(255, 255, 0, 0.8);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
 /* Hamburger Menu */
 .hamburger {
     display: none;
@@ -381,7 +420,6 @@ video {
 .image-wrapper {
     position: relative;
     width: calc(100% / 5);
-    background: red; /* For testing the placeholder space */
 }
 
 .image-wrapper img {
@@ -425,37 +463,6 @@ video {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
-
-
-
-
-/* Media Queries and Mobile Menu */
-@media screen and (min-width: 901px) {
-  .dropdown-content {
-      position: absolute;
-      display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-  }
-
-
-    .dropdown.active .dropdown-content {
-        display: block;
-        opacity: 1;
-    }
-
-    .dropdown:hover .dropdown-content {
-        display: block;
-        opacity: 1;
-    }
-
-    .menu-item:hover,
-    .dropdown-trigger:hover,
-    .dropdown-content a:hover {
-        background: none !important;
-    }
-}
-
 
 
 
@@ -578,20 +585,20 @@ video {
     }
 
     .menu-items-wrapper {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        align-items: center;
-        justify-content: center;
-        padding: 40px 0;
-        min-height: min-content;
-    }
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px; /* Reduced from 20px */
+      align-items: center;
+      justify-content: center;
+      padding: 30px 0; /* Reduced from 40px if needed */
+      min-height: min-content;
+  }
 
     .mobile-menu a {
         display: block;
-        padding: 10px 20px;
+        padding: 5px 20px;
         color: black;
         text-decoration: none;
         font-family: 'Rockwell Nova', sans-serif;
@@ -602,18 +609,19 @@ video {
 
     /* Mobile Dropdown Styles */
     .dropdown-content {
-        position: static;
-        display: block;
-        height: 0;
-        opacity: 0;
-        overflow: hidden;
-        transition: all 0.3s ease-in-out;
-        background: none;
-        box-shadow: none;
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-        min-width: unset;
-    }
+    position: static;
+    display: none;
+    max-height: 0; /* Change height to max-height */
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    background: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    min-width: unset;
+    margin: 0; /* Add this to ensure no margin when closed */
+}
 
     .dropdown-content a {
         font-size: 24px;
@@ -633,11 +641,11 @@ video {
     }
 
     .dropdown.active .dropdown-content {
-        height: auto;
-        opacity: 1;
-        margin: 10px 0;
-        transition: all 0.3s ease-in-out;
-    }
+      display:block;
+    max-height: 500px; /* Or whatever maximum height you need */
+    opacity: 1;
+    margin: 5px 0;
+}
 
     .dropdown.active .dropdown-content a {
         opacity: 1;
@@ -659,9 +667,13 @@ video {
     }
 
     .dropdown.active ~ .menu-item {
-        transform: translateY(20px);
-        transition: all 0.3s ease-out;
-    }
+    transform: translateY(0); /* Remove the 20px translation */
+    transition: all 0.3s ease-out;
+}
+
+.dropdown.active ~ .menu-item:first-of-type {
+    transform: translateY(0); /* Remove the 5px translation */
+}
 
     /* Prevent background scrolling when menu is open */
     body.menu-open {
@@ -680,12 +692,14 @@ video {
             width: calc(100% / 2);
         }
 
-        .image-container {
+        .image-wrapper {
         width: calc(100% / 2);
-        padding-bottom: calc(100% / 2);
+        background: red;
     }
-    .image-wrapper {
-        width: calc(100% / 2);
+
+    .image-wrapper img {
+        width: 100%;
+        height: auto;
     }
 }
 
@@ -735,6 +749,12 @@ video {
     }
     .image-wrapper {
         width: 100%;
+        background: red;
+    }
+
+    .image-wrapper img {
+        width: 100%;
+        height: auto;
     }
 
 }
