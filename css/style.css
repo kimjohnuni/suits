@@ -367,6 +367,8 @@ video {
 
 
 
+
+
 /*PORTRAITS*/
 .image-flex {
     display: flex;
@@ -375,20 +377,56 @@ video {
     margin: 0;
 }
 
-.image-flex img {
-    width: calc(100% / 5); /* Adjust the number based on desired columns */
-    height: auto;
-    margin: 0;
+
+.image-wrapper {
+    position: relative;
+    width: calc(100% / 5);
+    padding-bottom: calc(100% / 5); /* Creates square aspect ratio */
+    background-color: red; /* Changed to red to see the preserved space */
+}
+
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1;
+}
+
+.image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-wrapper img.loaded {
+    opacity: 1;
 }
 
 .portraits h2 {
-  font-family: 'Rockwell Nova', sans-serif;
+    font-family: 'Rockwell Nova', sans-serif;
     text-align: center;
-    margin-top:100px;
+    margin-top: 100px;
     margin-bottom: 2rem;
     font-size: 3em;
     transition: opacity 0.1s ease;
-    opacity: 1; /* Add this line */
+    opacity: 1;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 
@@ -644,6 +682,14 @@ video {
     .image-flex img {
             width: calc(100% / 2);
         }
+
+        .image-container {
+        width: calc(100% / 2);
+        padding-bottom: calc(100% / 2);
+    }
+    .image-wrapper {
+        width: calc(100% / 2);
+    }
 }
 
 
@@ -686,5 +732,12 @@ video {
     .image-flex img {
             width: 100%;
         }
+        .image-container {
+        width: 100%;
+        padding-bottom: 100%;
+    }
+    .image-wrapper {
+        width: 100%;
+    }
 
 }
