@@ -381,8 +381,16 @@ video {
 .image-wrapper {
     position: relative;
     width: calc(100% / 5);
-    padding-bottom: calc(100% / 5); /* Creates square aspect ratio */
-    background-color: red; /* Changed to red to see the preserved space */
+    background: red; /* For testing the placeholder space */
+}
+
+.image-wrapper img {
+    position: relative; /* Changed from absolute */
+    width: 100%;
+    height: auto; /* This maintains natural proportions */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: block; /* Prevents unwanted spacing */
 }
 
 .loading-spinner {
@@ -397,17 +405,6 @@ video {
     border-radius: 50%;
     animation: spin 1s linear infinite;
     z-index: 1;
-}
-
-.image-wrapper img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
 .image-wrapper img.loaded {
