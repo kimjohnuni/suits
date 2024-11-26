@@ -1,5 +1,3 @@
-// Mobile Menu Functionality
-// Mobile Menu Functionality
 const hamburger = document.querySelector('.hamburger');
 const mobileMenu = document.querySelector('.mobile-menu');
 const dropdownTrigger = document.querySelector('.dropdown-trigger');
@@ -7,29 +5,21 @@ const dropdownContent = document.querySelector('.dropdown-content');
 const menuItems = document.querySelectorAll('.menu-item, .dropdown-content a');
 let isAnimating = false;
 
-// iOS specific check
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+function resetDropdown() {
+    const dropdown = dropdownTrigger.closest('.dropdown');
+    dropdown.classList.remove('active');
+    dropdownContent.style.display = 'none';
+    dropdownContent.style.opacity = '0';
+}
 
 function toggleBodyScroll(disable) {
-    if (isIOS) {
-        document.body.style.position = disable ? 'fixed' : '';
-        document.body.style.top = disable ? `-${window.scrollY}px` : '';
-    } else {
-        document.body.style.overflow = disable ? 'hidden' : '';
-    }
+    document.body.style.overflow = disable ? 'hidden' : '';
 }
 
 function closeMenu() {
     mobileMenu.classList.remove('active');
     toggleBodyScroll(false);
-
-    if (isIOS) {
-        const scrollY = document.body.style.top;
-        document.body.style.position = '';
-        document.body.style.top = '';
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
-    }
-
+    resetDropdown(); // Reset dropdown state when closing menu
     setTimeout(() => {
         mobileMenu.style.display = 'none';
         isAnimating = false;
@@ -50,18 +40,19 @@ dropdownTrigger.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     const dropdown = dropdownTrigger.closest('.dropdown');
-    dropdown.classList.toggle('active');
 
     if (dropdown.classList.contains('active')) {
-        dropdownContent.style.display = 'block';
-        requestAnimationFrame(() => {
-            dropdownContent.style.opacity = '1';
-        });
-    } else {
+        dropdown.classList.remove('active');
         dropdownContent.style.opacity = '0';
         setTimeout(() => {
             dropdownContent.style.display = 'none';
         }, 300);
+    } else {
+        dropdown.classList.add('active');
+        dropdownContent.style.display = 'block';
+        requestAnimationFrame(() => {
+            dropdownContent.style.opacity = '1';
+        });
     }
 });
 
@@ -91,23 +82,6 @@ menuItems.forEach(item => {
         }
     });
 });
-
-// iOS specific touch event handlers
-if (isIOS) {
-    mobileMenu.addEventListener('touchstart', function(e) {
-        if (e.target === mobileMenu) {
-            e.preventDefault();
-        }
-    }, false);
-
-    document.addEventListener('touchmove', function(e) {
-        if (mobileMenu.classList.contains('active')) {
-            if (e.target !== mobileMenu && !mobileMenu.contains(e.target)) {
-                e.preventDefault();
-            }
-        }
-    }, { passive: false });
-}
 
 // Smooth scrolling functionality
 document.querySelectorAll('.menu a, .mobile-menu a').forEach(anchor => {
