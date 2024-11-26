@@ -88,6 +88,80 @@ menuItems.forEach(item => {
 
 
 
+
+
+// Menu click handlers for smooth scrolling
+document.querySelectorAll('.menu a, .mobile-menu a').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        if(this.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+
+            if(targetSection) {
+                const offset = 50;
+                customScrollIntoView(targetSection, 2500); // 2000ms = 2 seconds, adjust this number for faster/slower
+
+                // Close mobile menu if open
+                const mobileMenu = document.querySelector('.mobile-menu');
+                if(mobileMenu && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                }
+            }
+        }
+    });
+});
+
+function customScrollIntoView(element, duration = 2000) {
+    const targetPosition = element.offsetTop - 50; // 50 is the offset from the top
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    let start = null;
+
+    function animation(currentTime) {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const run = ease(timeElapsed, startPosition, distance, duration);
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+    }
+
+    // Easing function for smoother animation
+    function ease(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+    }
+
+    requestAnimationFrame(animation);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 const sections = [
     { logo: document.querySelector('.main-logo'), section: document.querySelector('.video-container') },
     { logo: document.querySelector('.artist-statement-logo'), section: document.querySelector('#artist-statement') },
