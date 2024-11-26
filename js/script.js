@@ -20,6 +20,8 @@ function closeMenu() {
     mobileMenu.classList.remove('active');
     toggleBodyScroll(false);
     resetDropdown(); // Reset dropdown state when closing menu
+    mobileMenu.style.transform = 'translate(-50%, -50%) scale(0)';
+    mobileMenu.style.opacity = '0';
     setTimeout(() => {
         mobileMenu.style.display = 'none';
         isAnimating = false;
@@ -63,8 +65,12 @@ hamburger.addEventListener('click', () => {
 
     if (!mobileMenu.classList.contains('active')) {
         mobileMenu.style.display = 'flex';
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.transform = 'translate(-50%, -50%) scale(0)';
         requestAnimationFrame(() => {
             mobileMenu.classList.add('active');
+            mobileMenu.style.opacity = '1';
+            mobileMenu.style.transform = 'translate(-50%, -50%) scale(1)';
             toggleBodyScroll(true);
             setTimeout(() => { isAnimating = false; }, 300);
         });
