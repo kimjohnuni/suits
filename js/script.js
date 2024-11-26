@@ -102,6 +102,24 @@ const sections = [
     { logo: document.querySelector('.tibet-logo'), section: document.querySelector('#tibet-section') }
 ];
 
+let currentIndex = 0;
+let lastScrollY = window.scrollY;
+let viewportHeight = window.innerHeight;
+
+// Throttle function to limit scroll event firing
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+}
+
 function initializeLogos() {
     const isMobile = window.innerWidth <= 900;
     sections.forEach(({logo}) => {
@@ -109,51 +127,61 @@ function initializeLogos() {
             logo.style.position = 'fixed';
             logo.style.left = '50%';
             logo.style.top = '50%';
-            logo.style.transform = 'translate(-50%, -50%)';
+            logo.style.transform = 'translate3d(-50%, -50%, 0)';
         }
     });
 }
-
-// Call initialization immediately
-initializeLogos();
-
-// Also call on load to ensure everything is set
-window.addEventListener('load', initializeLogos);
-
-let currentIndex = 0;
-let lastScrollY = window.scrollY;
-let viewportHeight = window.innerHeight;
 
 function animateLogoTransition(fromLogo, toLogo, direction) {
     const animationDuration = 300;
     const isMobile = window.innerWidth <= 900;
 
     if (isMobile) {
-        fromLogo.animate([
-            { transform: 'translateY(0)', opacity: 1 },
-            { transform: `translateY(${direction === 'down' ? '20px' : '-20px'})`, opacity: 0 }
-        ], { duration: animationDuration, fill: 'forwards' });
-
-        toLogo.animate([
-            { transform: `translateY(${direction === 'down' ? '-20px' : '20px'})`, opacity: 0 },
-            { transform: 'translateY(0)', opacity: 1 }
-        ], { duration: animationDuration, fill: 'forwards' });
+        fromLogo.style.opacity = '0';
+        toLogo.style.opacity = '1';
     } else {
         fromLogo.animate([
-            { transform: 'translate(-50%, -50%)', opacity: 1 },
-            { transform: `translate(-50%, ${direction === 'down' ? '20px' : '-70px'})`, opacity: 0 }
+            { transform: 'translate3d(-50%, -50%, 0)', opacity: 1 },
+            { transform: `translate3d(-50%, ${direction === 'down' ? '20px' : '-70px'}, 0)`, opacity: 0 }
         ], { duration: animationDuration, fill: 'forwards' });
 
         toLogo.animate([
-            { transform: `translate(-50%, ${direction === 'down' ? '-70px' : '20px'})`, opacity: 0 },
-            { transform: 'translate(-50%, -50%)', opacity: 1 }
+            { transform: `translate3d(-50%, ${direction === 'down' ? '-70px' : '20px'}, 0)`, opacity: 0 },
+            { transform: 'translate3d(-50%, -50%, 0)', opacity: 1 }
         ], { duration: animationDuration, fill: 'forwards' });
     }
 }
 
-function handleScroll() {
-    const scrollDirection = window.scrollY > lastScrollY ? 'down' : 'up';
+function setupIntersectionObserver() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const newIndex = sections.findIndex(section =>
+                    section.section === entry.target);
+                if (newIndex !== currentIndex) {
+                    animateLogoTransition(
+                        sections[currentIndex].logo,
+                        sections[newIndex].logo,
+                        window.scrollY > lastScrollY ? 'down' : 'up'
+                    );
+                    currentIndex = newIndex;
+                    sessionStorage.setItem('currentSectionIndex', newIndex);
+                }
+            }
+        });
+    }, {
+        threshold: 0.3,
+        rootMargin: '-30% 0px -70% 0px'
+    });
 
+    sections.forEach(section => {
+        observer.observe(section.section);
+    });
+}
+
+const handleScroll = throttle(() => {
+    if (window.innerWidth <= 900) return;
+    const scrollDirection = window.scrollY > lastScrollY ? 'down' : 'up';
     sections.forEach((section, index) => {
         const rect = section.section.getBoundingClientRect();
         if (rect.top <= viewportHeight * 0.3 && rect.bottom >= viewportHeight * 0.3) {
@@ -164,9 +192,8 @@ function handleScroll() {
             }
         }
     });
-
     lastScrollY = window.scrollY;
-}
+}, 100);
 
 function initializeCurrentSection() {
     const isMobile = window.innerWidth <= 900;
@@ -178,7 +205,7 @@ function initializeCurrentSection() {
             sessionStorage.setItem('currentSectionIndex', i);
             sections[i].logo.style.opacity = '1';
             if (isMobile) {
-                sections[i].logo.style.transform = 'translateY(0)';
+                sections[i].logo.style.transform = 'translate3d(0, 0, 0)';
             }
             break;
         }
@@ -194,7 +221,7 @@ function setInitialState() {
             logo.style.position = 'fixed';
             logo.style.left = '50%';
             logo.style.top = '50%';
-            logo.style.transform = 'translate(-50%, -50%)';
+            logo.style.transform = 'translate3d(-50%, -50%, 0)';
         }
     });
 
@@ -202,26 +229,29 @@ function setInitialState() {
         currentIndex = parseInt(storedIndex);
         sections[currentIndex].logo.style.opacity = '1';
         if (isMobile) {
-            sections[currentIndex].logo.style.transform = 'translateY(0)';
+            sections[currentIndex].logo.style.transform = 'translate3d(0, 0, 0)';
         }
     } else {
         initializeCurrentSection();
     }
 }
 
+// Event Listeners
 window.addEventListener('resize', () => {
     viewportHeight = window.innerHeight;
     setInitialState();
 });
 
-window.addEventListener('scroll', () => {
-    requestAnimationFrame(handleScroll);
-});
+window.addEventListener('scroll', handleScroll, { passive: true });
+
+window.addEventListener('load', initializeLogos);
 
 document.addEventListener('DOMContentLoaded', () => {
     setInitialState();
+    setupIntersectionObserver();
 });
 
+// Menu click handlers
 document.querySelectorAll('.menu a, .mobile-menu a').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         if(this.getAttribute('href').startsWith('#')) {
