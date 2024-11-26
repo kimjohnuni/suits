@@ -564,22 +564,20 @@ video {
 
     /* Mobile Menu Styles */
     .mobile-menu {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0);
-        background-color: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        border-radius: 15px;
-        width: 90%;
-        height: 650px;
-        z-index: 1002;
-        opacity: 0;
-        display: none;
-        transition: all 0.3s ease;
-        overflow-y: auto;
-    }
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: rgba(255, 255, 255, 0.9); /* Increased opacity */
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    width: 90%;
+    height: 80vh; /* Use viewport height instead of fixed height */
+    z-index: 9999; /* Ensure it's above other elements */
+    display: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* For iOS smooth scrolling */
+}
 
     .mobile-menu.active {
         opacity: 1;
