@@ -46,16 +46,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isAnimating) return;
         isAnimating = true;
 
-        if (mobileMenu.classList.contains('active')) {
-            mobileMenu.classList.remove('active');
-            toggleBodyScroll(false);
+        if (!mobileMenu.classList.contains('active')) {
+            // When opening the menu, ensure dropdown is closed
             const dropdown = document.querySelector('.mobile-nav__dropdown');
             if (dropdown) {
                 dropdown.classList.remove('active');
             }
-        } else {
             mobileMenu.classList.add('active');
             toggleBodyScroll(true);
+        } else {
+            closeMenu();
         }
 
         setTimeout(() => {
@@ -63,9 +63,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 300);
     }
 
+    // Close Menu Function
+    function closeMenu() {
+        mobileMenu.classList.remove('active');
+        toggleBodyScroll(false);
+    }
+
     // Hamburger Click Event
-    hamburger.addEventListener('click', (e) => {
-        e.stopPropagation();
+    hamburger.addEventListener('click', () => {
         toggleMenu();
     });
 
@@ -86,8 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const href = item.getAttribute('href');
             if (href && href !== '#') {
                 e.preventDefault();
-                mobileMenu.classList.remove('active');
-                toggleBodyScroll(false);
+                closeMenu();
 
                 setTimeout(() => {
                     const targetElement = document.querySelector(href);
@@ -106,19 +110,60 @@ document.addEventListener('DOMContentLoaded', function () {
             !mobileMenu.contains(e.target) &&
             !hamburger.contains(e.target)
         ) {
-            mobileMenu.classList.remove('active');
-            toggleBodyScroll(false);
+            closeMenu();
         }
     });
 
     // Escape Key to Close Menu
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
-            mobileMenu.classList.remove('active');
-            toggleBodyScroll(false);
+            closeMenu();
         }
     });
 });
+
+// Smooth scroll functionality
+document.querySelectorAll('.menu a, .mobile-nav__item, .mobile-nav__dropdown-content a').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        if(this.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+
+            if(targetSection && this.textContent !== 'PORTRAITS') {
+                const targetPosition = targetSection.offsetTop - 50; // 50 is the offset from the top
+                const startPosition = window.pageYOffset;
+                const distance = targetPosition - startPosition;
+                let start = null;
+
+                function animation(currentTime) {
+                    if (start === null) start = currentTime;
+                    const timeElapsed = currentTime - start;
+                    const run = ease(timeElapsed, startPosition, distance, 2500);
+                    window.scrollTo(0, run);
+                    if (timeElapsed < 2500) requestAnimationFrame(animation);
+                }
+
+                // Easing function for smoother animation
+                function ease(t, b, c, d) {
+                    t /= d / 2;
+                    if (t < 1) return c / 2 * t * t + b;
+                    t--;
+                    return -c / 2 * (t * (t - 2) - 1) + b;
+                }
+
+                requestAnimationFrame(animation);
+
+                // Close mobile menu if open
+                const mobileMenu = document.querySelector('.mobile-nav');
+                if(mobileMenu && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                }
+            }
+        }
+    });
+});
+
 
 
 
