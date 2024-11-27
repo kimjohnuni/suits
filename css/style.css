@@ -54,7 +54,7 @@ body {
     opacity: 1;
 }
 
-.mobile-nav, .hamburger {
+.mobile-nav, .mobile-nav__hamburger {
     display: none;
 }
 
