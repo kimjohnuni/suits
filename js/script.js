@@ -1,135 +1,130 @@
-const hamburger = document.querySelector('.hamburger');
-const mobileMenu = document.querySelector('.mobile-menu');
-const dropdownTrigger = document.querySelector('.dropdown-trigger');
-const dropdownContent = document.querySelector('.dropdown-content');
-const menuItems = document.querySelectorAll('.menu-item, .dropdown-content a');
-let isAnimating = false;
+/*BOTTOM NAVBAR TOUCH FUNCTION FOR TABLETS*/
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdowns = document.querySelectorAll('.bottom-navbar .dropdown');
 
-function resetDropdown() {
-    const dropdown = dropdownTrigger.closest('.dropdown');
-    dropdown.classList.remove('active');
-    dropdownContent.style.display = 'none';
-    dropdownContent.style.opacity = '0';
-}
+    dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
 
-function toggleBodyScroll(disable) {
-    document.body.style.overflow = disable ? 'hidden' : '';
-}
+        link.addEventListener('click', function(e) {
+            if (window.matchMedia('(hover: none)').matches) {
+                e.preventDefault();
+                dropdowns.forEach(d => {
+                    if (d !== dropdown) d.classList.remove('touch-open');
+                });
+                dropdown.classList.toggle('touch-open');
+            }
+        });
+    });
 
-function closeMenu() {
-    mobileMenu.classList.remove('active');
-    toggleBodyScroll(false);
-    resetDropdown(); // Reset dropdown state when closing menu
-    mobileMenu.style.transform = 'translate(-50%, -50%) scale(0)';
-    mobileMenu.style.opacity = '0';
-    setTimeout(() => {
-        mobileMenu.style.display = 'none';
-        isAnimating = false;
-    }, 300);
-}
-
-// Click outside to close
-document.addEventListener('click', function(event) {
-    if (!mobileMenu.contains(event.target) &&
-        !hamburger.contains(event.target) &&
-        mobileMenu.classList.contains('active')) {
-        closeMenu();
-    }
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.dropdown')) {
+            dropdowns.forEach(d => d.classList.remove('touch-open'));
+        }
+    });
 });
 
-// Dropdown functionality
-dropdownTrigger.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const dropdown = dropdownTrigger.closest('.dropdown');
 
-    if (dropdown.classList.contains('active')) {
-        dropdown.classList.remove('active');
-        dropdownContent.style.opacity = '0';
+
+
+
+/*MOBILE MENU*/
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.mobile-nav__hamburger');
+    const mobileMenu = document.querySelector('.mobile-nav');
+    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
+    const menuItems = document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a');
+    let isAnimating = false;
+
+    function toggleBodyScroll(disable) {
+        document.body.style.overflow = disable ? 'hidden' : '';
+    }
+
+    function closeMenu() {
+        mobileMenu.classList.remove('active');
+        toggleBodyScroll(false);
         setTimeout(() => {
-            dropdownContent.style.display = 'none';
+            const dropdown = document.querySelector('.mobile-nav__dropdown');
+            if (dropdown) {
+                dropdown.classList.remove('active');
+            }
+            isAnimating = false;
         }, 300);
-    } else {
-        dropdown.classList.add('active');
-        dropdownContent.style.display = 'block';
-        requestAnimationFrame(() => {
-            dropdownContent.style.opacity = '1';
-        });
     }
-});
 
-// Event Listeners
-hamburger.addEventListener('click', () => {
-    if (isAnimating) return;
-    isAnimating = true;
+    hamburger.addEventListener('click', () => {
+        if (isAnimating) return;
+        isAnimating = true;
 
-    if (!mobileMenu.classList.contains('active')) {
-        mobileMenu.style.display = 'flex';
-        mobileMenu.style.opacity = '0';
-        mobileMenu.style.transform = 'translate(-50%, -50%) scale(0)';
-        requestAnimationFrame(() => {
-            mobileMenu.classList.add('active');
-            mobileMenu.style.opacity = '1';
-            mobileMenu.style.transform = 'translate(-50%, -50%) scale(1)';
-            toggleBodyScroll(true);
-            setTimeout(() => { isAnimating = false; }, 300);
-        });
-    } else {
-        closeMenu();
-    }
-});
-
-menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-        if (!item.closest('.dropdown-content')) {
-            closeMenu();
+        if (!mobileMenu.classList.contains('active')) {
+            requestAnimationFrame(() => {
+                mobileMenu.classList.add('active');
+                toggleBodyScroll(true);
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 300);
+            });
         } else {
             closeMenu();
         }
     });
-});
 
-// Smooth scrolling functionality
-document.querySelectorAll('.menu a, .mobile-menu a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        if(this.getAttribute('href').startsWith('#')) {
+    if (dropdownTrigger) {
+        dropdownTrigger.addEventListener('click', function(e) {
             e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
+            e.stopPropagation();
 
-            if(targetSection) {
-                smoothScroll(targetSection);
+            const dropdown = this.closest('.mobile-nav__dropdown');
+            dropdown.classList.toggle('active');
+        });
+    }
+
+    menuItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            const href = item.getAttribute('href');
+            if (href && href !== '#') {
+                e.preventDefault();
+                closeMenu();
+                setTimeout(() => {
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        const offset = 60;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 300);
             }
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (mobileMenu.classList.contains('active') &&
+            !mobileMenu.contains(e.target) &&
+            !hamburger.contains(e.target)) {
+            closeMenu();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+            closeMenu();
         }
     });
 });
 
-function smoothScroll(element) {
-    const headerOffset = 50;
-    const targetPosition = element.offsetTop - headerOffset;
-    const startPosition = window.pageYOffset;
-    const distance = targetPosition - startPosition;
-    const duration = 1000;
-    let start = null;
 
-    function animation(currentTime) {
-        if (start === null) start = currentTime;
-        const timeElapsed = currentTime - start;
-        const run = linearThenEase(timeElapsed, startPosition, distance, duration);
-        window.scrollTo(0, run);
-        if (timeElapsed < duration) requestAnimationFrame(animation);
-    }
 
-    function linearThenEase(t, b, c, d) {
-        t /= d;
-        if (t < 0.2) {
-            return c * (5 * t) + b;
-        }
-        return c * (0.8 * Math.pow(t, 2) + 0.2) + b;
-    }
 
-    requestAnimationFrame(animation);
-}
+
+
+
+
+
+
 
 
 
@@ -142,45 +137,48 @@ function smoothScroll(element) {
 
 
 // Menu click handlers for smooth scrolling
-document.querySelectorAll('.menu a, .mobile-menu a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        if(this.getAttribute('href').startsWith('#')) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.mobile-nav__hamburger');
+    const mobileMenu = document.querySelector('.mobile-nav');
+    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
+    const menuItems = document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a');
+    let isAnimating = false;
 
-            if(targetSection && this.textContent !== 'PORTRAITS') {
-                const targetPosition = targetSection.offsetTop - 50; // 50 is the offset from the top
-                const startPosition = window.pageYOffset;
-                const distance = targetPosition - startPosition;
-                let start = null;
+    // Remove this function entirely
+    // function toggleBodyScroll(disable) {
+    //     document.body.style.overflow = disable ? 'hidden' : '';
+    // }
 
-                function animation(currentTime) {
-                    if (start === null) start = currentTime;
-                    const timeElapsed = currentTime - start;
-                    const run = ease(timeElapsed, startPosition, distance, 2500);
-                    window.scrollTo(0, run);
-                    if (timeElapsed < 2500) requestAnimationFrame(animation);
-                }
-
-                // Easing function for smoother animation
-                function ease(t, b, c, d) {
-                    t /= d / 2;
-                    if (t < 1) return c / 2 * t * t + b;
-                    t--;
-                    return -c / 2 * (t * (t - 2) - 1) + b;
-                }
-
-                requestAnimationFrame(animation);
-
-                // Close mobile menu if open
-                const mobileMenu = document.querySelector('.mobile-menu');
-                if(mobileMenu && mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                }
+    function closeMenu() {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = ''; // Just reset overflow directly
+        setTimeout(() => {
+            const dropdown = document.querySelector('.mobile-nav__dropdown');
+            if (dropdown) {
+                dropdown.classList.remove('active');
             }
+            isAnimating = false;
+        }, 300);
+    }
+
+    hamburger.addEventListener('click', () => {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        if (!mobileMenu.classList.contains('active')) {
+            requestAnimationFrame(() => {
+                mobileMenu.classList.add('active');
+                // Remove the toggleBodyScroll call here
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 300);
+            });
+        } else {
+            closeMenu();
         }
     });
+
+    // Rest of your mobile menu code remains the same
 });
 
 
