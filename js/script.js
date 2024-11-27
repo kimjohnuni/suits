@@ -29,48 +29,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 /*MOBILE MENU*/
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const hamburger = document.querySelector('.mobile-nav__hamburger');
     const mobileMenu = document.querySelector('.mobile-nav');
     const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
     const menuItems = document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a');
     let isAnimating = false;
 
+    // Scroll Lock Function
     function toggleBodyScroll(disable) {
         document.body.style.overflow = disable ? 'hidden' : '';
     }
 
-    function closeMenu() {
-        mobileMenu.classList.remove('active');
-        toggleBodyScroll(false);
-        setTimeout(() => {
+    // Toggle Menu Function
+    function toggleMenu() {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        if (mobileMenu.classList.contains('active')) {
+            mobileMenu.classList.remove('active');
+            toggleBodyScroll(false);
             const dropdown = document.querySelector('.mobile-nav__dropdown');
             if (dropdown) {
                 dropdown.classList.remove('active');
             }
+        } else {
+            mobileMenu.classList.add('active');
+            toggleBodyScroll(true);
+        }
+
+        setTimeout(() => {
             isAnimating = false;
         }, 300);
     }
 
-    hamburger.addEventListener('click', () => {
-        if (isAnimating) return;
-        isAnimating = true;
-
-        if (!mobileMenu.classList.contains('active')) {
-            requestAnimationFrame(() => {
-                mobileMenu.classList.add('active');
-                toggleBodyScroll(true);
-                setTimeout(() => {
-                    isAnimating = false;
-                }, 300);
-            });
-        } else {
-            closeMenu();
-        }
+    // Hamburger Click Event
+    hamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
     });
 
+    // Dropdown Click Event
     if (dropdownTrigger) {
-        dropdownTrigger.addEventListener('click', function(e) {
+        dropdownTrigger.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
@@ -79,39 +80,42 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Menu Items Click Event
     menuItems.forEach(item => {
         item.addEventListener('click', (e) => {
             const href = item.getAttribute('href');
             if (href && href !== '#') {
                 e.preventDefault();
-                closeMenu();
+                mobileMenu.classList.remove('active');
+                toggleBodyScroll(false);
+
                 setTimeout(() => {
                     const targetElement = document.querySelector(href);
                     if (targetElement) {
-                        const offset = 60;
-                        const elementPosition = targetElement.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - offset;
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
                     }
                 }, 300);
             }
         });
     });
 
+    // Click Outside to Close Menu
     document.addEventListener('click', (e) => {
-        if (mobileMenu.classList.contains('active') &&
+        if (
+            mobileMenu.classList.contains('active') &&
             !mobileMenu.contains(e.target) &&
-            !hamburger.contains(e.target)) {
-            closeMenu();
+            !hamburger.contains(e.target)
+        ) {
+            mobileMenu.classList.remove('active');
+            toggleBodyScroll(false);
         }
     });
 
+    // Escape Key to Close Menu
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
-            closeMenu();
+            mobileMenu.classList.remove('active');
+            toggleBodyScroll(false);
         }
     });
 });
@@ -136,49 +140,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
 // Menu click handlers for smooth scrolling
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.mobile-nav__hamburger');
-    const mobileMenu = document.querySelector('.mobile-nav');
-    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
-    const menuItems = document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a');
-    let isAnimating = false;
+document.querySelectorAll('.menu a, .mobile-nav__item, .mobile-nav__dropdown-content a').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        if(this.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
 
-    // Remove this function entirely
-    // function toggleBodyScroll(disable) {
-    //     document.body.style.overflow = disable ? 'hidden' : '';
-    // }
+            if(targetSection && this.textContent !== 'PORTRAITS') {
+                const targetPosition = targetSection.offsetTop - 50; // 50 is the offset from the top
+                const startPosition = window.pageYOffset;
+                const distance = targetPosition - startPosition;
+                let start = null;
 
-    function closeMenu() {
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = ''; // Just reset overflow directly
-        setTimeout(() => {
-            const dropdown = document.querySelector('.mobile-nav__dropdown');
-            if (dropdown) {
-                dropdown.classList.remove('active');
+                function animation(currentTime) {
+                    if (start === null) start = currentTime;
+                    const timeElapsed = currentTime - start;
+                    const run = ease(timeElapsed, startPosition, distance, 2500);
+                    window.scrollTo(0, run);
+                    if (timeElapsed < 2500) requestAnimationFrame(animation);
+                }
+
+                // Easing function for smoother animation
+                function ease(t, b, c, d) {
+                    t /= d / 2;
+                    if (t < 1) return c / 2 * t * t + b;
+                    t--;
+                    return -c / 2 * (t * (t - 2) - 1) + b;
+                }
+
+                requestAnimationFrame(animation);
+
+                // Close mobile menu if open
+                const mobileMenu = document.querySelector('.mobile-nav');
+                if(mobileMenu && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                }
             }
-            isAnimating = false;
-        }, 300);
-    }
-
-    hamburger.addEventListener('click', () => {
-        if (isAnimating) return;
-        isAnimating = true;
-
-        if (!mobileMenu.classList.contains('active')) {
-            requestAnimationFrame(() => {
-                mobileMenu.classList.add('active');
-                // Remove the toggleBodyScroll call here
-                setTimeout(() => {
-                    isAnimating = false;
-                }, 300);
-            });
-        } else {
-            closeMenu();
         }
     });
-
-    // Rest of your mobile menu code remains the same
 });
 
 
