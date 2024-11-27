@@ -644,6 +644,14 @@ video {
     /* Mobile Menu Styles */
 
     @media screen and (max-width: 900px) {
+
+      .mobile-nav__hamburger i {
+    font-size: 24px; /* or your preferred size */
+    color: #000; /* or your preferred color */
+    touch-action: manipulation;
+   -webkit-touch-callout: none;
+}
+
       .bottom-navbar {
         display: none;
     }
@@ -662,6 +670,7 @@ video {
         justify-content: center;
         align-items: center;
         z-index: 2001;
+        -webkit-tap-highlight-color: transparent; /* prevents tap highlight on iOS */
     }
 
     .mobile-nav {
