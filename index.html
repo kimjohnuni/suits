@@ -14,19 +14,7 @@
 
 <body>
   <header class="navbar">
-    <div class="logo-container">
-      <div class="logo main-logo">SUITMAN PORTRAITS</div>
-      <div class="logo artist-statement-logo">ARTIST STATEMENT</div>
-      <div class="logo busan-logo">BUSAN</div>
-      <div class="logo hongkong-logo">HONG KONG</div>
-      <div class="logo iceland-logo">ICELAND</div>
-      <div class="logo myanmar-logo">MYANMAR</div>
-      <div class="logo peru-logo">PERU</div>
-      <div class="logo manila-logo">MANILA</div>
-      <div class="logo seoul-logo">SEOUL</div>
-      <div class="logo singapore-logo">SINGAPORE</div>
-      <div class="logo tibet-logo">TIBET</div>
-</div>
+    <h1 id="navbar-text">SUITMAN'S PORTRAITS</h1>
   <div class="social-icons">
       <a href="https://instagram.com/YOUR_INSTAGRAM" target="_blank"><i class="fab fa-instagram"></i></a>
       <a href="https://facebook.com/YOUR_FACEBOOK" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -51,16 +39,17 @@
                 <a href="#tibet-section">TIBET</a>
             </div>
         </li>
-        <li><a href="#">OTHER WORKS</a></li>
-        <li><a href="#">EXHIBITIONS</a></li>
-        <li><a href="#"><img src="img/menu_buttons/contact.png" alt="Contact"></a></li>
+        <li><a href="#otherworks-section">OTHER WORKS</a></li>
+        <li><a href="#exhibition-section">EXHIBITIONS</a></li>
+        <li><a href="#contact-section"><img src="img/menu_buttons/contact.png" alt="Contact"></a></li>
         <li><a href="#home"><img src="img/menu_buttons/home.png" alt="Home"></a></li>
     </ul>
 </div>
 
 <!-- Mobile Navigation -->
 <button class="mobile-nav__hamburger" aria-haspopup="true" aria-expanded="false" aria-label="Menu">
-    <i class="fas fa-bars" aria-hidden="true"></i>
+    <i class="fas fa-bars menu-icon" aria-hidden="true"></i>
+    <i class="fas fa-times close-icon" aria-hidden="true"></i>
 </button>
 
 <div class="mobile-nav">
@@ -80,17 +69,17 @@
                 <a href="#tibet-section">TIBET</a>
             </div>
         </div>
-        <a href="#" class="mobile-nav__item">OTHER WORKS</a>
-        <a href="#" class="mobile-nav__item">EXHIBITIONS</a>
-        <a href="#" class="mobile-nav__item">CONTACT</a>
+        <a href="#otherworks-section" class="mobile-nav__item">OTHER WORKS</a>
+   <a href="#exhibition-section" class="mobile-nav__item">EXHIBITIONS</a>
+   <a href="#contact-section" class="mobile-nav__item">CONTACT</a>
     </div>
 </div>
 
-<div id="home" class="video-container">
+<section id="home" class="video-container">
     <video autoplay muted loop class="background-video">
         <source src="video/main-bg-video.mp4" type="video/mp4">
     </video>
-</div>
+</section>
 
 
 
@@ -113,7 +102,7 @@
 
         <div class="artist-statement-info">
             <h2>For further inquiry, please contact:</h2>
-            <h3>SUITMAN/YOUNG KIM</h3>
+            <h3>SUITMAN|YOUNG KIM</h3>
 
             <div class="artist-statement-links">
                 <p><a href="http://www.suitman.org">www.suitman.org</a></p>
@@ -131,16 +120,14 @@
 
 
    <section class="busan-portraits portraits">
-       <h2>BUSAN</h2>
+        <div class="flag-image">
+            <img src="img/flags/southkorea.png" alt="Image">
+        </div>
           <div id="busan-section" class="portraits-gallery image-flex">
              <div class="image-wrapper">
                  <div class="loading-spinner"></div>
                  <img src="img/portraits/busan/busan_port_1.jpg" alt="Busan Portrait 1" loading="lazy" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';">
             </div>
-            <div class="image-wrapper">
-                    <div class="loading-spinner"></div>
-                    <img src="img/portraits/busan/busan_port_1.jpg" alt="Busan Portrait 1" loading="lazy" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';">
-                </div>
                 <div class="image-wrapper">
                     <div class="loading-spinner"></div>
                     <img src="img/portraits/busan/busan_port_2.jpg" alt="Busan Portrait 2" loading="lazy" onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none';">
@@ -316,7 +303,9 @@
 
 
                <section class="hongkong-portraits portraits">
-                   <h2>HONG KONG</h2>
+                 <div class="flag-image">
+                     <img src="img/flags/hongkong.png" alt="Image">
+                 </div>
                    <div id="hongkong-section" class="portraits-gallery image-flex">
                        <div class="image-wrapper">
                            <div class="loading-spinner"></div>
@@ -521,7 +510,9 @@
 
 
                         <section class="iceland-portraits portraits">
-                            <h2>ICELAND</h2>
+                          <div class="flag-image">
+                              <img src="img/flags/iceland.png" alt="Image">
+                          </div>
                             <div id="iceland-section" class="portraits-gallery image-flex">
                                 <div class="image-wrapper">
                                     <div class="loading-spinner"></div>
@@ -565,7 +556,9 @@
 
 
                         <section class="myanmar-portraits portraits">
-                            <h2>MYANMAR</h2>
+                          <div class="flag-image">
+                              <img src="img/flags/myanmar.png" alt="Image">
+                          </div>
                             <div id="myanmar-section" class="portraits-gallery image-flex">
                                 <div class="image-wrapper">
                                     <div class="loading-spinner"></div>
@@ -740,7 +733,9 @@
 
 
                         <section class="peru-portraits portraits">
-                            <h2>PERU</h2>
+                          <div class="flag-image">
+                              <img src="img/flags/peru.png" alt="Image">
+                          </div>
                             <div id="peru-section" class="portraits-gallery image-flex">
                                 <div class="image-wrapper">
                                     <div class="loading-spinner"></div>
@@ -878,7 +873,9 @@
                         </section>
 
                         <section class="manila-portraits portraits">
-                            <h2>MANILA</h2>
+                          <div class="flag-image">
+                              <img src="img/flags/phillipines.png" alt="Image">
+                          </div>
                             <div id="manila-section" class="portraits-gallery image-flex">
                                 <div class="image-wrapper">
                                     <div class="loading-spinner"></div>
@@ -1097,7 +1094,9 @@
 
 
                           <section class="seoul-portraits portraits">
-                              <h2>SEOUL</h2>
+                            <div class="flag-image">
+                                <img src="img/flags/southkorea.png" alt="Image">
+                            </div>
                               <div id="seoul-section" class="portraits-gallery image-flex">
                                   <div class="image-wrapper">
                                       <div class="loading-spinner"></div>
@@ -1257,7 +1256,9 @@
 
 
                           <section class="singapore-portraits portraits">
-                              <h2>SINGAPORE</h2>
+                            <div class="flag-image">
+                                <img src="img/flags/singapore.png" alt="Image">
+                            </div>
                               <div id="singapore-section" class="portraits-gallery image-flex">
                                   <div class="image-wrapper">
                                       <div class="loading-spinner"></div>
@@ -1404,7 +1405,9 @@
 
 
                       <section class="tibet-portraits portraits">
-                          <h2>TIBET</h2>
+                        <div class="flag-image">
+                            <img src="img/flags/tibet.png" alt="Image">
+                        </div>
                           <div id="tibet-section" class="portraits-gallery image-flex">
                               <div class="image-wrapper">
                                   <div class="loading-spinner"></div>
@@ -1512,7 +1515,244 @@
 
 
 
+                      <div class="divider-container">
+                          <img src="img/divider/suitman_head.png" alt="Centered Image">
+                      </div>
 
+
+
+                      <section id="otherworks-section">
+    <p class="other-works-description">The Ceramics Figurine Collection echoes the concept of individuality, a recurring theme in Suitman's decades-long portrait photography series, "They All Look the Same to Me." While the collection may appear similar, each figurine is a unique, one-of-a-kind piece.</p>
+    <img src="img/other_img/2024allfigures.jpg" alt="Ceramic Figurine Collection" class="other-works-image">
+
+    <div class="other-works-gallery-container">
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_01.jpg" alt="Mask 1"
+                 data-full-img="img/other_img/thumbs/mask_01.jpg"
+                 data-figure="01"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 01</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_02.jpg" alt="Mask 2"
+                 data-full-img="img/other_img/thumbs/mask_02.jpg"
+                 data-figure="02"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 02</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_03.jpg" alt="Mask 3"
+                 data-full-img="img/other_img/thumbs/mask_03.jpg"
+                 data-figure="03"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 03</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_04.jpg" alt="Mask 4"
+                 data-full-img="img/other_img/thumbs/mask_04.jpg"
+                 data-figure="04"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 04</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_05.jpg" alt="Mask 5"
+                 data-full-img="img/other_img/thumbs/mask_05.jpg"
+                 data-figure="05"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 05</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_06.jpg" alt="Mask 6"
+                 data-full-img="img/other_img/thumbs/mask_06.jpg"
+                 data-figure="06"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 06</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_07.jpg" alt="Mask 7"
+                 data-full-img="img/other_img/thumbs/mask_07.jpg"
+                 data-figure="07"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 07</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_08.jpg" alt="Mask 8"
+                 data-full-img="img/other_img/thumbs/mask_08.jpg"
+                 data-figure="08"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 08</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_09.jpg" alt="Mask 9"
+                 data-full-img="img/other_img/thumbs/mask_09.jpg"
+                 data-figure="09"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 09</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_10.jpg" alt="Mask 10"
+                 data-full-img="img/other_img/thumbs/mask_10.jpg"
+                 data-figure="10"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 10</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_11.jpg" alt="Mask 11"
+                 data-full-img="img/other_img/thumbs/mask_11.jpg"
+                 data-figure="11"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 11</figcaption>
+        </figure>
+        <figure class="other-works-gallery-item">
+            <img src="img/other_img/thumbs/mask_12.jpg" alt="Mask 12"
+                 data-full-img="img/other_img/thumbs/mask_12.jpg"
+                 data-figure="12"
+                 data-medium="CERAMIC CLAY, ACRYLIC PAINT, PEANUT SHELL, & VARNISH"
+                 data-size="HEIGHT; 3 IN. X WIDTH; 2IN. X LENGTH; 7.5">
+            <figcaption>FIGURE NO. 12</figcaption>
+        </figure>
+    </div>
+</section>
+
+<!-- Modal Structure -->
+<div class="other-works-modal">
+    <div class="other-works-modal-content">
+        <div class="other-works-pull-indicator"></div>
+        <button class="other-works-modal-close">&times;</button>
+        <div class="other-works-modal-inner">
+            <div class="other-works-modal-content-wrapper">
+                <div class="other-works-modal-image">
+                    <img src="" alt="Figure Detail">
+                </div>
+                <div class="other-works-modal-info">
+                    <h2>FIGURE NO. <span class="figure-number"></span></h2>
+                    <p class="medium">MEDIUM: <span></span></p>
+                    <p class="size">SIZE: <span></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="divider-container">
+    <img src="img/divider/suitman_head.png" alt="Centered Image">
+</div>
+
+
+
+<section id="exhibition-section">
+    <div class="exhibition-gallery">
+        <figure class="exhibition-item">
+            <div class="image-container" data-exhibition-id="pwk">
+                <img src="img/exhibition_img/exhibition_thumbs/pwk_thumb.jpg" alt="POW! WOW! Korea">
+            </div>
+            <figcaption>
+                <strong>2019 POW! WOW! Korea</strong><br>
+                @Common Ground
+            </figcaption>
+        </figure>
+
+        <figure class="exhibition-item">
+            <div class="image-container" data-exhibition-id="artbusan">
+                <img src="img/exhibition_img/exhibition_thumbs/artbusan_thumb.jpg" alt="Art Busan & PowWow Korea">
+            </div>
+            <figcaption>
+                <strong>2019 Art Busan & PowWow Korea</strong><br>
+                @Winter Village
+            </figcaption>
+        </figure>
+
+        <figure class="exhibition-item">
+            <div class="image-container" data-exhibition-id="agnesb">
+                <img src="img/exhibition_img/exhibition_thumbs/agnesb_thumb.jpg" alt="Beyond the Shutter">
+            </div>
+            <figcaption>
+                <strong>Beyond the Shutter</strong><br>
+                @Agnes B's Librairie Galerie, Hong Kong
+            </figcaption>
+        </figure>
+
+        <figure class="exhibition-item">
+            <div class="image-container" data-exhibition-id="factory">
+                <img src="img/exhibition_img/exhibition_thumbs/factory_thumb.jpg" alt="Past, Present, & Future">
+            </div>
+            <figcaption>
+                <strong>Past, Present, & Future</strong><br>
+                @Factory
+            </figcaption>
+        </figure>
+
+        <figure class="exhibition-item">
+            <div class="image-container" data-exhibition-id="tngt">
+                <img src="img/exhibition_img/exhibition_thumbs/tngt_thumb.jpg" alt="The New Grand Tour">
+            </div>
+            <figcaption>
+                <strong>The New Grand Tour</strong><br>
+                @798 Beijing, Hong Kong, Bryce Wolkowitz, NYC.
+            </figcaption>
+        </figure>
+    </div>
+</section>
+
+<!-- Exhibition Modal Structure -->
+<div class="exhibition-modal">
+    <div class="exhibition-modal-inner">
+        <div class="exhibition-modal-content">
+            <button class="exhibition-modal-close">&times;</button>
+            <div class="exhibition-modal-content-wrapper">
+                <div class="exhibition-modal-image">
+                    <img src="" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+                      <div id="contact-section" class="contact-wrapper">
+                          <img src="img/contact/contact-bg.jpg" class="contact-img">
+                          <section class="contact-section">
+                              <div class="contact-fields-wrapper">
+                                  <h2 class="contact-title">Let's<br>Collaborate</h2>
+                                  <form id="contact-form">
+                                      <div class="contact-container">
+                                          <input type="text" class="contact-input-box" name="user_name" placeholder="NAME" />
+                                          <div class="contact-indicator"></div>
+                                      </div>
+
+                                      <div class="contact-container">
+                                          <input type="text" class="contact-input-box" name="user_email" placeholder="E-MAIL" />
+                                          <div class="contact-indicator"></div>
+                                      </div>
+
+                                      <div class="contact-message-container">
+                                          <textarea class="contact-message-box" name="message" placeholder="MESSAGE"></textarea>
+                                          <div class="contact-message-indicator"></div>
+                                      </div>
+                                      <button type="submit" class="contact-send-button" disabled>SEND</button>
+                                  </form>
+                              </div>
+                          </section>
+                      </div>
+
+                      <footer class="site-footer">
+                          <p class="site-footer-copyright">© 2024 Suitman®. All Rights Reserved.</p>
+                      </footer>
 
 <script src="js/script.js" defer></script>
 </body>
