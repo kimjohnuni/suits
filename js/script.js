@@ -1,196 +1,244 @@
-/*BOTTOM NAVBAR TOUCH FUNCTION FOR TABLETS*/
-document.addEventListener('DOMContentLoaded', function() {
-    const dropdowns = document.querySelectorAll('.bottom-navbar .dropdown');
-
-    dropdowns.forEach(dropdown => {
-        const link = dropdown.querySelector('a');
-
-        link.addEventListener('click', function(e) {
-            if (window.matchMedia('(hover: none)').matches) {
-                e.preventDefault();
-                dropdowns.forEach(d => {
-                    if (d !== dropdown) d.classList.remove('touch-open');
-                });
-                dropdown.classList.toggle('touch-open');
-            }
-        });
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.dropdown')) {
-            dropdowns.forEach(d => d.classList.remove('touch-open'));
-        }
-    });
-});
 
 
 
 
 
 /*MOBILE MENU*/
-document.addEventListener('DOMContentLoaded', function () {
-    const hamburger = document.querySelector('.mobile-nav__hamburger');
-    const mobileMenu = document.querySelector('.mobile-nav');
-    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
-    const menuItems = document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a');
-    let isAnimating = false;
+// Navigation System Class
+// Navigation System Class
+class NavigationSystem {
+    constructor() {
+        this.state = {
+            isMenuOpen: false,
+            isDropdownOpen: false,
+            isMobile: window.innerWidth <= 900
+        };
 
-    // Scroll Lock Function
-    function toggleBodyScroll(disable) {
-        document.body.style.overflow = disable ? 'hidden' : '';
+        this.elements = {
+            hamburger: document.querySelector('.mobile-nav__hamburger'),
+            mobileNav: document.querySelector('.mobile-nav'),
+            dropdown: document.querySelector('.mobile-nav__dropdown'),
+            dropdownTrigger: document.querySelector('.mobile-nav__dropdown-trigger'),
+            dropdownContent: document.querySelector('.mobile-nav__dropdown-content'),
+            allNavLinks: document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a'),
+            bottomNavLinks: document.querySelectorAll('.bottom-navbar .menu a'),
+            bottomNavDropdown: document.querySelector('.bottom-navbar .dropdown'),
+            bottomNavDropdownContent: document.querySelector('.bottom-navbar .dropdown-content'),
+            headerText: document.querySelector('#navbar-text')
+        };
+
+        this.init();
     }
 
-    // Toggle Menu Function
-    function toggleMenu() {
-        if (isAnimating) return;
-        isAnimating = true;
+    init() {
+        this.setupEventListeners();
+        this.setupMobileNav();
+        this.setupScrollHandler();
+    }
 
-        hamburger.classList.toggle('active');
+    setupScrollHandler() {
+        window.addEventListener('scroll', () => {
+            requestAnimationFrame(() => {
+                this.updateHeaderTextOnScroll();
+            });
+        });
+    }
 
-        if (!mobileMenu.classList.contains('active')) {
-            // When opening the menu, ensure dropdown is closed
-            const dropdown = document.querySelector('.mobile-nav__dropdown');
-            if (dropdown) {
-                dropdown.classList.remove('active');
+    updateHeaderTextOnScroll() {
+        const scrollPosition = window.scrollY;
+
+        const sections = {
+            'artist-statement': "ARTIST STATEMENT",
+            'busan-section': "BUSAN",
+            'hongkong-section': "HONG KONG",
+            'iceland-section': "ICELAND",
+            'myanmar-section': "MYANMAR",
+            'peru-section': "PERU",
+            'manila-section': "MANILA",
+            'seoul-section': "SEOUL",
+            'singapore-section': "SINGAPORE",
+            'tibet-section': "TIBET",
+            'otherworks-section': "OTHER WORKS",
+            'exhibition-section': "EXHIBITIONS",
+            'contact-section': "CONTACT"
+        };
+
+        let currentSection = "SUITMAN'S PORTRAITS";
+
+        Object.entries(sections).forEach(([id, title]) => {
+            const element = document.getElementById(id);
+            if (element && scrollPosition >= element.offsetTop - 200) {
+                currentSection = title;
             }
-            mobileMenu.classList.add('active');
-            toggleBodyScroll(true);
-        } else {
-            closeMenu();
+        });
+
+        if (this.elements.headerText) {
+            this.elements.headerText.textContent = currentSection;
+        }
+    }
+
+    setupEventListeners() {
+        // Hamburger menu toggle
+        this.elements.hamburger?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleMenu();
+        });
+
+        // Dropdown toggle
+        this.elements.dropdownTrigger?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.toggleDropdown();
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (this.state.isMenuOpen && !this.elements.mobileNav.contains(e.target)) {
+                this.closeMenu();
+            }
+        });
+
+        // Window resize handler
+        window.addEventListener('resize', this.debounce(() => {
+            this.state.isMobile = window.innerWidth <= 900;
+            if (!this.state.isMobile) {
+                this.closeMenu();
+                this.closeDropdown();
+            }
+        }, 250));
+
+        // Bottom navbar smooth scroll
+        this.elements.bottomNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#') && href !== '#') {
+                    e.preventDefault();
+                    this.smoothScroll(href);
+                }
+            });
+        });
+
+        // Bottom navbar dropdown hover
+        if (this.elements.bottomNavDropdown) {
+            this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
+                this.elements.bottomNavDropdownContent.style.display = 'block';
+            });
+
+            this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
+                this.elements.bottomNavDropdownContent.style.display = 'none';
+            });
         }
 
+        // Setup smooth scrolling
+        this.setupSmoothScroll();
+    }
+
+    setupMobileNav() {
+        if (this.elements.mobileNav) {
+            this.elements.mobileNav.style.display = 'block';
+            this.elements.mobileNav.style.transform = 'scale(0)';
+            this.elements.mobileNav.style.visibility = 'hidden';
+        }
+    }
+
+    toggleMenu() {
+        this.state.isMenuOpen ? this.closeMenu() : this.openMenu();
+    }
+
+    openMenu() {
+        this.state.isMenuOpen = true;
+        this.elements.mobileNav.style.visibility = 'visible';
+        this.elements.mobileNav.style.transform = 'scale(1)';
+        this.elements.hamburger.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeMenu() {
+        this.state.isMenuOpen = false;
+        this.elements.mobileNav.style.transform = 'scale(0)';
+        this.elements.hamburger.classList.remove('active');
+        document.body.style.overflow = '';
+
+        // Close dropdown when menu closes
+        this.closeDropdown();
+
         setTimeout(() => {
-            isAnimating = false;
+            if (!this.state.isMenuOpen) {
+                this.elements.mobileNav.style.visibility = 'hidden';
+            }
         }, 300);
     }
 
-    // Close Menu Function
-    function closeMenu() {
-        mobileMenu.classList.remove('active');
-        hamburger.classList.remove('active');
-        toggleBodyScroll(false);
+    toggleDropdown() {
+        this.state.isDropdownOpen ? this.closeDropdown() : this.openDropdown();
     }
 
-    // Hamburger Click Event
-    hamburger.addEventListener('click', () => {
-        toggleMenu();
-    });
+    openDropdown() {
+        this.state.isDropdownOpen = true;
+        this.elements.dropdown.classList.add('active');
+    }
 
-    // Dropdown Click Event
-    if (dropdownTrigger) {
-        dropdownTrigger.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+    closeDropdown() {
+        this.state.isDropdownOpen = false;
+        this.elements.dropdown.classList.remove('active');
+    }
 
-            const dropdown = this.closest('.mobile-nav__dropdown');
-            dropdown.classList.toggle('active');
+    setupSmoothScroll() {
+        this.elements.allNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#') && href !== '#') {
+                    e.preventDefault();
+                    this.smoothScroll(href);
+                }
+            });
         });
     }
 
-    // Menu Items Click Event
-    menuItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            const href = item.getAttribute('href');
-            if (href && href !== '#') {
-                e.preventDefault();
-                closeMenu();
+    smoothScroll(targetId) {
+        const targetElement = document.querySelector(targetId);
+        if (!targetElement) return;
 
-                setTimeout(() => {
-                    const targetElement = document.querySelector(href);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }, 300);
-            }
-        });
-    });
+        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 150;
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        const duration = Math.min(1500, Math.max(300, Math.abs(distance) / 2));
 
-    // Click Outside to Close Menu
-    document.addEventListener('click', (e) => {
-        if (
-            mobileMenu.classList.contains('active') &&
-            !mobileMenu.contains(e.target) &&
-            !hamburger.contains(e.target)
-        ) {
-            closeMenu();
-        }
-    });
+        // Close menu immediately
+        this.closeMenu();
 
-    // Escape Key to Close Menu
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
-            closeMenu();
-        }
-    });
-});
+        const animation = (currentTime) => {
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
 
+            window.scrollTo(0, startPosition + distance * this.easeInOutCubic(progress));
 
-
-
-
-
-
-
-
-
-
-
-// Smooth scroll functionality
-document.querySelectorAll('.menu a, .mobile-nav__item, .mobile-nav__dropdown-content a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        if (this.getAttribute('href').startsWith('#')) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-
-            if (targetSection && this.textContent !== 'PORTRAITS') {
-                console.log(`Scrolling to: ${targetId}`); // Debugging line
-                const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - 150;
-                console.log(`Calculated target position: ${targetPosition}`); // Debugging line
-
-                const startPosition = window.pageYOffset;
-                const distance = targetPosition - startPosition;
-
-                const baseDuration = 500;
-                const maxDuration = 1500;
-                const minDuration = 300;
-                const duration = Math.min(maxDuration, Math.max(minDuration, Math.abs(distance) / 2));
-
-                let startTime = null;
-
-                function easeInOutQuad(t) {
-                    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-                }
-
-                function animation(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    const timeElapsed = currentTime - startTime;
-                    const run = easeInOutQuad(timeElapsed / duration) * distance + startPosition;
-                    window.scrollTo(0, run);
-
-                    if (timeElapsed < duration) requestAnimationFrame(animation);
-                }
-
+            if (progress < 1) {
                 requestAnimationFrame(animation);
-
-                // Close mobile menu if open
-                const mobileMenu = document.querySelector('.mobile-nav');
-                if (mobileMenu && mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                    const hamburger = document.querySelector('.mobile-nav__hamburger');
-                    if (hamburger) {
-                        hamburger.classList.remove('active');
-                    }
-                }
-            } else {
-                console.warn(`Target section not found for: ${targetId}`); // Debugging line
             }
-        }
-    });
+        };
+
+        const startTime = performance.now();
+        requestAnimationFrame(animation);
+    }
+
+    easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    debounce(func, wait) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    new NavigationSystem();
 });
-
-
 
 
 
@@ -201,114 +249,7 @@ document.querySelectorAll('.menu a, .mobile-nav__item, .mobile-nav__dropdown-con
 
 
 /* HEADER */
-document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll("[id]");
-    const navbarText = document.getElementById("navbar-text");
-    const mobileNav = document.querySelector('.mobile-nav');
-    const hamburger = document.querySelector('.mobile-nav__hamburger');
-    let lastKnownSection = '';
-    let isMenuClick = false;
 
-    if (!navbarText || !hamburger || !mobileNav) return;
-
-    // Mobile menu toggle
-    hamburger.addEventListener('click', () => {
-        mobileNav.classList.toggle('active');
-        hamburger.setAttribute('aria-expanded',
-            hamburger.getAttribute('aria-expanded') === 'false' ? 'true' : 'false'
-        );
-    });
-
-    // Mobile dropdown toggle
-    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
-    if (dropdownTrigger) {
-        dropdownTrigger.addEventListener('click', (e) => {
-            e.preventDefault();
-            const dropdownContent = e.target.closest('.mobile-nav__dropdown').querySelector('.mobile-nav__dropdown-content');
-            if (dropdownContent) {
-                dropdownContent.classList.toggle('show');
-            }
-        });
-    }
-
-    const newTextMap = {
-        'home': "SUITMAN'S PORTRAITS",
-        'artist-statement': "ARTIST STATEMENT",
-        'busan-section': "BUSAN",
-        'hongkong-section': "HONG KONG",
-        'iceland-section': "ICELAND",
-        'myanmar-section': "MYANMAR",
-        'peru-section': "PERU",
-        'manila-section': "MANILA",
-        'seoul-section': "SEOUL",
-        'singapore-section': "SINGAPORE",
-        'tibet-section': "TIBET",
-        'otherworks-section': "OTHER WORKS",
-        'exhibition-section': "EXHIBITIONS",
-        'contact-section': "CONTACT"
-    };
-
-    function updateNavbarTextOnScroll() {
-        if (isMenuClick) return;
-
-        let currentSectionId = '';
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-
-            if (window.pageYOffset >= sectionTop - 200 && window.pageYOffset < sectionTop + sectionHeight - 200) {
-                currentSectionId = section.getAttribute('id');
-            }
-        });
-
-        if (currentSectionId && currentSectionId !== lastKnownSection) {
-            lastKnownSection = currentSectionId;
-            navbarText.innerText = newTextMap[currentSectionId] || "SUITMAN'S PORTRAITS";
-        }
-    }
-
-    window.addEventListener('scroll', () => {
-        if (!isMenuClick) {
-            updateNavbarTextOnScroll();
-        }
-    });
-
-    const handleMenuClick = (event) => {
-        event.preventDefault();
-        const targetId = event.target.getAttribute('href');
-        if (targetId && targetId !== '#') {
-            isMenuClick = true;
-            const targetElement = document.querySelector(targetId);
-            lastKnownSection = targetId.substring(1);
-
-            navbarText.innerText = newTextMap[lastKnownSection] || "SUITMAN'S PORTRAITS";
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-
-            document.addEventListener('scrollend', function onScrollEnd() {
-                isMenuClick = false;
-                document.removeEventListener('scrollend', onScrollEnd);
-            }, { once: true });
-
-            // Close mobile menu if open
-            mobileNav.classList.remove('active');
-            hamburger.setAttribute('aria-expanded', 'false');
-        }
-    };
-
-    // Desktop menu click handlers
-    document.querySelectorAll('.menu a, .dropdown-content a').forEach(item => {
-        item.addEventListener('click', handleMenuClick);
-    });
-
-    // Mobile menu click handlers
-    document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a').forEach(item => {
-        item.addEventListener('click', handleMenuClick);
-    });
-
-    // Initial call to set correct text on page load
-    updateNavbarTextOnScroll();
-});
 
 
 
