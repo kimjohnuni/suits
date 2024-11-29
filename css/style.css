@@ -14,45 +14,48 @@ html, body {
 
 body {
     min-height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #fff;
+}
+
+
+.divider-container {
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Optional: add background or border */
+    background-color: #fff;
+}
+
+.divider-container img {
+    max-height: 80px;
+    max-width: 80px;
+    object-fit: contain;
 }
 
 
 /* Header Styles */
 .navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(6px);
-  z-index: 1000;
-  overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center; /* Vertically center items */
+    justify-content: center; /* Horizontally center items */
+    z-index: 10;
+    padding: 0 20px;
+}
+.navbar h1 {
+margin: 0;
+font-size: 36px;
+font-family: 'Rockwell', serif;
 }
 
 
-
-
-.logo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: max-content;
-    text-align: center;
-    font-family: 'Rockwell Nova', sans-serif;
-    font-weight: 700;
-    font-size: 56px;
-    letter-spacing: 1px;
-}
-
-.main-logo {
-    opacity: 1;
-}
 
 .mobile-nav, .mobile-nav__hamburger {
     display: none;
@@ -390,7 +393,7 @@ video {
 .seoul-portraits,
 .singapore-portraits,
 .tibet-portraits {
-    scroll-margin-top: -80px; /* Adjust this value based on your needs */
+    scroll-margin-top: 80px; /* Adjust this value based on your needs */
 }
 
 .statement-container {
@@ -559,6 +562,569 @@ video {
     }
 }
 
+.flag-image {
+    display: flex;
+    margin-top:80px;
+    justify-content: center;
+    align-items: center;
+    height: 100px;  /* You can adjust the height of the container */
+}
+
+.flag-image img {
+    width: 50px;
+    height: auto;  /* Optional: keeps the aspect ratio of the image */
+}
+
+
+
+/*OTHER WORKS*/
+
+#otherworks-section {
+    padding: 0 50px 0 50px; /* Added 100px top padding */
+    box-sizing: border-box;
+}
+
+.other-works-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 3px;
+}
+
+.other-works-gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 100px 0;
+    justify-content: center;
+}
+
+.other-works-gallery-item {
+    width: 300px;
+    margin: 0;
+}
+
+.other-works-gallery-item img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 3px solid transparent;
+    transition: border 0.2s ease;
+}
+
+.other-works-gallery-item img:hover {
+    border: 15px solid #000;
+}
+
+.other-works-gallery-item figcaption {
+    font-family: 'Rockwell Nova', bold;
+    font-weight:bold;
+    margin-top: 4px;
+    text-align: left;
+    font-size: .8em;
+}
+
+.other-works-description {
+    font-family: 'Rockwell Nova', sans-serif;
+    font-size: 1.8em;
+    text-align: left;
+    margin-bottom: 100px; /* Add some space between text and image */
+}
+
+
+
+
+/* Modal Styles */
+.other-works-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0);
+    transition: visibility 0s linear 0.3s, background-color 0.3s ease-out;
+}
+
+.other-works-modal-inner {
+    height: 100%;
+    overflow-y: auto;
+    padding: 60px 20px 20px;
+}
+
+.other-works-modal.active {
+    visibility: visible;
+    transition-delay: 0s;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.other-works-modal-content {
+   position: fixed;
+   left: 5px;
+   right: 5px;
+   bottom: 0;
+   height: calc(100% - 80px);
+   background: white;
+   transform: translateY(100%);
+   opacity: 0;
+   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+   border-radius: 30px 30px 0 0;
+   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.other-works-modal.active .other-works-modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.other-works-modal.closing .other-works-modal-content {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.other-works-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #000;
+    z-index: 1001;
+}
+
+.other-works-modal.closing {
+    background-color: rgba(0, 0, 0, 0);
+    visibility: visible; /* Keep visible during closing animation */
+}
+
+
+/*MODAL CONTENT WRAPPER*/
+.other-works-modal-content-wrapper {
+    display: flex;
+    gap: 40px;
+    height: 100%;
+    padding: 20px 20px 20px 10px;
+    align-items: flex-start;
+}
+
+
+.other-works-modal-image {
+    flex: 2;
+    max-width: 65%;
+}
+
+.other-works-modal-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.other-works-modal-info {
+    flex: 1;
+    padding: 0;
+}
+
+.other-works-modal-info h2 {
+    font-family: 'Rockwell Nova', bold;
+    margin-bottom: 20px;
+    font-size: 14px; /* Reduced from default */
+
+}
+
+.other-works-modal-info p {
+  font-family: 'Rockwell Nova';
+    margin-bottom: 12px;
+    line-height: 1.4;
+    font-size: 12px; /* Reduced from default */
+}
+
+.other-works-modal-info .label {
+    font-weight: bold;
+}
+
+.other-works-modal-info h2,
+.other-works-modal-info p {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.other-works-modal-info span {
+    display: inline-block; /* Add this to ensure spans show up */
+}
+
+
+
+/*EXHIBITIONS*/
+.exhibition-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 80px;
+    padding: 20px 40px;
+    justify-content: center; /* Centers only the image containers */
+}
+
+.exhibition-item {
+    width: 350px;
+    margin: 0;
+}
+
+.exhibition-item .image-container {
+    padding: 15px;
+    background-color: black;
+    height: 500px;
+}
+
+.exhibition-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+}
+
+.exhibition-item figcaption {
+  font-family: 'Rockwell Nova', sans-serif;
+    margin-top: 8px;
+    line-height: 1.4;
+}
+
+.exhibition-item .image-container,
+.exhibition-item figcaption {
+    cursor: pointer; /* Shows hand cursor on hover */
+}
+
+
+/*EXHIBITION MODAL*/
+.exhibition-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0);
+    transition: visibility 0s linear 0.3s, background-color 0.3s ease-out;
+}
+
+.exhibition-modal-inner {
+    height: 100%;
+    overflow-y: auto;
+    padding: 60px 20px 20px;
+}
+
+.exhibition-modal.active {
+    visibility: visible;
+    transition-delay: 0s;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.exhibition-modal-content {
+   position: fixed;
+   left: 5px;
+   right: 5px;
+   bottom: 0;
+   height: calc(100% - 80px);
+   background: white;
+   transform: translateY(100%);
+   opacity: 0;
+   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+   border-radius: 30px 30px 0 0;
+   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.exhibition-modal.active .exhibition-modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.exhibition-modal.closing .exhibition-modal-content {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.exhibition-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #000;
+    z-index: 1001;
+}
+
+.exhibition-modal.closing {
+    background-color: rgba(0, 0, 0, 0);
+    visibility: visible;
+}
+
+.exhibition-modal-content-wrapper {
+    display: flex;
+    gap: 40px;
+    height: 100%;
+    padding: 20px 20px 20px 10px;
+    align-items: flex-start;
+}
+
+.exhibition-modal-image {
+    flex: 2;
+    max-width: 65%;
+}
+
+.exhibition-modal-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.exhibition-modal-info {
+    flex: 1;
+    padding: 0;
+}
+
+.exhibition-modal-info h2 {
+    font-family: 'Rockwell Nova', bold;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.exhibition-modal-info p {
+    font-family: 'Rockwell Nova';
+    margin-bottom: 12px;
+    line-height: 1.4;
+    font-size: 12px;
+}
+
+.exhibition-modal-info .label {
+    font-weight: bold;
+}
+
+.exhibition-modal-info h2,
+.exhibition-modal-info p {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.exhibition-modal-info span {
+    display: inline-block;
+}
+
+
+
+
+/*CONTACT*/
+
+.contact-wrapper {
+    display: flex;
+    position: relative;
+    width: 100%;
+    margin-top:200px;
+}
+
+.contact-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+}
+
+.contact-section {
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+
+.contact-fields-wrapper {
+    background-color: white;
+    padding: 40px;
+    padding-bottom: 90px;
+    width: 430px;
+    margin-left: 10%;
+}
+
+.contact-title {
+    font-family: 'Rockwell Nova', serif;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+.contact-container {
+    position: relative;
+    height: 40px;
+    margin-bottom: 20px;
+}
+
+.contact-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 40px;
+    background-color: black;
+    transition: width 0.3s ease;
+}
+
+.contact-container:hover .contact-indicator {
+    width: 4px;
+}
+
+.contact-input-box {
+    width: 350px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    color: black;
+    font-size: 20px;
+    font-family: 'Rockwell Nova', serif;
+    padding-left: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.contact-input-box::placeholder {
+    color: black;
+    font-family: 'Rockwell Nova', serif;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.contact-input-box.focused + .contact-indicator {
+    width: 350px;
+}
+
+.contact-input-box.focused {
+    outline: none;
+    color: white;
+}
+
+.contact-input-box.focused::placeholder {
+    color: white;
+}
+
+.contact-message-container {
+    position: relative;
+    height: 250px;
+    margin-bottom: 20px;
+}
+
+.contact-message-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 250px;
+    background-color: black;
+    transition: width 0.3s ease;
+}
+
+.contact-message-container:hover .contact-message-indicator {
+    width: 4px;
+}
+
+.contact-message-box {
+    width: 350px;
+    height: 250px;
+    border: none;
+    background-color: transparent;
+    color: black;
+    font-size: 20px;
+    font-family: 'Rockwell Nova', serif;
+    padding-left: 10px;
+    padding-top: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    resize: none;
+}
+
+.contact-message-box::placeholder {
+    color: black;
+    font-family: 'Rockwell Nova', serif;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.contact-message-box.focused + .contact-message-indicator {
+    width: 350px;
+}
+
+.contact-message-box.focused {
+    outline: none;
+    color: white;
+}
+
+.contact-message-box.focused::placeholder {
+    color: white;
+}
+
+.contact-send-button {
+    float: right;
+    width: 100px;
+    height: 40px;
+    background-color: black;
+    color: white;
+    border: none;
+    font-family: 'Rockwell Nova', serif;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contact-send-button:hover {
+    background-color: #333;
+}
+
+.contact-send-button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+
+
+
+
+
+/*FOOTER*/
+.site-footer {
+    background-color: #fff;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.site-copyright {
+    font-family: 'Rockwell Nova', serif;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+}
+
+
+
 
 
 
@@ -663,7 +1229,6 @@ video {
 
     /* Mobile Menu Styles */
 
-      @media screen and (max-width: 900px) {
         .bottom-navbar {
             display: none;
         }
@@ -871,6 +1436,31 @@ video {
         width: 100%;
         height: auto;
     }
+
+
+
+
+
+    /*OTHER WORKS*/
+
+    .other-works-gallery-item {
+        width: 250px;
+    }
+
+    .other-works-gallery-item img {
+        width: 250px;
+        height: 167px;
+    }
+
+
+
+
+    /*EXHIBITIONS*/
+
+    .exhibition-item {
+        flex: 0 1 calc(33.333% - 14px);
+    }
+
 }
 
 
@@ -940,5 +1530,53 @@ video {
         padding: 0.4rem 0.75rem;
     }
 
+/*OTHER WORKS*/
+.other-works-description {
+        font-size: 1em;
+    }
+
+    /*OTHER WORKS*/
+
+    .other-works-gallery-container {
+        gap: 30px;
+        padding: 0;
+    }
+
+    .other-works-gallery-item {
+        width: 100%;
+    }
+
+    .other-works-gallery-item img {
+        width: 100%;
+        height: 250px;
+    }
+
+    .other-works-modal-content-wrapper {
+        display: block; /* Change to block instead of flex */
+    }
+
+    .other-works-modal-info {
+       display: block; /* Ensure block display */
+       width: 100%;
+   }
+
+
+    .other-works-modal-image {
+        max-width: 100%;
+        margin-bottom: 10px; /* Add space below image */
+    }
+
+
+
+
+  /*EXHIBITIONS*/
+  .exhibition-item {
+        flex: 0 1 100%;
+        padding: 0; /* Remove padding in mobile view */
+    }
+
+    .exhibition-gallery {
+        padding: 0 20px; /* Adjusted padding for mobile */
+    }
 
 }
