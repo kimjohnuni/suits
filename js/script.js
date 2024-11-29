@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isAnimating) return;
         isAnimating = true;
 
+        hamburger.classList.toggle('active');
+
         if (!mobileMenu.classList.contains('active')) {
             // When opening the menu, ensure dropdown is closed
             const dropdown = document.querySelector('.mobile-nav__dropdown');
@@ -66,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Close Menu Function
     function closeMenu() {
         mobileMenu.classList.remove('active');
+        hamburger.classList.remove('active');
         toggleBodyScroll(false);
     }
 
@@ -122,43 +125,66 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+
+
+
+
+
+
+
+
+
+
 // Smooth scroll functionality
 document.querySelectorAll('.menu a, .mobile-nav__item, .mobile-nav__dropdown-content a').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
-        if(this.getAttribute('href').startsWith('#')) {
+        if (this.getAttribute('href').startsWith('#')) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             const targetSection = document.querySelector(targetId);
 
-            if(targetSection && this.textContent !== 'PORTRAITS') {
-                const targetPosition = targetSection.offsetTop - 50; // 50 is the offset from the top
+            if (targetSection && this.textContent !== 'PORTRAITS') {
+                console.log(`Scrolling to: ${targetId}`); // Debugging line
+                const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - 150;
+                console.log(`Calculated target position: ${targetPosition}`); // Debugging line
+
                 const startPosition = window.pageYOffset;
                 const distance = targetPosition - startPosition;
-                let start = null;
 
-                function animation(currentTime) {
-                    if (start === null) start = currentTime;
-                    const timeElapsed = currentTime - start;
-                    const run = ease(timeElapsed, startPosition, distance, 2500);
-                    window.scrollTo(0, run);
-                    if (timeElapsed < 2500) requestAnimationFrame(animation);
+                const baseDuration = 500;
+                const maxDuration = 1500;
+                const minDuration = 300;
+                const duration = Math.min(maxDuration, Math.max(minDuration, Math.abs(distance) / 2));
+
+                let startTime = null;
+
+                function easeInOutQuad(t) {
+                    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
                 }
 
-                // Easing function for smoother animation
-                function ease(t, b, c, d) {
-                    t /= d / 2;
-                    if (t < 1) return c / 2 * t * t + b;
-                    t--;
-                    return -c / 2 * (t * (t - 2) - 1) + b;
+                function animation(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const run = easeInOutQuad(timeElapsed / duration) * distance + startPosition;
+                    window.scrollTo(0, run);
+
+                    if (timeElapsed < duration) requestAnimationFrame(animation);
                 }
 
                 requestAnimationFrame(animation);
 
                 // Close mobile menu if open
                 const mobileMenu = document.querySelector('.mobile-nav');
-                if(mobileMenu && mobileMenu.classList.contains('active')) {
+                if (mobileMenu && mobileMenu.classList.contains('active')) {
                     mobileMenu.classList.remove('active');
+                    const hamburger = document.querySelector('.mobile-nav__hamburger');
+                    if (hamburger) {
+                        hamburger.classList.remove('active');
+                    }
                 }
+            } else {
+                console.warn(`Target section not found for: ${targetId}`); // Debugging line
             }
         }
     });
@@ -174,311 +200,283 @@ document.querySelectorAll('.menu a, .mobile-nav__item, .mobile-nav__dropdown-con
 
 
 
+/* HEADER */
+document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll("[id]");
+    const navbarText = document.getElementById("navbar-text");
+    const mobileNav = document.querySelector('.mobile-nav');
+    const hamburger = document.querySelector('.mobile-nav__hamburger');
+    let lastKnownSection = '';
+    let isMenuClick = false;
 
+    if (!navbarText || !hamburger || !mobileNav) return;
 
+    // Mobile menu toggle
+    hamburger.addEventListener('click', () => {
+        mobileNav.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded',
+            hamburger.getAttribute('aria-expanded') === 'false' ? 'true' : 'false'
+        );
+    });
 
-
-
-
-
-
-
-
-
-
-// Menu click handlers for smooth scrolling
-document.querySelectorAll('.menu a, .mobile-nav__item, .mobile-nav__dropdown-content a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        if(this.getAttribute('href').startsWith('#')) {
+    // Mobile dropdown toggle
+    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
+    if (dropdownTrigger) {
+        dropdownTrigger.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-
-            if(targetSection && this.textContent !== 'PORTRAITS') {
-                const targetPosition = targetSection.offsetTop - 50; // 50 is the offset from the top
-                const startPosition = window.pageYOffset;
-                const distance = targetPosition - startPosition;
-                let start = null;
-
-                function animation(currentTime) {
-                    if (start === null) start = currentTime;
-                    const timeElapsed = currentTime - start;
-                    const run = ease(timeElapsed, startPosition, distance, 2500);
-                    window.scrollTo(0, run);
-                    if (timeElapsed < 2500) requestAnimationFrame(animation);
-                }
-
-                // Easing function for smoother animation
-                function ease(t, b, c, d) {
-                    t /= d / 2;
-                    if (t < 1) return c / 2 * t * t + b;
-                    t--;
-                    return -c / 2 * (t * (t - 2) - 1) + b;
-                }
-
-                requestAnimationFrame(animation);
-
-                // Close mobile menu if open
-                const mobileMenu = document.querySelector('.mobile-nav');
-                if(mobileMenu && mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                }
-            }
-        }
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-const sections = [
-    { logo: document.querySelector('.main-logo'), section: document.querySelector('.video-container') },
-    { logo: document.querySelector('.artist-statement-logo'), section: document.querySelector('#artist-statement') },
-    { logo: document.querySelector('.busan-logo'), section: document.querySelector('#busan-section') },
-    { logo: document.querySelector('.hongkong-logo'), section: document.querySelector('#hongkong-section') },
-    { logo: document.querySelector('.iceland-logo'), section: document.querySelector('#iceland-section') },
-    { logo: document.querySelector('.myanmar-logo'), section: document.querySelector('#myanmar-section') },
-    { logo: document.querySelector('.peru-logo'), section: document.querySelector('#peru-section') },
-    { logo: document.querySelector('.manila-logo'), section: document.querySelector('#manila-section') },
-    { logo: document.querySelector('.seoul-logo'), section: document.querySelector('#seoul-section') },
-    { logo: document.querySelector('.singapore-logo'), section: document.querySelector('#singapore-section') },
-    { logo: document.querySelector('.tibet-logo'), section: document.querySelector('#tibet-section') }
-];
-
-let currentIndex = 0;
-let lastScrollY = window.scrollY;
-let viewportHeight = window.innerHeight;
-
-// Throttle function to limit scroll event firing
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    }
-}
-
-function initializeLogos() {
-    const isMobile = window.innerWidth <= 900;
-    sections.forEach(({logo}) => {
-        if (!isMobile) {
-            logo.style.position = 'fixed';
-            logo.style.left = '50%';
-            logo.style.top = '50%';
-            logo.style.transform = 'translate3d(-50%, -50%, 0)';
-        }
-    });
-}
-
-function animateLogoTransition(fromLogo, toLogo, direction) {
-    const animationDuration = 300;
-    const isMobile = window.innerWidth <= 900;
-
-    if (isMobile) {
-        fromLogo.style.opacity = '0';
-        toLogo.style.opacity = '1';
-    } else {
-        fromLogo.animate([
-            { transform: 'translate3d(-50%, -50%, 0)', opacity: 1 },
-            { transform: `translate3d(-50%, ${direction === 'down' ? '20px' : '-70px'}, 0)`, opacity: 0 }
-        ], { duration: animationDuration, fill: 'forwards' });
-
-        toLogo.animate([
-            { transform: `translate3d(-50%, ${direction === 'down' ? '-70px' : '20px'}, 0)`, opacity: 0 },
-            { transform: 'translate3d(-50%, -50%, 0)', opacity: 1 }
-        ], { duration: animationDuration, fill: 'forwards' });
-    }
-}
-
-function setupIntersectionObserver() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const newIndex = sections.findIndex(section =>
-                    section.section === entry.target);
-                if (newIndex !== currentIndex) {
-                    animateLogoTransition(
-                        sections[currentIndex].logo,
-                        sections[newIndex].logo,
-                        window.scrollY > lastScrollY ? 'down' : 'up'
-                    );
-                    currentIndex = newIndex;
-                    sessionStorage.setItem('currentSectionIndex', newIndex);
-                }
+            const dropdownContent = e.target.closest('.mobile-nav__dropdown').querySelector('.mobile-nav__dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.classList.toggle('show');
             }
         });
-    }, {
-        threshold: 0.3,
-        rootMargin: '-30% 0px -70% 0px'
-    });
+    }
 
-    sections.forEach(section => {
-        observer.observe(section.section);
-    });
-}
+    const newTextMap = {
+        'home': "SUITMAN'S PORTRAITS",
+        'artist-statement': "ARTIST STATEMENT",
+        'busan-section': "BUSAN",
+        'hongkong-section': "HONG KONG",
+        'iceland-section': "ICELAND",
+        'myanmar-section': "MYANMAR",
+        'peru-section': "PERU",
+        'manila-section': "MANILA",
+        'seoul-section': "SEOUL",
+        'singapore-section': "SINGAPORE",
+        'tibet-section': "TIBET",
+        'otherworks-section': "OTHER WORKS",
+        'exhibition-section': "EXHIBITIONS",
+        'contact-section': "CONTACT"
+    };
 
-const handleScroll = throttle(() => {
-    if (window.innerWidth <= 900) return;
-    const scrollDirection = window.scrollY > lastScrollY ? 'down' : 'up';
-    sections.forEach((section, index) => {
-        const rect = section.section.getBoundingClientRect();
-        if (rect.top <= viewportHeight * 0.3 && rect.bottom >= viewportHeight * 0.3) {
-            if (index !== currentIndex) {
-                animateLogoTransition(sections[currentIndex].logo, section.logo, scrollDirection);
-                currentIndex = index;
-                sessionStorage.setItem('currentSectionIndex', index);
+    function updateNavbarTextOnScroll() {
+        if (isMenuClick) return;
+
+        let currentSectionId = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+
+            if (window.pageYOffset >= sectionTop - 200 && window.pageYOffset < sectionTop + sectionHeight - 200) {
+                currentSectionId = section.getAttribute('id');
             }
-        }
-    });
-    lastScrollY = window.scrollY;
-}, 100);
+        });
 
-function initializeCurrentSection() {
-    const isMobile = window.innerWidth <= 900;
-
-    for (let i = 0; i < sections.length; i++) {
-        const rect = sections[i].section.getBoundingClientRect();
-        if (rect.top <= viewportHeight * 0.3 && rect.bottom >= viewportHeight * 0.3) {
-            currentIndex = i;
-            sessionStorage.setItem('currentSectionIndex', i);
-            sections[i].logo.style.opacity = '1';
-            if (isMobile) {
-                sections[i].logo.style.transform = 'translate3d(0, 0, 0)';
-            }
-            break;
+        if (currentSectionId && currentSectionId !== lastKnownSection) {
+            lastKnownSection = currentSectionId;
+            navbarText.innerText = newTextMap[currentSectionId] || "SUITMAN'S PORTRAITS";
         }
     }
-}
 
-function setInitialState() {
-    const storedIndex = sessionStorage.getItem('currentSectionIndex');
-    const isMobile = window.innerWidth <= 900;
-
-    sections.forEach(({logo}) => {
-        if (!isMobile) {
-            logo.style.position = 'fixed';
-            logo.style.left = '50%';
-            logo.style.top = '50%';
-            logo.style.transform = 'translate3d(-50%, -50%, 0)';
+    window.addEventListener('scroll', () => {
+        if (!isMenuClick) {
+            updateNavbarTextOnScroll();
         }
     });
 
-    if (storedIndex !== null) {
-        currentIndex = parseInt(storedIndex);
-        sections[currentIndex].logo.style.opacity = '1';
-        if (isMobile) {
-            sections[currentIndex].logo.style.transform = 'translate3d(0, 0, 0)';
+    const handleMenuClick = (event) => {
+        event.preventDefault();
+        const targetId = event.target.getAttribute('href');
+        if (targetId && targetId !== '#') {
+            isMenuClick = true;
+            const targetElement = document.querySelector(targetId);
+            lastKnownSection = targetId.substring(1);
+
+            navbarText.innerText = newTextMap[lastKnownSection] || "SUITMAN'S PORTRAITS";
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+
+            document.addEventListener('scrollend', function onScrollEnd() {
+                isMenuClick = false;
+                document.removeEventListener('scrollend', onScrollEnd);
+            }, { once: true });
+
+            // Close mobile menu if open
+            mobileNav.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
         }
-    } else {
-        initializeCurrentSection();
-    }
-}
+    };
 
-// Event Listeners
-window.addEventListener('resize', () => {
-    viewportHeight = window.innerHeight;
-    setInitialState();
+    // Desktop menu click handlers
+    document.querySelectorAll('.menu a, .dropdown-content a').forEach(item => {
+        item.addEventListener('click', handleMenuClick);
+    });
+
+    // Mobile menu click handlers
+    document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a').forEach(item => {
+        item.addEventListener('click', handleMenuClick);
+    });
+
+    // Initial call to set correct text on page load
+    updateNavbarTextOnScroll();
 });
 
-window.addEventListener('scroll', handleScroll, { passive: true });
 
-window.addEventListener('load', initializeLogos);
 
-document.addEventListener('DOMContentLoaded', () => {
-    setInitialState();
-    setupIntersectionObserver();
-});
 
-// Menu click handlers
-document.querySelectorAll('.menu a, .mobile-menu a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        if(this.getAttribute('href').startsWith('#')) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
 
-            if(targetSection) {
-                const offset = 50;
-                const elementPosition = targetSection.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - offset;
 
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
 
-                const mobileMenu = document.querySelector('.mobile-menu');
-                if(mobileMenu && mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                }
+
+
+
+/* MODAL FOR OTHER WORKS */
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.querySelector('.other-works-modal');
+    const modalContent = document.querySelector('.other-works-modal-content');
+    const closeBtn = document.querySelector('.other-works-modal-close');
+    const galleryItems = document.querySelectorAll('.other-works-gallery-item img');
+    let startY;
+    let currentY;
+
+    // Open modal with content
+    galleryItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const modalImg = modal.querySelector('.other-works-modal-image img');
+            const figureNumber = modal.querySelector('.figure-number');
+            const medium = modal.querySelector('.medium');
+            const size = modal.querySelector('.size');
+
+            // Set content
+            modalImg.src = this.getAttribute('data-full-img');
+            figureNumber.textContent = this.getAttribute('data-figure');
+
+            // Format medium text with bold MEDIUM
+            medium.innerHTML = '<span class="label">MEDIUM</span>: ' + this.getAttribute('data-medium');
+
+            // Format size text with bold SIZE
+            size.innerHTML = '<span class="label">SIZE</span>: ' + this.getAttribute('data-size');
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // Close modal with button
+    closeBtn.addEventListener('click', closeModal);
+
+    // Handle touch events for pull-down to close
+    modalContent.addEventListener('touchstart', e => {
+        startY = e.touches[0].clientY;
+    });
+
+    modalContent.addEventListener('touchmove', e => {
+        if (modalContent.scrollTop === 0) {
+            currentY = e.touches[0].clientY;
+            const diff = currentY - startY;
+
+            if (diff > 0) {
+                e.preventDefault();
+                modalContent.style.transform = `translateY(${diff}px)`;
             }
         }
     });
-});
 
-
-
-
-
-
-
-
-// FADE OUT PORTRAIT H2
-// Get all portrait title elements
-const portraitsTitles = document.querySelectorAll('.portraits h2');
-let lastScrollPosition = window.pageYOffset;
-
-// Add scroll event listener
-window.addEventListener('scroll', () => {
-    const currentScrollPosition = window.pageYOffset;
-    const scrollingDown = currentScrollPosition > lastScrollPosition;
-
-    // Loop through all portrait titles
-    portraitsTitles.forEach(title => {
-        const elementPosition = title.getBoundingClientRect().top;
-        const fadeOutThreshold = 100;
-        const fadeInThreshold = 500;
-
-        if (scrollingDown) {
-            // Fade out calculation when scrolling down
-            if (elementPosition < fadeInThreshold) {
-                const opacity = Math.max(0, elementPosition / fadeOutThreshold);
-                title.style.opacity = opacity;
-            }
+    modalContent.addEventListener('touchend', e => {
+        if (currentY && currentY - startY > 100) {
+            closeModal();
         } else {
-            // Fade in calculation when scrolling up
-            const opacity = Math.min(1, elementPosition / fadeInThreshold);
-            title.style.opacity = opacity;
+            modalContent.style.transform = '';
+        }
+        startY = null;
+        currentY = null;
+    });
+
+    function closeModal() {
+        modal.classList.add('closing');
+        modalContent.addEventListener('transitionend', function handler() {
+            modal.classList.remove('active', 'closing');
+            document.body.style.overflow = '';
+            modalContent.style.transform = '';
+            modalContent.removeEventListener('transitionend', handler);
+        });
+    }
+});
+
+
+
+
+
+
+
+// MODAL FOR EXHIBITION PAGE
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.querySelector('.exhibition-modal');
+    const modalContent = document.querySelector('.exhibition-modal-content');
+    const closeBtn = document.querySelector('.exhibition-modal-close');
+    const exhibitionItems = document.querySelectorAll('.exhibition-item .image-container');
+    let startY;
+    let currentY;
+
+    const exhibitionContent = {
+        'pwk': {
+            image: 'img/exhibition/pwk.jpg'
+        },
+        'artbusan': {
+            image: 'img/exhibition/artbusan.jpg'
+        },
+        'agnesb': {
+            image: 'img/exhibition/agnesb.jpg'
+        },
+        'factory': {
+            image: 'img/exhibition/factory.jpg'
+        },
+        'tngt': {
+            image: 'img/exhibition/tngt.jpg'
+        }
+    };
+
+    exhibitionItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const exhibitionId = this.getAttribute('data-exhibition-id');
+            const content = exhibitionContent[exhibitionId];
+
+            const modalImg = modal.querySelector('.exhibition-modal-image img');
+            modalImg.src = content.image;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // Close modal with button
+    closeBtn.addEventListener('click', closeModal);
+
+    // Handle touch events for pull-down to close
+    modalContent.addEventListener('touchstart', e => {
+        startY = e.touches[0].clientY;
+    });
+
+    modalContent.addEventListener('touchmove', e => {
+        if (modalContent.scrollTop === 0) {
+            currentY = e.touches[0].clientY;
+            const diff = currentY - startY;
+
+            if (diff > 0) {
+                e.preventDefault();
+                modalContent.style.transform = `translateY(${diff}px)`;
+            }
         }
     });
 
-    lastScrollPosition = currentScrollPosition;
+    modalContent.addEventListener('touchend', e => {
+        if (currentY && currentY - startY > 100) {
+            closeModal();
+        } else {
+            modalContent.style.transform = '';
+        }
+        startY = null;
+        currentY = null;
+    });
+
+    function closeModal() {
+        modal.classList.add('closing');
+        modalContent.addEventListener('transitionend', function handler() {
+            modal.classList.remove('active', 'closing');
+            document.body.style.overflow = '';
+            modalContent.style.transform = '';
+            modalContent.removeEventListener('transitionend', handler);
+        });
+    }
 });
 
 
@@ -487,25 +485,324 @@ window.addEventListener('scroll', () => {
 
 
 
-/*
-// Image Loading
-document.querySelectorAll('.portraits__gallery img').forEach(img => {
-    const aspectRatio = 1;
-    img.style.height = (img.offsetWidth * aspectRatio) + 'px';
-    img.addEventListener('load', function() {
-        this.classList.add('loaded');
+
+
+
+//CONTACT Form
+const contactInputBoxes = document.querySelectorAll('.contact-input-box, .contact-message-box');
+const contactSendButton = document.querySelector('.contact-send-button');
+
+contactInputBoxes.forEach(inputBox => {
+    inputBox.addEventListener('focus', function() {
+        this.classList.add('focused');
+    });
+
+    inputBox.addEventListener('blur', function() {
+        if (this.value === '') {
+            this.classList.remove('focused');
+        }
     });
 });
 
-// Initialize
-window.addEventListener('scroll', () => requestAnimationFrame(handleScroll));
-window.addEventListener('resize', () => viewportHeight = window.innerHeight);
+function checkInputs() {
+    let allFilled = true;
+    contactInputBoxes.forEach(input => {
+        if (input.value.trim() === '') {
+            allFilled = false;
+        }
+    });
+    contactSendButton.disabled = !allFilled;
+}
+
+contactInputBoxes.forEach(input => {
+    input.addEventListener('keyup', checkInputs);
+    input.addEventListener('change', checkInputs);
+});
+
+// EmailJS form submission
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+        .then(() => {
+            console.log('SUCCESS!');
+            this.reset();
+            contactSendButton.disabled = true;
+        }, (error) => {
+            console.log('FAILED...', error);
+        });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SCALE HEADER
+/*
 document.addEventListener('DOMContentLoaded', () => {
-    const storedIndex = sessionStorage.getItem('currentSectionIndex');
-    if (storedIndex !== null) {
-        currentIndex = parseInt(storedIndex);
-        sections[currentIndex].logo.style.transform = 'translateY(0)';
-        sections[currentIndex].logo.style.opacity = '1';
+    const sections = document.querySelectorAll("[id]");
+    const navbarText = document.getElementById("navbar-text");
+    const mobileNav = document.querySelector('.mobile-nav');
+    const hamburger = document.querySelector('.mobile-nav__hamburger');
+    let lastKnownSection = '';
+    let isMenuClick = false;
+
+    if (!navbarText || !hamburger || !mobileNav) return;
+
+    // Mobile menu toggle
+    hamburger.addEventListener('click', () => {
+        mobileNav.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded',
+            hamburger.getAttribute('aria-expanded') === 'false' ? 'true' : 'false'
+        );
+    });
+
+    // Mobile dropdown toggle
+    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
+    if (dropdownTrigger) {
+        dropdownTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            const dropdownContent = e.target.closest('.mobile-nav__dropdown').querySelector('.mobile-nav__dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.classList.toggle('show');
+            }
+        });
     }
+
+    const newTextMap = {
+        'home': "SUITMAN'S PORTRAITS",
+        'artist-statement': "ARTIST STATEMENT",
+        'busan-section': "BUSAN",
+        'hongkong-section': "HONG KONG",
+        'iceland-section': "ICELAND",
+        'myanmar-section': "MYANMAR",
+        'peru-section': "PERU",
+        'manila-section': "MANILA",
+        'seoul-section': "SEOUL",
+        'singapore-section': "SINGAPORE",
+        'tibet-section': "TIBET",
+        'otherworks-section': "OTHER WORKS",
+        'exhibition-section': "EXHIBITIONS",
+        'contact-section': "CONTACT"
+    };
+
+    function updateNavbarTextOnScroll() {
+        if (isMenuClick) return;
+
+        let currentSectionId = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+
+            if (window.pageYOffset >= sectionTop - 200 && window.pageYOffset < sectionTop + sectionHeight - 200) {
+                currentSectionId = section.getAttribute('id');
+            }
+        });
+
+        if (currentSectionId && currentSectionId !== lastKnownSection) {
+            lastKnownSection = currentSectionId;
+            navbarText.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            navbarText.style.transform = 'scale(0)';
+            navbarText.style.opacity = '0';
+
+            setTimeout(() => {
+                navbarText.innerText = newTextMap[currentSectionId] || "SUITMAN'S PORTRAITS";
+                navbarText.style.transform = 'scale(1)';
+                navbarText.style.opacity = '1';
+            }, 300);
+        }
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!isMenuClick) {
+            updateNavbarTextOnScroll();
+        }
+    });
+
+    const handleMenuClick = (event) => {
+        event.preventDefault();
+        const targetId = event.target.getAttribute('href');
+        if (targetId && targetId !== '#') {
+            isMenuClick = true;
+
+            // Initial animation (scale down)
+            navbarText.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            navbarText.style.transform = 'scale(0)';
+            navbarText.style.opacity = '0';
+
+            const targetElement = document.querySelector(targetId);
+            lastKnownSection = targetId.substring(1);
+
+            // Start scrolling
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+
+            // Use the scrollend event to detect when scrolling stops
+            document.addEventListener('scrollend', function onScrollEnd() {
+                setTimeout(() => {
+                    navbarText.innerText = newTextMap[lastKnownSection] || "SUITMAN'S PORTRAITS";
+                    navbarText.style.transform = 'scale(1)';
+                    navbarText.style.opacity = '1';
+                    isMenuClick = false;
+                    document.removeEventListener('scrollend', onScrollEnd);
+                }, 100);
+            }, { once: true });
+
+            // Close mobile menu if open
+            mobileNav.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+    };
+
+    // Desktop menu click handlers
+    document.querySelectorAll('.menu a, .dropdown-content a').forEach(item => {
+        item.addEventListener('click', handleMenuClick);
+    });
+
+    // Mobile menu click handlers
+    document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a').forEach(item => {
+        item.addEventListener('click', handleMenuClick);
+    });
+
+    // Initial call to set correct text on page load
+    updateNavbarTextOnScroll();
+});
+*/
+
+
+
+
+/*FADE HEADER
+document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll("[id]");
+    const navbarText = document.getElementById("navbar-text");
+    const mobileNav = document.querySelector('.mobile-nav');
+    const hamburger = document.querySelector('.mobile-nav__hamburger');
+    let lastKnownSection = '';
+    let isMenuClick = false;
+
+    if (!navbarText || !hamburger || !mobileNav) return;
+
+    // Mobile menu toggle
+    hamburger.addEventListener('click', () => {
+        mobileNav.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded',
+            hamburger.getAttribute('aria-expanded') === 'false' ? 'true' : 'false'
+        );
+    });
+
+    // Mobile dropdown toggle
+    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
+    if (dropdownTrigger) {
+        dropdownTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            const dropdownContent = e.target.closest('.mobile-nav__dropdown').querySelector('.mobile-nav__dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.classList.toggle('show');
+            }
+        });
+    }
+
+    const newTextMap = {
+        'home': "SUITMAN'S PORTRAITS",
+        'artist-statement': "ARTIST STATEMENT",
+        'busan-section': "BUSAN",
+        'hongkong-section': "HONG KONG",
+        'iceland-section': "ICELAND",
+        'myanmar-section': "MYANMAR",
+        'peru-section': "PERU",
+        'manila-section': "MANILA",
+        'seoul-section': "SEOUL",
+        'singapore-section': "SINGAPORE",
+        'tibet-section': "TIBET",
+        'otherworks-section': "OTHER WORKS",
+        'exhibition-section': "EXHIBITIONS",
+        'contact-section': "CONTACT"
+    };
+
+    function updateNavbarTextOnScroll() {
+        if (isMenuClick) return;
+
+        let currentSectionId = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+
+            if (window.pageYOffset >= sectionTop - 200 && window.pageYOffset < sectionTop + sectionHeight - 200) {
+                currentSectionId = section.getAttribute('id');
+            }
+        });
+
+        if (currentSectionId && currentSectionId !== lastKnownSection) {
+            lastKnownSection = currentSectionId;
+            navbarText.style.transition = 'opacity 0.3s ease';
+            navbarText.style.opacity = '0';
+
+            setTimeout(() => {
+                navbarText.innerText = newTextMap[currentSectionId] || "SUITMAN'S PORTRAITS";
+                navbarText.style.opacity = '1';
+            }, 300);
+        }
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!isMenuClick) {
+            updateNavbarTextOnScroll();
+        }
+    });
+
+    const handleMenuClick = (event) => {
+        event.preventDefault();
+        const targetId = event.target.getAttribute('href');
+        if (targetId && targetId !== '#') {
+            isMenuClick = true;
+
+            // Initial fade out
+            navbarText.style.transition = 'opacity 0.3s ease';
+            navbarText.style.opacity = '0';
+
+            const targetElement = document.querySelector(targetId);
+            lastKnownSection = targetId.substring(1);
+
+            // Start scrolling
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+
+            // Use the scrollend event to detect when scrolling stops
+            document.addEventListener('scrollend', function onScrollEnd() {
+                setTimeout(() => {
+                    navbarText.innerText = newTextMap[lastKnownSection] || "SUITMAN'S PORTRAITS";
+                    navbarText.style.opacity = '1';
+                    isMenuClick = false;
+                    document.removeEventListener('scrollend', onScrollEnd);
+                }, 100);
+            }, { once: true });
+
+            // Close mobile menu if open
+            mobileNav.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+    };
+
+    // Desktop menu click handlers
+    document.querySelectorAll('.menu a, .dropdown-content a').forEach(item => {
+        item.addEventListener('click', handleMenuClick);
+    });
+
+    // Mobile menu click handlers
+    document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a').forEach(item => {
+        item.addEventListener('click', handleMenuClick);
+    });
+
+    // Initial call to set correct text on page load
+    updateNavbarTextOnScroll();
 });
 */
