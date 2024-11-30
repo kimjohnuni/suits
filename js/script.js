@@ -4,14 +4,13 @@
 
 
 /*MOBILE MENU*/
-// Navigation System Class
-// Navigation System Class
 class NavigationSystem {
     constructor() {
         this.state = {
             isMenuOpen: false,
             isDropdownOpen: false,
-            isMobile: window.innerWidth <= 900
+            isMobile: window.innerWidth <= 900,
+            isScrolling: false // Flag to manage scrolling state
         };
 
         this.elements = {
@@ -34,6 +33,7 @@ class NavigationSystem {
         this.setupEventListeners();
         this.setupMobileNav();
         this.setupScrollHandler();
+        adjustPlaceholders(); // Adjust heights on initialization
     }
 
     setupScrollHandler() {
@@ -46,7 +46,6 @@ class NavigationSystem {
 
     updateHeaderTextOnScroll() {
         const scrollPosition = window.scrollY;
-
         const sections = {
             'artist-statement': "ARTIST STATEMENT",
             'busan-section': "BUSAN",
@@ -95,6 +94,7 @@ class NavigationSystem {
         document.addEventListener('click', (e) => {
             if (this.state.isMenuOpen && !this.elements.mobileNav.contains(e.target)) {
                 this.closeMenu();
+                console.log("Menu closed"); // Debugging log
             }
         });
 
@@ -104,141 +104,179 @@ class NavigationSystem {
             if (!this.state.isMobile) {
                 this.closeMenu();
                 this.closeDropdown();
+                console.log("Menu closed on resize"); // Debugging log
             }
+            adjustPlaceholders(); // Adjust heights on resize
         }, 250));
 
-        // Bottom navbar smooth scroll
-        this.elements.bottomNavLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                const href = link.getAttribute('href');
-                if (href.startsWith('#') && href !== '#') {
-                    e.preventDefault();
-                    this.smoothScroll(href);
-                }
-            });
-        });
+        // Smooth scroll for all navigation links
+        [...this.elements.bottomNavLinks, ...this.elements.allNavLinks].forEach(link => {
+           link.addEventListener('click', (e) => {
+               const href = link.getAttribute('href');
+               if (href.startsWith('#') && href !== '#') {
+                   e.preventDefault();
+                   this.smoothScroll(href);
+               }
+           });
+       });
 
-        // Bottom navbar dropdown hover
-        if (this.elements.bottomNavDropdown) {
-            this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
-                this.elements.bottomNavDropdownContent.style.display = 'block';
-            });
+       // Bottom navbar dropdown hover
+       if (this.elements.bottomNavDropdown) {
+           this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
+               this.elements.bottomNavDropdownContent.style.display = 'block';
+           });
 
-            this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
-                this.elements.bottomNavDropdownContent.style.display = 'none';
-            });
-        }
-
-        // Setup smooth scrolling
-        this.setupSmoothScroll();
+           this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
+               this.elements.bottomNavDropdownContent.style.display = 'none';
+           });
+       }
     }
 
     setupMobileNav() {
-        if (this.elements.mobileNav) {
-            this.elements.mobileNav.style.display = 'block';
-            this.elements.mobileNav.style.transform = 'scale(0)';
-            this.elements.mobileNav.style.visibility = 'hidden';
-        }
+       if (this.elements.mobileNav) {
+           this.elements.mobileNav.style.display = 'block';
+           this.elements.mobileNav.style.transform = 'scale(0)';
+           this.elements.mobileNav.style.visibility = 'hidden';
+       }
     }
 
     toggleMenu() {
-        this.state.isMenuOpen ? this.closeMenu() : this.openMenu();
+       if (this.state.isMenuOpen) {
+           console.log("Closing menu"); // Debugging log
+           this.closeMenu();
+       } else {
+           console.log("Opening menu"); // Debugging log
+           this.openMenu();
+       }
     }
 
     openMenu() {
-        this.state.isMenuOpen = true;
-        this.elements.mobileNav.style.visibility = 'visible';
-        this.elements.mobileNav.style.transform = 'scale(1)';
-        this.elements.hamburger.classList.add('active');
-        document.body.style.overflow = 'hidden';
+       this.state.isMenuOpen = true;
+       this.elements.mobileNav.style.visibility = 'visible';
+       this.elements.mobileNav.style.transform = 'scale(1)';
+       this.elements.hamburger.classList.add('active');
+       document.body.style.overflow = 'hidden';
     }
 
     closeMenu() {
-        this.state.isMenuOpen = false;
-        this.elements.mobileNav.style.transform = 'scale(0)';
-        this.elements.hamburger.classList.remove('active');
-        document.body.style.overflow = '';
+       this.state.isMenuOpen = false;
+       this.elements.mobileNav.style.transform = 'scale(0)';
+       this.elements.hamburger.classList.remove('active');
+       document.body.style.overflow = '';
 
-        // Close dropdown when menu closes
-        this.closeDropdown();
+       // Close dropdown when menu closes
+       this.closeDropdown();
 
-        setTimeout(() => {
-            if (!this.state.isMenuOpen) {
-                this.elements.mobileNav.style.visibility = 'hidden';
-            }
-        }, 300);
+       setTimeout(() => {
+           if (!this.state.isMenuOpen) {
+               console.log("Setting mobile nav visibility to hidden"); // Debugging log
+               this.elements.mobileNav.style.visibility = 'hidden';
+           }
+       }, 300);
     }
 
     toggleDropdown() {
-        this.state.isDropdownOpen ? this.closeDropdown() : this.openDropdown();
+       if (this.state.isDropdownOpen) {
+           console.log("Closing dropdown"); // Debugging log
+           this.closeDropdown();
+       } else {
+           console.log("Opening dropdown"); // Debugging log
+           this.openDropdown();
+       }
     }
 
     openDropdown() {
-        this.state.isDropdownOpen = true;
-        this.elements.dropdown.classList.add('active');
+       this.state.isDropdownOpen = true;
+       this.elements.dropdown.classList.add('active');
     }
 
     closeDropdown() {
-        this.state.isDropdownOpen = false;
-        this.elements.dropdown.classList.remove('active');
-    }
-
-    setupSmoothScroll() {
-        this.elements.allNavLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                const href = link.getAttribute('href');
-                if (href.startsWith('#') && href !== '#') {
-                    e.preventDefault();
-                    this.smoothScroll(href);
-                }
-            });
-        });
+       this.state.isDropdownOpen = false;
+       this.elements.dropdown.classList.remove('active');
     }
 
     smoothScroll(targetId) {
         const targetElement = document.querySelector(targetId);
-        if (!targetElement) return;
-
-        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 150;
-        const startPosition = window.pageYOffset;
-        const distance = targetPosition - startPosition;
-        const duration = Math.min(1500, Math.max(300, Math.abs(distance) / 2));
+        if (!targetElement || this.state.isScrolling) return; // Prevent multiple scrolls
 
         // Close menu immediately
         this.closeMenu();
 
-        const animation = (currentTime) => {
-            const timeElapsed = currentTime - startTime;
-            const progress = Math.min(timeElapsed / duration, 1);
+        // Set flag to prevent further scrolling actions until completed
+        this.state.isScrolling = true;
 
-            window.scrollTo(0, startPosition + distance * this.easeInOutCubic(progress));
+        // Wait for all images in the target section to load if they are lazy-loaded
+        const images = targetElement.querySelectorAll('img[loading="lazy"]');
 
-            if (progress < 1) {
-                requestAnimationFrame(animation);
-            }
-        };
+        const imageLoadPromises = Array.from(images).map(img =>
+            new Promise(resolve => img.onload ? resolve() : img.onload = resolve)
+        );
 
-        const startTime = performance.now();
-        requestAnimationFrame(animation);
-    }
+        Promise.all(imageLoadPromises).then(() => {
+            const headerHeight = document.querySelector('.navbar') ?
+                                 document.querySelector('.navbar').offsetHeight : 0;
 
-    easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
+            console.log(`Scrolling to: ${targetId}`); // Debugging log
 
-    debounce(func, wait) {
-        let timeout;
-        return (...args) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
+            // Calculate target position with an additional offset of 150 pixels
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 110;
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth' // Use native smooth scrolling
+          });
+
+          // Reset scrolling flag after a short delay
+          setTimeout(() => {
+              this.state.isScrolling = false;
+          }, 300); // Adjust timeout as necessary based on expected load times.
+      }).catch(error => {
+          console.error("Error loading images:", error);
+          this.state.isScrolling = false; // Ensure flag is reset even on error
+      });
+   }
+
+   debounce(func, wait) {
+      let timeout;
+      return (...args) => {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+   }
 }
+
+// Function to adjust image placeholders based on actual image dimensions
+function adjustPlaceholders() {
+    const imageWrappers = document.querySelectorAll('.image-wrapper');
+
+    imageWrappers.forEach(wrapper => {
+        const img = wrapper.querySelector('img');
+        const placeholder = wrapper.querySelector('.portrait-placeholder');
+
+        // Get the natural (actual) dimensions of the image
+        const naturalWidth = img.naturalWidth;
+        const naturalHeight = img.naturalHeight;
+
+        // Get current width of wrapper
+        const currentWidth = wrapper.clientWidth;
+
+        // Calculate height maintaining the original image's aspect ratio
+        const scaledHeight = (currentWidth * naturalHeight) / naturalWidth;
+
+        // Set the placeholder height
+        placeholder.style.height = `${scaledHeight}px`;
+    });
+}
+
+// Call on load and resize
+window.addEventListener('load', adjustPlaceholders);
+window.addEventListener('resize', adjustPlaceholders);
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    new NavigationSystem();
+   new NavigationSystem();
 });
+
 
 
 
