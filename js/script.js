@@ -33,7 +33,7 @@ class NavigationSystem {
         this.setupEventListeners();
         this.setupMobileNav();
         this.setupScrollHandler();
-        this.state.isMobile ? adjustPlaceholdersMobile() : adjustPlaceholders();
+        this.state.isMobile ? handleImageLoadingMobile() : handleImageLoadingDesktop();
     }
 
     setupScrollHandler() {
@@ -99,8 +99,7 @@ class NavigationSystem {
             this.state.isMobile = window.innerWidth <= 900;
 
             if (wasMobile !== this.state.isMobile) {
-                // Only adjust placeholders if device type changed
-                this.state.isMobile ? adjustPlaceholdersMobile() : adjustPlaceholders();
+                this.state.isMobile ? handleImageLoadingMobile() : handleImageLoadingDesktop();
             }
 
             if (!this.state.isMobile) {
@@ -241,63 +240,62 @@ class NavigationSystem {
 }
 
 // Desktop image loading
-function adjustPlaceholders() {
+function handleImageLoadingDesktop() {
     const imageWrappers = document.querySelectorAll('.image-wrapper');
 
     imageWrappers.forEach(wrapper => {
         const img = wrapper.querySelector('img');
-        const placeholder = wrapper.querySelector('.portrait-placeholder');
+        const spinner = wrapper.querySelector('.loading-spinner');
 
-        if (img && placeholder) {
+        if (img) {
             if (img.complete) {
-                setPlaceholderHeight(img, placeholder);
+                if (spinner) spinner.style.display = 'none';
+                img.classList.add('loaded');
             } else {
-                img.onload = () => setPlaceholderHeight(img, placeholder);
+                if (spinner) spinner.style.display = 'block';
+
+                img.onload = function() {
+                    if (spinner) spinner.style.display = 'none';
+                    img.classList.add('loaded');
+                };
+
+                img.onerror = function() {
+                    console.error('Error loading image:', this.src);
+                    if (spinner) spinner.style.display = 'none';
+                };
             }
         }
     });
 }
 
 // Mobile image loading
-function adjustPlaceholdersMobile() {
+function handleImageLoadingMobile() {
     const imageWrappers = document.querySelectorAll('.image-wrapper');
 
     imageWrappers.forEach(wrapper => {
         const img = wrapper.querySelector('img');
-        const placeholder = wrapper.querySelector('.portrait-placeholder');
+        const spinner = wrapper.querySelector('.loading-spinner');
 
-        if (img && placeholder) {
+        if (img) {
             const tempImage = new Image();
-            tempImage.src = img.src;
+
+            if (spinner) spinner.style.display = 'block';
 
             tempImage.onload = function() {
-                const naturalWidth = this.naturalWidth;
-                const naturalHeight = this.naturalHeight;
-                const currentWidth = wrapper.clientWidth;
-                const scaledHeight = (currentWidth * naturalHeight) / naturalWidth;
-
-                placeholder.style.height = `${scaledHeight}px`;
-
                 img.onload = function() {
-                    const actualScaledHeight = (currentWidth * this.naturalHeight) / this.naturalWidth;
-                    placeholder.style.height = `${actualScaledHeight}px`;
+                    if (spinner) spinner.style.display = 'none';
+                    img.classList.add('loaded');
                 };
             };
 
             tempImage.onerror = function() {
                 console.error('Error loading image:', img.src);
-                placeholder.style.height = '0px';
+                if (spinner) spinner.style.display = 'none';
             };
+
+            tempImage.src = img.src;
         }
     });
-}
-
-function setPlaceholderHeight(img, placeholder) {
-    const naturalWidth = img.naturalWidth;
-    const naturalHeight = img.naturalHeight;
-    const currentWidth = img.parentElement.clientWidth;
-    const scaledHeight = (currentWidth * naturalHeight) / naturalWidth;
-    placeholder.style.height = `${scaledHeight}px`;
 }
 
 // Initialize when DOM is ready
@@ -305,17 +303,18 @@ document.addEventListener('DOMContentLoaded', () => {
     new NavigationSystem();
 });
 
-// Call appropriate adjustPlaceholders function based on device type
+// Call appropriate image loading function based on device type
 window.addEventListener('load', () => {
     const isMobile = window.innerWidth <= 900;
-    isMobile ? adjustPlaceholdersMobile() : adjustPlaceholders();
+    isMobile ? handleImageLoadingMobile() : handleImageLoadingDesktop();
 });
 
 // Handle resize events
 window.addEventListener('resize', () => {
     const isMobile = window.innerWidth <= 900;
-    isMobile ? adjustPlaceholdersMobile() : adjustPlaceholders();
+    isMobile ? handleImageLoadingMobile() : handleImageLoadingDesktop();
 });
+
 
 
 
