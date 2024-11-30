@@ -10,7 +10,7 @@ class NavigationSystem {
             isMenuOpen: false,
             isDropdownOpen: false,
             isMobile: window.innerWidth <= 900,
-            isScrolling: false // Flag to manage scrolling state
+            isScrolling: false
         };
 
         this.elements = {
@@ -33,7 +33,7 @@ class NavigationSystem {
         this.setupEventListeners();
         this.setupMobileNav();
         this.setupScrollHandler();
-        adjustPlaceholders(); // Adjust heights on initialization
+        adjustPlaceholders();
     }
 
     setupScrollHandler() {
@@ -77,175 +77,139 @@ class NavigationSystem {
     }
 
     setupEventListeners() {
-        // Hamburger menu toggle
         this.elements.hamburger?.addEventListener('click', (e) => {
             e.stopPropagation();
             this.toggleMenu();
         });
 
-        // Dropdown toggle
         this.elements.dropdownTrigger?.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             this.toggleDropdown();
         });
 
-        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (this.state.isMenuOpen && !this.elements.mobileNav.contains(e.target)) {
                 this.closeMenu();
-                console.log("Menu closed"); // Debugging log
             }
         });
 
-        // Window resize handler
         window.addEventListener('resize', this.debounce(() => {
             this.state.isMobile = window.innerWidth <= 900;
             if (!this.state.isMobile) {
                 this.closeMenu();
                 this.closeDropdown();
-                console.log("Menu closed on resize"); // Debugging log
             }
-            adjustPlaceholders(); // Adjust heights on resize
+            adjustPlaceholders();
         }, 250));
 
-        // Smooth scroll for all navigation links
         [...this.elements.bottomNavLinks, ...this.elements.allNavLinks].forEach(link => {
-           link.addEventListener('click', (e) => {
-               const href = link.getAttribute('href');
-               if (href.startsWith('#') && href !== '#') {
-                   e.preventDefault();
-                   this.smoothScroll(href);
-               }
-           });
-       });
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#') && href !== '#') {
+                    e.preventDefault();
+                    this.smoothScroll(href);
+                }
+            });
+        });
 
-       // Bottom navbar dropdown hover
-       if (this.elements.bottomNavDropdown) {
-           this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
-               this.elements.bottomNavDropdownContent.style.display = 'block';
-           });
+        if (this.elements.bottomNavDropdown) {
+            this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
+                this.elements.bottomNavDropdownContent.style.display = 'block';
+            });
 
-           this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
-               this.elements.bottomNavDropdownContent.style.display = 'none';
-           });
-       }
+            this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
+                this.elements.bottomNavDropdownContent.style.display = 'none';
+            });
+        }
     }
 
     setupMobileNav() {
-       if (this.elements.mobileNav) {
-           this.elements.mobileNav.style.display = 'block';
-           this.elements.mobileNav.style.transform = 'scale(0)';
-           this.elements.mobileNav.style.visibility = 'hidden';
-       }
+        if (this.elements.mobileNav) {
+            this.elements.mobileNav.style.display = 'block';
+            this.elements.mobileNav.style.transform = 'scale(0)';
+            this.elements.mobileNav.style.visibility = 'hidden';
+        }
     }
 
     toggleMenu() {
-       if (this.state.isMenuOpen) {
-           console.log("Closing menu"); // Debugging log
-           this.closeMenu();
-       } else {
-           console.log("Opening menu"); // Debugging log
-           this.openMenu();
-       }
+        if (this.state.isMenuOpen) {
+            this.closeMenu();
+        } else {
+            this.openMenu();
+        }
     }
 
     openMenu() {
-       this.state.isMenuOpen = true;
-       this.elements.mobileNav.style.visibility = 'visible';
-       this.elements.mobileNav.style.transform = 'scale(1)';
-       this.elements.hamburger.classList.add('active');
-       document.body.style.overflow = 'hidden';
+        this.state.isMenuOpen = true;
+        this.elements.mobileNav.style.visibility = 'visible';
+        this.elements.mobileNav.style.transform = 'scale(1)';
+        this.elements.hamburger.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
 
     closeMenu() {
-       this.state.isMenuOpen = false;
-       this.elements.mobileNav.style.transform = 'scale(0)';
-       this.elements.hamburger.classList.remove('active');
-       document.body.style.overflow = '';
+        this.state.isMenuOpen = false;
+        this.elements.mobileNav.style.transform = 'scale(0)';
+        this.elements.hamburger.classList.remove('active');
+        document.body.style.overflow = '';
+        this.closeDropdown();
 
-       // Close dropdown when menu closes
-       this.closeDropdown();
-
-       setTimeout(() => {
-           if (!this.state.isMenuOpen) {
-               console.log("Setting mobile nav visibility to hidden"); // Debugging log
-               this.elements.mobileNav.style.visibility = 'hidden';
-           }
-       }, 300);
+        setTimeout(() => {
+            if (!this.state.isMenuOpen) {
+                this.elements.mobileNav.style.visibility = 'hidden';
+            }
+        }, 300);
     }
 
     toggleDropdown() {
-       if (this.state.isDropdownOpen) {
-           console.log("Closing dropdown"); // Debugging log
-           this.closeDropdown();
-       } else {
-           console.log("Opening dropdown"); // Debugging log
-           this.openDropdown();
-       }
+        if (this.state.isDropdownOpen) {
+            this.closeDropdown();
+        } else {
+            this.openDropdown();
+        }
     }
 
     openDropdown() {
-       this.state.isDropdownOpen = true;
-       this.elements.dropdown.classList.add('active');
+        this.state.isDropdownOpen = true;
+        this.elements.dropdown.classList.add('active');
     }
 
     closeDropdown() {
-       this.state.isDropdownOpen = false;
-       this.elements.dropdown.classList.remove('active');
+        this.state.isDropdownOpen = false;
+        this.elements.dropdown.classList.remove('active');
     }
 
     smoothScroll(targetId) {
         const targetElement = document.querySelector(targetId);
-        if (!targetElement || this.state.isScrolling) return; // Prevent multiple scrolls
+        if (!targetElement || this.state.isScrolling) return;
 
-        // Close menu immediately
         this.closeMenu();
-
-        // Set flag to prevent further scrolling actions until completed
         this.state.isScrolling = true;
 
-        // Wait for all images in the target section to load if they are lazy-loaded
-        const images = targetElement.querySelectorAll('img[loading="lazy"]');
+        const headerHeight = document.querySelector('.navbar')?.offsetHeight || 0;
+        const offset = 70;  // Changed from 150 to 70
+        const targetPosition = targetElement.offsetTop - headerHeight - offset;
 
-        const imageLoadPromises = Array.from(images).map(img =>
-            new Promise(resolve => img.onload ? resolve() : img.onload = resolve)
-        );
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
 
-        Promise.all(imageLoadPromises).then(() => {
-            const headerHeight = document.querySelector('.navbar') ?
-                                 document.querySelector('.navbar').offsetHeight : 0;
+        setTimeout(() => {
+            this.state.isScrolling = false;
+        }, 300);
+    }
 
-            console.log(`Scrolling to: ${targetId}`); // Debugging log
-
-            // Calculate target position with an additional offset of 150 pixels
-            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 110;
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth' // Use native smooth scrolling
-          });
-
-          // Reset scrolling flag after a short delay
-          setTimeout(() => {
-              this.state.isScrolling = false;
-          }, 300); // Adjust timeout as necessary based on expected load times.
-      }).catch(error => {
-          console.error("Error loading images:", error);
-          this.state.isScrolling = false; // Ensure flag is reset even on error
-      });
-   }
-
-   debounce(func, wait) {
-      let timeout;
-      return (...args) => {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => func.apply(this, args), wait);
-      };
-   }
+    debounce(func, wait) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
 }
 
-// Function to adjust image placeholders based on actual image dimensions
 function adjustPlaceholders() {
     const imageWrappers = document.querySelectorAll('.image-wrapper');
 
@@ -253,30 +217,33 @@ function adjustPlaceholders() {
         const img = wrapper.querySelector('img');
         const placeholder = wrapper.querySelector('.portrait-placeholder');
 
-        // Get the natural (actual) dimensions of the image
-        const naturalWidth = img.naturalWidth;
-        const naturalHeight = img.naturalHeight;
+        if (img && placeholder) {
+            setPlaceholderHeight(img, placeholder);
 
-        // Get current width of wrapper
-        const currentWidth = wrapper.clientWidth;
-
-        // Calculate height maintaining the original image's aspect ratio
-        const scaledHeight = (currentWidth * naturalHeight) / naturalWidth;
-
-        // Set the placeholder height
-        placeholder.style.height = `${scaledHeight}px`;
+            // Update placeholder height when image loads
+            if (!img.complete) {
+                img.onload = () => setPlaceholderHeight(img, placeholder);
+            }
+        }
     });
 }
 
-// Call on load and resize
-window.addEventListener('load', adjustPlaceholders);
-window.addEventListener('resize', adjustPlaceholders);
+function setPlaceholderHeight(img, placeholder) {
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
+    const currentWidth = img.parentElement.clientWidth;
+    const scaledHeight = (currentWidth * naturalHeight) / naturalWidth;
+    placeholder.style.height = `${scaledHeight}px`;
+}
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-   new NavigationSystem();
+    new NavigationSystem();
 });
 
+// Call adjustPlaceholders on load and resize
+window.addEventListener('load', adjustPlaceholders);
+window.addEventListener('resize', adjustPlaceholders);
 
 
 
