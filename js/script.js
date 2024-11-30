@@ -191,10 +191,17 @@ class NavigationSystem {
         const offset = 70;
         const targetPosition = targetElement.offsetTop - headerHeight - offset;
 
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-        });
+        // Different scroll behavior for mobile and desktop
+        if (window.innerWidth <= 900) {
+            window.scrollTo({
+                top: targetPosition
+            });
+        } else {
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        }
 
         setTimeout(() => {
             this.state.isScrolling = false;
