@@ -1407,19 +1407,28 @@ video {
         width: calc(100% - 40px);
         padding: 50px 20px;
     }
+
+
+
+    /*PORTRAITS*/
     .image-flex img {
-            width: calc(100% / 2);
-        }
-
-        .image-wrapper {
-        width: calc(100% / 2);
-        background: #ededed;
-    }
-
-    .image-wrapper img {
-        width: 100%;
-        height: auto;
-    }
+       width: calc(100% / 2);
+   }
+   .image-wrapper {
+       width: calc(100% / 2);
+       background: #ededed;
+       position: relative; /* Add this */
+   }
+   .image-wrapper img {
+       width: 100%;
+       height: auto;
+   }
+   .loading-spinner {
+       position: absolute;
+       left: 50%;
+       top: 50%;
+       transform: translate(-50%, -50%);
+   }
 
 
 
@@ -1492,23 +1501,31 @@ video {
         font-size: 32px;
         margin: 0 auto 20px;
     }
+
+
     .image-flex img {
             width: 100%;
         }
-        .image-container {
-        width: 100%;
-        padding-bottom: 100%;
-    }
-    .image-wrapper {
-        width: 100%;
-        background: #ededed;
-    }
+        .image-wrapper {
+            width: 100%;
+            background: #ededed;
+            position: relative; /* Add this */
+        }
+        .image-wrapper img {
+            width: 100%;
+            height: auto;
+        }
+        .loading-spinner {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    .image-wrapper img {
-        width: 100%;
-        height: auto;
-    }
 
+
+
+/*Mobile Menu*/
     .mobile-nav__wrapper {
         padding: 1rem;
     }
