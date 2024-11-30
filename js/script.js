@@ -10,7 +10,9 @@ class NavigationSystem {
             isMenuOpen: false,
             isDropdownOpen: false,
             isMobile: window.innerWidth <= 900,
-            isScrolling: false
+            isScrolling: false,
+            lastScrollTop: 0,
+            bottomNavVisible: true
         };
 
         this.elements = {
@@ -23,7 +25,9 @@ class NavigationSystem {
             bottomNavLinks: document.querySelectorAll('.bottom-navbar .menu a'),
             bottomNavDropdown: document.querySelector('.bottom-navbar .dropdown'),
             bottomNavDropdownContent: document.querySelector('.bottom-navbar .dropdown-content'),
-            headerText: document.querySelector('#navbar-text')
+            headerText: document.querySelector('#navbar-text'),
+            mobileBottomLinks: document.querySelectorAll('.mobile-nav__bottom-buttons a'),
+            bottomNavbar: document.querySelector('.bottom-navbar')
         };
 
         this.init();
@@ -33,16 +37,44 @@ class NavigationSystem {
         this.setupEventListeners();
         this.setupMobileNav();
         this.setupScrollHandler();
-        this.state.isMobile ? handleImageLoadingMobile() : handleImageLoadingDesktop();
+        // Ensure bottom navbar is visible on load
+        if (this.elements.bottomNavbar) {
+            this.elements.bottomNavbar.style.bottom = '20';
+        }
     }
 
     setupScrollHandler() {
         window.addEventListener('scroll', () => {
             requestAnimationFrame(() => {
                 this.updateHeaderTextOnScroll();
+                this.handleBottomNavVisibility();
             });
         });
     }
+
+    handleBottomNavVisibility() {
+      if (!this.elements.bottomNavbar) return;
+
+      const currentScrollPos = window.pageYOffset;
+      const scrollingDown = currentScrollPos > this.state.lastScrollTop;
+      const scrollingUp = currentScrollPos < this.state.lastScrollTop;
+
+      // Add a minimum scroll threshold before hiding/showing
+      const scrollThreshold = 5;
+
+      if (currentScrollPos <= 0) {
+          // At the top of the page
+          this.elements.bottomNavbar.style.bottom = '20px';
+      } else if (scrollingDown && Math.abs(currentScrollPos - this.state.lastScrollTop) > scrollThreshold) {
+          // Scrolling down
+          this.elements.bottomNavbar.style.bottom = '-100px';
+      } else if (scrollingUp && Math.abs(currentScrollPos - this.state.lastScrollTop) > scrollThreshold) {
+          // Scrolling up
+          this.elements.bottomNavbar.style.bottom = '20px';
+      }
+
+      this.state.lastScrollTop = currentScrollPos;
+  }
 
     updateHeaderTextOnScroll() {
         const scrollPosition = window.scrollY;
@@ -95,13 +127,7 @@ class NavigationSystem {
         });
 
         window.addEventListener('resize', this.debounce(() => {
-            const wasMobile = this.state.isMobile;
             this.state.isMobile = window.innerWidth <= 900;
-
-            if (wasMobile !== this.state.isMobile) {
-                this.state.isMobile ? handleImageLoadingMobile() : handleImageLoadingDesktop();
-            }
-
             if (!this.state.isMobile) {
                 this.closeMenu();
                 this.closeDropdown();
@@ -114,6 +140,22 @@ class NavigationSystem {
                 if (href.startsWith('#') && href !== '#') {
                     e.preventDefault();
                     this.smoothScroll(href);
+                    if (this.state.isMenuOpen) {
+                        this.closeMenu();
+                    }
+                }
+            });
+        });
+
+        this.elements.mobileBottomLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    this.smoothScroll(href);
+                    if (this.state.isMenuOpen) {
+                        this.closeMenu();
+                    }
                 }
             });
         });
@@ -189,7 +231,6 @@ class NavigationSystem {
         const targetElement = document.querySelector(targetId);
         if (!targetElement || this.state.isScrolling) return;
 
-        this.closeMenu();
         this.state.isScrolling = true;
 
         const headerHeight = document.querySelector('.navbar')?.offsetHeight || 0;
@@ -199,7 +240,6 @@ class NavigationSystem {
         const distance = targetPosition - startPosition;
 
         if (this.state.isMobile) {
-            // Simpler scrolling for mobile
             const duration = 500;
             const start = performance.now();
 
@@ -218,7 +258,6 @@ class NavigationSystem {
 
             requestAnimationFrame(scroll);
         } else {
-            // Desktop scrolling
             window.scrollTo({
                 top: targetPosition,
                 behavior: 'smooth'
@@ -239,80 +278,8 @@ class NavigationSystem {
     }
 }
 
-// Desktop image loading
-function handleImageLoadingDesktop() {
-    const imageWrappers = document.querySelectorAll('.image-wrapper');
-
-    imageWrappers.forEach(wrapper => {
-        const img = wrapper.querySelector('img');
-        const spinner = wrapper.querySelector('.loading-spinner');
-
-        if (img) {
-            if (img.complete) {
-                if (spinner) spinner.style.display = 'none';
-                img.classList.add('loaded');
-            } else {
-                if (spinner) spinner.style.display = 'block';
-
-                img.onload = function() {
-                    if (spinner) spinner.style.display = 'none';
-                    img.classList.add('loaded');
-                };
-
-                img.onerror = function() {
-                    console.error('Error loading image:', this.src);
-                    if (spinner) spinner.style.display = 'none';
-                };
-            }
-        }
-    });
-}
-
-// Mobile image loading
-function handleImageLoadingMobile() {
-    const imageWrappers = document.querySelectorAll('.image-wrapper');
-
-    imageWrappers.forEach(wrapper => {
-        const img = wrapper.querySelector('img');
-        const spinner = wrapper.querySelector('.loading-spinner');
-
-        if (img) {
-            const tempImage = new Image();
-
-            if (spinner) spinner.style.display = 'block';
-
-            tempImage.onload = function() {
-                img.onload = function() {
-                    if (spinner) spinner.style.display = 'none';
-                    img.classList.add('loaded');
-                };
-            };
-
-            tempImage.onerror = function() {
-                console.error('Error loading image:', img.src);
-                if (spinner) spinner.style.display = 'none';
-            };
-
-            tempImage.src = img.src;
-        }
-    });
-}
-
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new NavigationSystem();
-});
-
-// Call appropriate image loading function based on device type
-window.addEventListener('load', () => {
-    const isMobile = window.innerWidth <= 900;
-    isMobile ? handleImageLoadingMobile() : handleImageLoadingDesktop();
-});
-
-// Handle resize events
-window.addEventListener('resize', () => {
-    const isMobile = window.innerWidth <= 900;
-    isMobile ? handleImageLoadingMobile() : handleImageLoadingDesktop();
 });
 
 
@@ -424,36 +391,76 @@ document.addEventListener('DOMContentLoaded', function() {
     let startY;
     let currentY;
 
-    const exhibitionContent = {
-        'pwk': {
-            image: 'img/exhibition/pwk.jpg'
-        },
-        'artbusan': {
-            image: 'img/exhibition/artbusan.jpg'
-        },
-        'agnesb': {
-            image: 'img/exhibition/agnesb.jpg'
-        },
-        'factory': {
-            image: 'img/exhibition/factory.jpg'
-        },
-        'tngt': {
-            image: 'img/exhibition/tngt.jpg'
-        }
-    };
-
     exhibitionItems.forEach(item => {
         item.addEventListener('click', function() {
-            const exhibitionId = this.getAttribute('data-exhibition-id');
-            const content = exhibitionContent[exhibitionId];
+            const modalWrapper = modal.querySelector('.exhibition-modal-content-wrapper');
+            const title = this.dataset.title;
+            const description = this.dataset.description;
 
-            const modalImg = modal.querySelector('.exhibition-modal-image img');
-            modalImg.src = content.image;
+            modalWrapper.innerHTML = `
+                <div class="pwk-content-text">
+                    <h2>${title}</h2>
+                    <p>${description}</p>
+                </div>
+                <div class="pwk-content-images">
+                    ${generateImageContent(this)}
+                </div>
+            `;
 
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
     });
+
+    function generateImageContent(element) {
+        const exhibitionId = element.dataset.exhibitionId;
+
+        if (exhibitionId === 'pwk') {
+            return `
+                <div class="pwk-image-pair">
+                    <img src="${element.dataset.image1}" alt="PowWow Korea 2019">
+                    <img src="${element.dataset.image2}" alt="PowWow Korea 2019">
+                </div>
+                <div class="pwk-image-stack">
+                    <img src="${element.dataset.image3}" alt="PowWow Korea 2019">
+                    <img src="${element.dataset.image4}" alt="PowWow Korea 2019">
+                    <img src="${element.dataset.image5}" alt="PowWow Korea 2019">
+                </div>
+            `;
+        } else if (exhibitionId === 'artbusan') {
+            return `
+                <img src="${element.dataset.image1}" alt="Art Busan 2019">
+                <div class="pwk-image-pair">
+                    <img src="${element.dataset.image2}" alt="Art Busan 2019">
+                    <img src="${element.dataset.image3}" alt="Art Busan 2019">
+                </div>
+                ${Array.from({length: 11}, (_, i) =>
+                    `<img src="${element.dataset['image' + (i + 4)]}" alt="Art Busan 2019">`
+                ).join('')}
+            `;
+        } else if (exhibitionId === 'agnesb') {
+            return `
+                <div class="pwk-image-pair">
+                    <img src="${element.dataset.image1}" alt="Agnes b Exhibition">
+                    <img src="${element.dataset.image2}" alt="Agnes b Exhibition">
+                </div>
+                ${Array.from({length: 5}, (_, i) =>
+                    `<img src="${element.dataset['image' + (i + 3)]}" alt="Agnes b Exhibition">`
+                ).join('')}
+            `;
+        } else if (exhibitionId === 'factory') {
+            return `
+                ${Array.from({length: 15}, (_, i) =>
+                    `<img src="${element.dataset['image' + (i + 1)]}" alt="Factory Exhibition">`
+                ).join('')}
+                <div class="pwk-image-pair">
+                    <img src="${element.dataset.image16}" alt="Factory Exhibition">
+                    <img src="${element.dataset.image17}" alt="Factory Exhibition">
+                </div>
+                <img src="${element.dataset.image18}" alt="Factory Exhibition">
+            `;
+        }
+    }
 
     // Close modal with button
     closeBtn.addEventListener('click', closeModal);
