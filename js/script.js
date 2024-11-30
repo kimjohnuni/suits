@@ -10,9 +10,7 @@ class NavigationSystem {
             isMenuOpen: false,
             isDropdownOpen: false,
             isMobile: window.innerWidth <= 900,
-            isScrolling: false,
-            lastScrollTop: 0,
-            bottomNavVisible: true
+            isScrolling: false
         };
 
         this.elements = {
@@ -26,8 +24,7 @@ class NavigationSystem {
             bottomNavDropdown: document.querySelector('.bottom-navbar .dropdown'),
             bottomNavDropdownContent: document.querySelector('.bottom-navbar .dropdown-content'),
             headerText: document.querySelector('#navbar-text'),
-            mobileBottomLinks: document.querySelectorAll('.mobile-nav__bottom-buttons a'),
-            bottomNavbar: document.querySelector('.bottom-navbar')
+            mobileBottomLinks: document.querySelectorAll('.mobile-nav__bottom-buttons a')
         };
 
         this.init();
@@ -37,44 +34,15 @@ class NavigationSystem {
         this.setupEventListeners();
         this.setupMobileNav();
         this.setupScrollHandler();
-        // Ensure bottom navbar is visible on load
-        if (this.elements.bottomNavbar) {
-            this.elements.bottomNavbar.style.bottom = '20';
-        }
     }
 
     setupScrollHandler() {
         window.addEventListener('scroll', () => {
             requestAnimationFrame(() => {
                 this.updateHeaderTextOnScroll();
-                this.handleBottomNavVisibility();
             });
         });
     }
-
-    handleBottomNavVisibility() {
-      if (!this.elements.bottomNavbar) return;
-
-      const currentScrollPos = window.pageYOffset;
-      const scrollingDown = currentScrollPos > this.state.lastScrollTop;
-      const scrollingUp = currentScrollPos < this.state.lastScrollTop;
-
-      // Add a minimum scroll threshold before hiding/showing
-      const scrollThreshold = 5;
-
-      if (currentScrollPos <= 0) {
-          // At the top of the page
-          this.elements.bottomNavbar.style.bottom = '20px';
-      } else if (scrollingDown && Math.abs(currentScrollPos - this.state.lastScrollTop) > scrollThreshold) {
-          // Scrolling down
-          this.elements.bottomNavbar.style.bottom = '-100px';
-      } else if (scrollingUp && Math.abs(currentScrollPos - this.state.lastScrollTop) > scrollThreshold) {
-          // Scrolling up
-          this.elements.bottomNavbar.style.bottom = '20px';
-      }
-
-      this.state.lastScrollTop = currentScrollPos;
-  }
 
     updateHeaderTextOnScroll() {
         const scrollPosition = window.scrollY;
