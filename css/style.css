@@ -5,6 +5,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: auto !important; /* Prevents conflicts with custom scroll */
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -225,7 +229,7 @@ video {
     -webkit-backdrop-filter: blur(6px);
     border-radius: 10px;
     box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    overflow: hidden;
+
     z-index: 1001;
     transition: opacity 0.3s, visibility 0.3s;
     pointer-events: none;
@@ -374,16 +378,7 @@ video {
 
 
 
-/* ARTIST STATEMENT */
-#artist-statement {
-    scroll-margin-top: 10px;
-}
 
-.main-logo, .artist-statement-logo, .busan-logo, .hongkong-logo,
-.iceland-logo, .myanmar-logo, .peru-logo, .manila-logo,
-.seoul-logo, .singapore-logo, .tibet-logo {
-    opacity: 0;
-}
 
 .busan-portraits,
 .hongkong-portraits,
@@ -394,7 +389,7 @@ video {
 .seoul-portraits,
 .singapore-portraits,
 .tibet-portraits {
-    scroll-margin-top: 80px; /* Adjust this value based on your needs */
+    scroll-margin-top: 150px;  /* Adjust this value based on your needs */
 }
 
 .statement-container {
@@ -488,6 +483,14 @@ video {
 
 
 /*PORTRAITS*/
+.portrait-placeholder {
+    background-color: lightgrey; /* Placeholder color */
+    position: relative;
+    width: 100%; /* Full width of the wrapper */
+    display: block;
+    /* Initial height will be set dynamically via JavaScript */
+}
+
 .image-flex {
     display: flex;
     flex-wrap: wrap;
@@ -958,7 +961,7 @@ video {
     background-color: white;
     padding: 40px;
     padding-bottom: 90px;
-    width: 430px;
+    width: 380px;
     margin-left: 10%;
 }
 
@@ -989,7 +992,7 @@ video {
 }
 
 .contact-input-box {
-    width: 350px;
+    width: 300px;
     height: 40px;
     border: none;
     background-color: transparent;
@@ -1011,7 +1014,7 @@ video {
 }
 
 .contact-input-box.focused + .contact-indicator {
-    width: 350px;
+    width: 300px;
 }
 
 .contact-input-box.focused {
@@ -1044,7 +1047,7 @@ video {
 }
 
 .contact-message-box {
-    width: 350px;
+    width: 300px;
     height: 250px;
     border: none;
     background-color: transparent;
@@ -1068,7 +1071,7 @@ video {
 }
 
 .contact-message-box.focused + .contact-message-indicator {
-    width: 350px;
+    width: 300px;
 }
 
 .contact-message-box.focused {
@@ -1171,49 +1174,11 @@ video {
         transition: all 0.3s ease;
     }
 
-    .logo-container {
-        position: absolute;
-        left: 0;
-        transform: none;
-        height: 50px;
-        width: 100%;
-        overflow: hidden;
-        margin-top: 15px;
-    }
 
-    .logo-container, .logo {
-    -webkit-transform: translate3d(0,0,0);
-    transform: translate3d(0,0,0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
 
-.logo {
-        position: absolute;
-        left: 20px;
-        transform: none;
-        font-size: 24px !important;
-        text-align: left;
-        width: auto;
-    }
 
-    .main-logo, .artist-statement-logo {
-            left: 20px;
-            transform: none;
-            font-size: 24px !important; /* Added !important to ensure override */
-        }
 
-        .main-logo {
-            transform: translateY(0);
-        }
 
-        .artist-statement-logo {
-            transform: translateY(100%);
-        }
-
-    .logo.section-change {
-        transform: translateX(-100%);
-    }
 
     .social-icons {
         font-size: 30px;
@@ -1358,10 +1323,10 @@ video {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    margin-top:20px;
     background: none;
     box-shadow: none;
     max-height: 0;
-    overflow: hidden;
     transition: max-height 0.3s ease-out;
     opacity: 0;
     padding-bottom: env(safe-area-inset-bottom); /* Added this line */
@@ -1493,7 +1458,9 @@ video {
 @media screen and (max-width: 576px) {
     .navbar h1 {
         font-size: 22px;
+        margin-top:5px;
     }
+
 
     .social-icons {
         font-size: 30px;
@@ -1622,6 +1589,20 @@ margin-bottom:60px;
 
     .exhibition-gallery {
         padding: 0 20px; /* Adjusted padding for mobile */
+    }
+
+    /* CONTACT*/
+
+    .contact-wrapper img{
+      display:none;
+    }
+
+    .contact-fields-wrapper {
+      margin-left:0;
+    }
+
+    .contact-fields-wrapper {
+      padding-top:0;
     }
 
 }
