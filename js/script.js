@@ -188,7 +188,7 @@ class NavigationSystem {
         this.state.isScrolling = true;
 
         const headerHeight = document.querySelector('.navbar')?.offsetHeight || 0;
-        const offset = 70;  // Changed from 150 to 70
+        const offset = 70;
         const targetPosition = targetElement.offsetTop - headerHeight - offset;
 
         window.scrollTo({
@@ -218,22 +218,32 @@ function adjustPlaceholders() {
         const placeholder = wrapper.querySelector('.portrait-placeholder');
 
         if (img && placeholder) {
-            setPlaceholderHeight(img, placeholder);
+            // Create a new Image object to ensure dimensions are loaded
+            const tempImage = new Image();
+            tempImage.src = img.src;
 
-            // Update placeholder height when image loads
-            if (!img.complete) {
-                img.onload = () => setPlaceholderHeight(img, placeholder);
-            }
+            tempImage.onload = function() {
+                const naturalWidth = this.naturalWidth;
+                const naturalHeight = this.naturalHeight;
+                const currentWidth = wrapper.clientWidth;
+                const scaledHeight = (currentWidth * naturalHeight) / naturalWidth;
+
+                placeholder.style.height = `${scaledHeight}px`;
+
+                // Update actual image dimensions once loaded
+                img.onload = function() {
+                    const actualScaledHeight = (currentWidth * this.naturalHeight) / this.naturalWidth;
+                    placeholder.style.height = `${actualScaledHeight}px`;
+                };
+            };
+
+            // Handle loading errors
+            tempImage.onerror = function() {
+                console.error('Error loading image:', img.src);
+                placeholder.style.height = '0px';
+            };
         }
     });
-}
-
-function setPlaceholderHeight(img, placeholder) {
-    const naturalWidth = img.naturalWidth;
-    const naturalHeight = img.naturalHeight;
-    const currentWidth = img.parentElement.clientWidth;
-    const scaledHeight = (currentWidth * naturalHeight) / naturalWidth;
-    placeholder.style.height = `${scaledHeight}px`;
 }
 
 // Initialize when DOM is ready
