@@ -456,7 +456,7 @@ video {
   margin-bottom:20px;
 }
 .artist-statement-links {
-    margin-bottom: 200px; /* Increase this value for more white space at the bottom */
+    margin-bottom: 100px; /* Increase this value for more white space at the bottom */
 }
 
 .main-logo,
@@ -569,14 +569,15 @@ video {
 
 .flag-image {
     display: flex;
-    margin-top:80px;
+    margin-top:50px;
     justify-content: center;
     align-items: center;
-    height: 100px;  /* You can adjust the height of the container */
+    height: 200px;  /* You can adjust the height of the container */
 }
 
 .flag-image img {
-    width: 50px;
+  margin-top:30px;
+    width: 100px;
     height: auto;  /* Optional: keeps the aspect ratio of the image */
 }
 
@@ -948,6 +949,21 @@ video {
     display: inline-block;
 }
 
+.pull-down-indicator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 4px;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    margin-top: 12px;
+    z-index: 1004;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
 
 
 
@@ -1011,6 +1027,74 @@ video {
 
 .pwk-image-stack img {
   width:
+}
+
+
+
+
+
+.exhibition-modal-placeholder {
+    position: relative;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.exhibition-modal-placeholder::before {
+    content: '';
+    display: block;
+    padding-top: 66.67%; /* For 3:2 aspect ratio, adjust based on your images */
+}
+
+.modal-spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.modal-spinner-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    display: none;
+}
+
+.modal-spinner {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  position: relative;
+}
+.modal-spinner::after,
+.modal-spinner::before {
+  content: '';
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #FFF;
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: animloader 2s linear infinite;
+}
+.modal-spinner::after {
+  animation-delay: 1s;
+}
+
+@keyframes animloader {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
 }
 
 
@@ -1709,11 +1793,14 @@ margin-bottom:60px;
 
     .exhibition-modal-content {
        overflow-y: auto;
+       position: relative;
+    overscroll-behavior-y: contain;
    }
 
    .exhibition-modal-content-wrapper {
        display: block;
-       padding: 50px 20px 50px 20px;
+       padding: 60px 20px 50px 20px;
+       overscroll-behavior-y: contain;
    }
 
    .pwk-content-text {
