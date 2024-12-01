@@ -202,7 +202,7 @@ class NavigationSystem {
         this.state.isScrolling = true;
 
         const headerHeight = document.querySelector('.navbar')?.offsetHeight || 0;
-        const offset = 70;
+        const offset = 110;
         const targetPosition = targetElement.offsetTop - headerHeight - offset;
         const startPosition = window.pageYOffset;
         const distance = targetPosition - startPosition;
@@ -358,6 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const exhibitionItems = document.querySelectorAll('.exhibition-item .image-container');
     let startY;
     let currentY;
+    let isDragging = false;
 
     exhibitionItems.forEach(item => {
         item.addEventListener('click', function() {
@@ -436,29 +437,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle touch events for pull-down to close
     modalContent.addEventListener('touchstart', e => {
         startY = e.touches[0].clientY;
+        isDragging = false;
     });
 
     modalContent.addEventListener('touchmove', e => {
-        if (modalContent.scrollTop === 0) {
-            currentY = e.touches[0].clientY;
-            const diff = currentY - startY;
+        currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+        const scrollTop = modalContent.scrollTop;
 
-            if (diff > 0) {
-                e.preventDefault();
-                modalContent.style.transform = `translateY(${diff}px)`;
-            }
+        // Only allow pull-down when at the top
+        if (scrollTop === 0 && diff > 0) {
+            isDragging = true;
+            e.preventDefault();
+            modalContent.style.transform = `translateY(${Math.min(diff * 0.5, 150)}px)`;
         }
     });
 
     modalContent.addEventListener('touchend', e => {
-        if (currentY && currentY - startY > 100) {
-            closeModal();
-        } else {
-            modalContent.style.transform = '';
+        if (isDragging) {
+            const diff = currentY - startY;
+            if (diff > 100) {
+                closeModal();
+            } else {
+                modalContent.style.transform = '';
+            }
         }
+        isDragging = false;
         startY = null;
         currentY = null;
     });
+
+    // Prevent default pull-to-refresh behavior
+    document.body.addEventListener('touchmove', function(e) {
+        if (modal.classList.contains('active')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 
     function closeModal() {
         modal.classList.add('closing');
@@ -470,7 +484,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 
 
 
