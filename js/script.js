@@ -1,27 +1,33 @@
-//VIDEO Preloader
 window.onload = function() {
-        const video = document.querySelector('.background-video');
-        const preloader = document.querySelector('.video-preloader');
+    const video = document.querySelector('.background-video');
+    const preloader = document.querySelector('.video-preloader');
 
-        // Check if video has loaded
+    // Force the preloader to show initially
+    preloader.style.display = 'block';
+    video.style.opacity = '0';
+
+    // Add a minimum display time for the preloader
+    setTimeout(() => {
         video.oncanplaythrough = function() {
             // Fade in the video
-            video.style.opacity = 1;
+            video.style.opacity = '1';
 
-            // Hide the preloader
-            preloader.style.display = 'none';
+            // Add a slight delay before hiding the preloader
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
         };
+    }, 1000); // Minimum 1 second display time
 
-        // Optionally, in case the video fails to load
-        video.onerror = function() {
-            preloader.innerHTML = "Video failed to load"; // You can customize this
-        };
+    video.onerror = function() {
+        preloader.innerHTML = "Video failed to load";
     };
+};
 
 
 
 
-    
+
 
 
 
