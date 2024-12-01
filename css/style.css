@@ -85,12 +85,7 @@ font-family: 'Rockwell', serif;
 }
 
 /* Video Background */
-.video-container {
-    position: relative;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-}
+
 
 video {
     position: absolute;
@@ -103,18 +98,64 @@ video {
     height: auto;
     z-index: -1;
 }
+/* Video container */
+.video-container {
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
 
+/* Preloader Styles */
+.video-preloader {
+    width: 200px;
+    height: 200px;
+    background-image: url('frame1.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: frameAnimation 2s steps(1) infinite;
+    z-index: 1;
+}
+
+/* Preloader frame animation */
+@keyframes frameAnimation {
+    0% { background-image: url('img/preloader/frame1.svg'); }
+    12.5% { background-image: url('img/preloader/frame2.svg'); }
+    25% { background-image: url('img/preloader/frame3.svg'); }
+    37.5% { background-image: url('img/preloader/frame4.svg'); }
+    50% { background-image: url('img/preloader/frame5.svg'); }
+    62.5% { background-image: url('img/preloader/frame6.svg'); }
+    75% { background-image: url('img/preloader/frame7.svg'); }
+    87.5% { background-image: url('img/preloader/frame8.svg'); }
+    100% { background-image: url('img/preloader/frame1.svg'); }
+}
+
+/* Video Styles */
 .background-video {
     position: absolute;
-    right: 0;
-    bottom: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     min-width: 100%;
     min-height: 100%;
     width: auto;
     height: auto;
     object-fit: cover;
     z-index: -1;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 1s ease-in-out; /* Fade-in transition */
 }
+
+
+
+
+
+
 
 /* Bottom Navigation */
 .bottom-navbar {
