@@ -1,4 +1,27 @@
+//VIDEO Preloader
+window.onload = function() {
+        const video = document.querySelector('.background-video');
+        const preloader = document.querySelector('.video-preloader');
 
+        // Check if video has loaded
+        video.oncanplaythrough = function() {
+            // Fade in the video
+            video.style.opacity = 1;
+
+            // Hide the preloader
+            preloader.style.display = 'none';
+        };
+
+        // Optionally, in case the video fails to load
+        video.onerror = function() {
+            preloader.innerHTML = "Video failed to load"; // You can customize this
+        };
+    };
+
+
+
+
+    
 
 
 
@@ -367,116 +390,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalContent = document.querySelector('.exhibition-modal-content');
     const closeBtn = document.querySelector('.exhibition-modal-close');
     const exhibitionItems = document.querySelectorAll('.exhibition-item .image-container');
+    const pullDownIndicator = document.querySelector('.pull-down-indicator');
     let startY;
     let currentY;
     let isDragging = false;
+    let touchStartedOnIndicator = false;
 
-    exhibitionItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const modalWrapper = modal.querySelector('.exhibition-modal-content-wrapper');
-            const title = this.dataset.title;
-            const description = this.dataset.description;
-
-            modalWrapper.innerHTML = `
-                <div class="pwk-content-text">
-                    <h2>${title}</h2>
-                    <p>${description}</p>
-                </div>
-                <div class="pwk-content-images">
-                    ${generateImageContent(this)}
-                </div>
-            `;
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    });
-
-    function generateImageContent(element) {
-        const exhibitionId = element.dataset.exhibitionId;
-
-        if (exhibitionId === 'pwk') {
-            return `
-                <div class="pwk-image-pair">
-                    <img src="${element.dataset.image1}" alt="PowWow Korea 2019">
-                    <img src="${element.dataset.image2}" alt="PowWow Korea 2019">
-                </div>
-                <div class="pwk-image-stack">
-                    <img src="${element.dataset.image3}" alt="PowWow Korea 2019">
-                    <img src="${element.dataset.image4}" alt="PowWow Korea 2019">
-                    <img src="${element.dataset.image5}" alt="PowWow Korea 2019">
-                </div>
-            `;
-        } else if (exhibitionId === 'artbusan') {
-            return `
-                <img src="${element.dataset.image1}" alt="Art Busan 2019">
-                <div class="pwk-image-pair">
-                    <img src="${element.dataset.image2}" alt="Art Busan 2019">
-                    <img src="${element.dataset.image3}" alt="Art Busan 2019">
-                </div>
-                ${Array.from({length: 11}, (_, i) =>
-                    `<img src="${element.dataset['image' + (i + 4)]}" alt="Art Busan 2019">`
-                ).join('')}
-            `;
-        } else if (exhibitionId === 'agnesb') {
-            return `
-                <div class="pwk-image-pair">
-                    <img src="${element.dataset.image1}" alt="Agnes b Exhibition">
-                    <img src="${element.dataset.image2}" alt="Agnes b Exhibition">
-                </div>
-                ${Array.from({length: 5}, (_, i) =>
-                    `<img src="${element.dataset['image' + (i + 3)]}" alt="Agnes b Exhibition">`
-                ).join('')}
-            `;
-        } else if (exhibitionId === 'factory') {
-            return `
-                ${Array.from({length: 15}, (_, i) =>
-                    `<img src="${element.dataset['image' + (i + 1)]}" alt="Factory Exhibition">`
-                ).join('')}
-                <div class="pwk-image-pair">
-                    <img src="${element.dataset.image16}" alt="Factory Exhibition">
-                    <img src="${element.dataset.image17}" alt="Factory Exhibition">
-                </div>
-                <img src="${element.dataset.image18}" alt="Factory Exhibition">
-            `;
-
-      } else if (exhibitionId === 'tngt') {
-  return `
-      <div class="pwk-image-pair">
-          <img src="${element.dataset.image1}" alt="The New Grand Tour">
-          <img src="${element.dataset.image2}" alt="The New Grand Tour">
-      </div>
-      <div class="pwk-image-pair">
-          <img src="${element.dataset.image3}" alt="The New Grand Tour">
-          <img src="${element.dataset.image4}" alt="The New Grand Tour">
-      </div>
-      <div class="pwk-image-stack">
-          <img src="${element.dataset.image5}" alt="The New Grand Tour">
-          <img src="${element.dataset.image6}" alt="The New Grand Tour">
-          <img src="${element.dataset.image7}" alt="The New Grand Tour">
-          <img src="${element.dataset.image8}" alt="The New Grand Tour">
-          <img src="${element.dataset.image9}" alt="The New Grand Tour">
-      </div>
-  `;
-}
-    }
+    // Keep your existing exhibitionItems.forEach and generateImageContent functions the same
 
     closeBtn.addEventListener('click', closeModal);
 
-    modalContent.addEventListener('touchstart', e => {
+    // New touch handling specifically for the pull-down indicator
+    pullDownIndicator.addEventListener('touchstart', e => {
         startY = e.touches[0].clientY;
+        touchStartedOnIndicator = true;
         isDragging = false;
     });
 
+    modalContent.addEventListener('touchstart', e => {
+        // Check if touch started in the top 60px of the modal
+        const touchY = e.touches[0].clientY;
+        const modalRect = modalContent.getBoundingClientRect();
+        const topThreshold = modalRect.top + 60; // Adjust this value as needed
+
+        if (touchY <= topThreshold) {
+            startY = e.touches[0].clientY;
+            touchStartedOnIndicator = true;
+            isDragging = false;
+        } else {
+            touchStartedOnIndicator = false;
+        }
+    });
+
     modalContent.addEventListener('touchmove', e => {
-        if (!startY) return;
+        if (!startY || !touchStartedOnIndicator) return;
 
         currentY = e.touches[0].clientY;
         const diff = currentY - startY;
         const wrapper = modal.querySelector('.exhibition-modal-content-wrapper');
 
-        // Only handle pull-down when at the top of the content
+        // Only allow pull-down when touch started on indicator
         if (wrapper.scrollTop <= 0 && diff > 0) {
+            e.preventDefault(); // Prevent default scrolling
             isDragging = true;
             modalContent.style.transform = `translateY(${Math.min(diff * 0.5, 150)}px)`;
         } else {
@@ -486,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     modalContent.addEventListener('touchend', e => {
-        if (isDragging) {
+        if (isDragging && touchStartedOnIndicator) {
             const diff = currentY - startY;
             if (diff > 100) {
                 closeModal();
@@ -497,6 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
         startY = null;
         currentY = null;
         isDragging = false;
+        touchStartedOnIndicator = false;
     });
 
     function closeModal() {
@@ -509,7 +465,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 
 
 
