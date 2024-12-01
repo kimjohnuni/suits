@@ -97,8 +97,81 @@ font-family: 'Rockwell', serif;
     overflow: hidden;
 }
 
-/* Preloader Styles */
 .video-preloader {
+    width: 100%;
+    height: 100vh;
+    position: absolute; /* Changed from absolute */
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateZ(0); /* GPU acceleration */
+    will-change: transform;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+
+.preloader {
+  opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.preloader-animation {
+    width: 200px;
+    height: 200px;
+    background-image: url('../img/preloader/frame1.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: frameAnimation 2s steps(1) infinite;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    transition: opacity 1s ease-in-out;
+}
+
+@keyframes frameAnimation {
+    0% { background-image: url('../img/frame1.svg'); }
+    16.66% { background-image: url('../img/preloader/frame2.svg'); }
+    33.32% { background-image: url('../img/preloader/frame3.svg'); }
+    49.98% { background-image: url('../img/preloader/frame4.svg'); }
+    66.64% { background-image: url('../img/preloader/frame5.svg'); }
+    83.3% { background-image: url('../img/preloader/frame6.svg'); }
+    100% { background-image: url('../img/preloader/frame1.svg'); }
+}
+
+@keyframes frameAnimation {
+    from {
+        background-image: url('../img/preloader/sprite.svg');
+        background-position: 0 0;
+    }
+    to {
+        background-image: url('../img/preloader/sprite.svg');
+        background-position: -1600px 0; /* Assuming each frame is 200px wide */
+    }
+}
+
+.background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+
+
+
+
+.exhibition-image-preloader {
     width: 100%;
     height: 100vh;
     position: absolute;
@@ -110,7 +183,7 @@ font-family: 'Rockwell', serif;
     align-items: center;
 }
 
-.preloader-animation {
+.exhibition-image-preloader-animation {
     width: 200px;
     height: 200px;
     background-image: url('../img/preloader/frame1.svg');
@@ -133,21 +206,6 @@ font-family: 'Rockwell', serif;
     100% { background-image: url('../img/preloader/frame1.svg'); }
 }
 
-/* Video Styles */
-.background-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: cover;
-    z-index: -1;
-    opacity: 0; /* Initially hidden */
-    transition: opacity 1s ease-in-out; /* Fade-in transition */
-}
 
 
 
@@ -1078,69 +1136,7 @@ font-family: 'Rockwell', serif;
 
 
 
-.exhibition-modal-placeholder {
-    position: relative;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
-}
 
-.exhibition-modal-placeholder::before {
-    content: '';
-    display: block;
-    padding-top: 66.67%; /* For 3:2 aspect ratio, adjust based on your images */
-}
-
-.modal-spinner-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-}
-
-.modal-spinner-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    display: none;
-}
-
-.modal-spinner {
-  width: 48px;
-  height: 48px;
-  display: inline-block;
-  position: relative;
-}
-.modal-spinner::after,
-.modal-spinner::before {
-  content: '';
-  box-sizing: border-box;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #FFF;
-  position: absolute;
-  left: 0;
-  top: 0;
-  animation: animloader 2s linear infinite;
-}
-.modal-spinner::after {
-  animation-delay: 1s;
-}
-
-@keyframes animloader {
-  0% {
-    transform: scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
-}
 
 
 
