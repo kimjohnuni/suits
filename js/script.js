@@ -1,22 +1,47 @@
+//VIDEO PRELOADER
 document.addEventListener('DOMContentLoaded', function() {
     const video = document.querySelector('.background-video');
     const preloader = document.querySelector('.video-preloader');
+    let alreadyLoaded = false; // Flag to prevent double loading
 
-    // Force preloader to show
+    // Initial state
     preloader.style.display = 'flex';
+    preloader.style.opacity = '1';
     video.style.opacity = '0';
 
-    console.log('Preloader should be visible'); // Debug log
+    // Function to handle the sequential fading
+    const handleVideoLoad = () => {
+        if (alreadyLoaded) return; // Prevent double loading
+        alreadyLoaded = true;
 
-    video.addEventListener('canplaythrough', function() {
-        console.log('Video can play through'); // Debug log
-
+        // First fade out preloader
         setTimeout(() => {
-            video.style.opacity = '1';
-            preloader.style.display = 'none';
-            console.log('Preloader hidden'); // Debug log
-        }, 2000);
-    });
+            preloader.style.opacity = '0';
+
+            // After preloader fades out, hide it and fade in video
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                video.style.opacity = '1';
+            }, 1000); // Wait for preloader fade to complete
+        }, 2000); // Minimum display time for preloader
+    };
+
+    // Check if video is already loaded
+    if (video.readyState >= 3) {
+        handleVideoLoad();
+    } else {
+        video.addEventListener('canplaythrough', function onCanPlay() {
+            handleVideoLoad();
+            video.removeEventListener('canplaythrough', onCanPlay);
+        }, { once: true }); // Ensure event only fires once
+    }
+
+    // Fallback in case video takes too long
+    setTimeout(() => {
+        if (preloader.style.display !== 'none') {
+            handleVideoLoad();
+        }
+    }, 5000); // Fallback timeout
 });
 
 
@@ -397,11 +422,45 @@ document.addEventListener('DOMContentLoaded', function() {
     let isDragging = false;
     let touchStartedOnIndicator = false;
 
-    // Keep your existing exhibitionItems.forEach and generateImageContent functions the same
+    // Function to generate modal content
+    function generateModalContent(item) {
+        const title = item.dataset.title;
+        const description = item.dataset.description;
+        const modalWrapper = modal.querySelector('.exhibition-modal-content-wrapper');
 
+        // Generate all images HTML
+        let imagesHTML = '';
+        let imageIndex = 1;
+        while (item.dataset[`image${imageIndex}`]) {
+            imagesHTML += `<img src="${item.dataset[`image${imageIndex}`]}" alt="${title} - Image ${imageIndex}">`;
+            imageIndex++;
+        }
+
+        // Put text div first (on the left), then images div
+        modalWrapper.innerHTML = `
+            <div class="pwk-content-text">
+                <h2>${title}</h2>
+                <p>${description}</p>
+            </div>
+            <div class="pwk-content-images">
+                ${imagesHTML}
+            </div>
+        `;
+    }
+
+    // Add click event listeners to exhibition items
+    exhibitionItems.forEach(item => {
+        item.addEventListener('click', () => {
+            generateModalContent(item);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // Close button event listener
     closeBtn.addEventListener('click', closeModal);
 
-    // New touch handling specifically for the pull-down indicator
+    // Touch handling for pull-down indicator
     pullDownIndicator.addEventListener('touchstart', e => {
         startY = e.touches[0].clientY;
         touchStartedOnIndicator = true;
@@ -409,10 +468,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     modalContent.addEventListener('touchstart', e => {
-        // Check if touch started in the top 60px of the modal
         const touchY = e.touches[0].clientY;
         const modalRect = modalContent.getBoundingClientRect();
-        const topThreshold = modalRect.top + 60; // Adjust this value as needed
+        const topThreshold = modalRect.top + 60;
 
         if (touchY <= topThreshold) {
             startY = e.touches[0].clientY;
@@ -430,9 +488,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const diff = currentY - startY;
         const wrapper = modal.querySelector('.exhibition-modal-content-wrapper');
 
-        // Only allow pull-down when touch started on indicator
         if (wrapper.scrollTop <= 0 && diff > 0) {
-            e.preventDefault(); // Prevent default scrolling
+            e.preventDefault();
             isDragging = true;
             modalContent.style.transform = `translateY(${Math.min(diff * 0.5, 150)}px)`;
         } else {
@@ -465,6 +522,20 @@ document.addEventListener('DOMContentLoaded', function() {
             modalContent.removeEventListener('transitionend', handler);
         });
     }
+
+    // Optional: Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Optional: Close modal with escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
 });
 
 
