@@ -87,6 +87,7 @@ font-family: 'Rockwell', serif;
 /* Video Background */
 
 
+/* Video styles */
 video {
     position: absolute;
     top: 50%;
@@ -98,6 +99,7 @@ video {
     height: auto;
     z-index: -1;
 }
+
 /* Video container */
 .video-container {
     position: relative;
@@ -110,7 +112,7 @@ video {
 .video-preloader {
     width: 200px;
     height: 200px;
-    background-image: url('frame1.svg');
+    background-image: url('img/preloader/frame1.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -120,6 +122,8 @@ video {
     transform: translate(-50%, -50%);
     animation: frameAnimation 2s steps(1) infinite;
     z-index: 1;
+    display: block; /* Explicitly set display */
+    opacity: 1; /* Ensure visibility */
 }
 
 /* Preloader frame animation */
@@ -150,6 +154,7 @@ video {
     opacity: 0; /* Initially hidden */
     transition: opacity 1s ease-in-out; /* Fade-in transition */
 }
+
 
 
 
