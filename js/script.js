@@ -431,25 +431,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Close modal with button
     closeBtn.addEventListener('click', closeModal);
 
-    // Handle touch events for pull-down to close
     modalContent.addEventListener('touchstart', e => {
         startY = e.touches[0].clientY;
         isDragging = false;
     });
 
     modalContent.addEventListener('touchmove', e => {
+        if (!startY) return;
+
         currentY = e.touches[0].clientY;
         const diff = currentY - startY;
-        const scrollTop = modalContent.scrollTop;
+        const wrapper = modal.querySelector('.exhibition-modal-content-wrapper');
 
-        // Only allow pull-down when at the top
-        if (scrollTop === 0 && diff > 0) {
+        // Only handle pull-down when at the top of the content
+        if (wrapper.scrollTop <= 0 && diff > 0) {
             isDragging = true;
-            e.preventDefault();
             modalContent.style.transform = `translateY(${Math.min(diff * 0.5, 150)}px)`;
+        } else {
+            isDragging = false;
+            modalContent.style.transform = '';
         }
     });
 
@@ -462,17 +464,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalContent.style.transform = '';
             }
         }
-        isDragging = false;
         startY = null;
         currentY = null;
+        isDragging = false;
     });
-
-    // Prevent default pull-to-refresh behavior
-    document.body.addEventListener('touchmove', function(e) {
-        if (modal.classList.contains('active')) {
-            e.preventDefault();
-        }
-    }, { passive: false });
 
     function closeModal() {
         modal.classList.add('closing');
