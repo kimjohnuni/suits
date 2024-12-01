@@ -279,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const galleryItems = document.querySelectorAll('.other-works-gallery-item img');
     let startY;
     let currentY;
+    let isDragging = false;
 
     // Open modal with content
     galleryItems.forEach(item => {
@@ -291,11 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set content
             modalImg.src = this.getAttribute('data-full-img');
             figureNumber.textContent = this.getAttribute('data-figure');
-
-            // Format medium text with bold MEDIUM
             medium.innerHTML = '<span class="label">MEDIUM</span>: ' + this.getAttribute('data-medium');
-
-            // Format size text with bold SIZE
             size.innerHTML = '<span class="label">SIZE</span>: ' + this.getAttribute('data-size');
 
             modal.classList.add('active');
@@ -303,35 +300,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Close modal with button
     closeBtn.addEventListener('click', closeModal);
 
-    // Handle touch events for pull-down to close
     modalContent.addEventListener('touchstart', e => {
         startY = e.touches[0].clientY;
+        isDragging = false;
     });
 
     modalContent.addEventListener('touchmove', e => {
-        if (modalContent.scrollTop === 0) {
-            currentY = e.touches[0].clientY;
-            const diff = currentY - startY;
+        if (!startY) return;
 
-            if (diff > 0) {
-                e.preventDefault();
-                modalContent.style.transform = `translateY(${diff}px)`;
-            }
+        currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+        const wrapper = modal.querySelector('.other-works-modal-inner');
+
+        // Only handle pull-down when at the top of the content
+        if (wrapper.scrollTop <= 0 && diff > 0) {
+            isDragging = true;
+            modalContent.style.transform = `translateY(${Math.min(diff * 0.5, 150)}px)`;
+        } else {
+            isDragging = false;
+            modalContent.style.transform = '';
         }
     });
 
     modalContent.addEventListener('touchend', e => {
-        if (currentY && currentY - startY > 100) {
-            closeModal();
-        } else {
-            modalContent.style.transform = '';
+        if (isDragging) {
+            const diff = currentY - startY;
+            if (diff > 100) {
+                closeModal();
+            } else {
+                modalContent.style.transform = '';
+            }
         }
+        isDragging = false;
         startY = null;
         currentY = null;
     });
+
+    // Prevent default pull-to-refresh behavior
+    document.body.addEventListener('touchmove', function(e) {
+        if (modal.classList.contains('active')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 
     function closeModal() {
         modal.classList.add('closing');
@@ -343,7 +355,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 
 
 
@@ -428,7 +439,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <img src="${element.dataset.image18}" alt="Factory Exhibition">
             `;
-        }
+
+      } else if (exhibitionId === 'tngt') {
+  return `
+      <div class="pwk-image-pair">
+          <img src="${element.dataset.image1}" alt="The New Grand Tour">
+          <img src="${element.dataset.image2}" alt="The New Grand Tour">
+      </div>
+      <div class="pwk-image-pair">
+          <img src="${element.dataset.image3}" alt="The New Grand Tour">
+          <img src="${element.dataset.image4}" alt="The New Grand Tour">
+      </div>
+      <div class="pwk-image-stack">
+          <img src="${element.dataset.image5}" alt="The New Grand Tour">
+          <img src="${element.dataset.image6}" alt="The New Grand Tour">
+          <img src="${element.dataset.image7}" alt="The New Grand Tour">
+          <img src="${element.dataset.image8}" alt="The New Grand Tour">
+          <img src="${element.dataset.image9}" alt="The New Grand Tour">
+      </div>
+  `;
+}
     }
 
     closeBtn.addEventListener('click', closeModal);
