@@ -480,16 +480,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const title = item.dataset.title;
         const description = item.dataset.description;
         const modalWrapper = modal.querySelector('.exhibition-modal-content-wrapper');
+        const exhibitionId = item.dataset.exhibitionId;
 
-        // Generate all images HTML
         let imagesHTML = '';
         let imageIndex = 1;
+
         while (item.dataset[`image${imageIndex}`]) {
-            imagesHTML += `<img src="${item.dataset[`image${imageIndex}`]}" alt="${title} - Image ${imageIndex}">`;
-            imageIndex++;
+            // Check for specific image pairs
+            if (
+                (exhibitionId === 'pwk' && imageIndex === 1) ||
+                (exhibitionId === 'artbusan' && imageIndex === 2) ||
+                (exhibitionId === 'agnesb' && imageIndex === 1) ||
+                (exhibitionId === 'factory' && imageIndex === 15)
+            ) {
+                imagesHTML += `<div class="pwk-image-pair">
+                    <img src="${item.dataset[`image${imageIndex}`]}" alt="${title} - Image ${imageIndex}">
+                    <img src="${item.dataset[`image${imageIndex + 1}`]}" alt="${title} - Image ${imageIndex + 1}">
+                </div>`;
+                imageIndex += 2;
+            } else {
+                imagesHTML += `<img src="${item.dataset[`image${imageIndex}`]}" alt="${title} - Image ${imageIndex}">`;
+                imageIndex++;
+            }
         }
 
-        // Put text div first (on the left), then images div
         modalWrapper.innerHTML = `
             <div class="pwk-content-text">
                 <h2>${title}</h2>
