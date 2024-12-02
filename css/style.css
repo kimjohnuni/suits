@@ -725,7 +725,7 @@ font-family: 'Rockwell Nova', sans-serif;
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
-    padding-top: 100;
+    padding-top: 100px;
     justify-content: center;
 }
 
@@ -1783,8 +1783,8 @@ font-family: 'Rockwell Nova', sans-serif;
     }
 
     .mobile-nav__hamburger {
-        bottom: 20px;
-        right: 20px;
+        bottom: 40px;
+        right: 40px;
     }
 
     .mobile-nav__item,
@@ -1911,6 +1911,7 @@ margin-bottom:60px;
        overflow-y: visible; /* Remove separate scroll */
        height: auto;
        padding: 0;
+       padding-bottom: 100px;
    }
 
    .pwk-content-text h2 {
