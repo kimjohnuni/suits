@@ -4,33 +4,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const preloader = document.querySelector('.video-preloader');
     let alreadyLoaded = false;
 
+    // Initial state
+    preloader.style.display = 'flex';
+    preloader.style.opacity = '1';
+    mobileSprite.style.opacity = '0';
+
     const handleLoad = () => {
         if (alreadyLoaded) return;
         alreadyLoaded = true;
 
-        // Remove fixed delay and fade out immediately
-        preloader.style.opacity = '0';
+        // Ensure preloader is visible while loading
+        preloader.style.opacity = '1';
+        preloader.style.display = 'flex';
+
+        // Only start fade out after sprite is fully loaded
         setTimeout(() => {
-            preloader.style.display = 'none';
-            if (window.innerWidth > 576) {
-                video.style.opacity = '1';
-            } else {
-                mobileSprite.style.opacity = '1';
-            }
-        }, 800); // Keep only transition duration
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                if (window.innerWidth <= 576) {
+                    mobileSprite.style.opacity = '1';
+                } else {
+                    video.style.opacity = '1';
+                }
+            }, 800);
+        }, 800);
     };
 
-    // Execute handleLoad immediately if assets are already loaded
-    if (window.innerWidth > 576) {
-        if (video.readyState >= 3) {
-            handleLoad();
-        } else {
-            video.addEventListener('canplaythrough', handleLoad, { once: true });
-        }
-    } else {
-        // For mobile sprite, check if image is loaded
+    if (window.innerWidth <= 576) {
         const spriteImg = new Image();
         spriteImg.src = mobileSprite.style.backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+
+        // Ensure preloader shows while sprite loads
+        preloader.style.opacity = '1';
+        preloader.style.display = 'flex';
 
         if (spriteImg.complete) {
             handleLoad();
@@ -38,9 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
             spriteImg.onload = handleLoad;
         }
     }
-
-    // Shorter fallback timeout for local development
-    setTimeout(handleLoad, 2000);
 });
 
 
