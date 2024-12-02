@@ -7,7 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial state
     preloader.style.display = 'flex';
     preloader.style.opacity = '1';
-    mobileSprite.style.opacity = '0';
+
+    // Initialize both elements with opacity 0
+    if (mobileSprite) mobileSprite.style.opacity = '0';
+    if (video) video.style.opacity = '0';
 
     const handleLoad = () => {
         if (alreadyLoaded) return;
@@ -19,24 +22,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setTimeout(() => {
             preloader.style.opacity = '0';
-            if (window.innerWidth <= 576) {
-                // Force a reflow before changing opacity
-                void mobileSprite.offsetWidth;
+
+            // Handle mobile sprite
+            if (window.innerWidth <= 576 && mobileSprite) {
+                void mobileSprite.offsetWidth; // Force reflow
                 mobileSprite.style.opacity = '1';
+                if (video) video.style.opacity = '0';
             }
+            // Handle desktop video
+            else if (window.innerWidth > 576 && video) {
+                void video.offsetWidth; // Force reflow
+                video.style.opacity = '1';
+                if (mobileSprite) mobileSprite.style.opacity = '0';
+            }
+
             setTimeout(() => {
                 preloader.style.display = 'none';
             }, 800);
         }, 800);
     };
 
-    if (window.innerWidth <= 576) {
+    // Mobile handling
+    if (window.innerWidth <= 576 && mobileSprite) {
         const spriteImg = new Image();
         spriteImg.src = mobileSprite.style.backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
-
-        // Ensure preloader shows while sprite loads
-        preloader.style.opacity = '1';
-        preloader.style.display = 'flex';
 
         if (spriteImg.complete) {
             handleLoad();
@@ -44,6 +53,27 @@ document.addEventListener('DOMContentLoaded', function() {
             spriteImg.onload = handleLoad;
         }
     }
+    // Desktop handling
+    else if (window.innerWidth > 576 && video) {
+        video.preload = 'auto';
+
+        if (video.readyState >= 3) {
+            handleLoad();
+        } else {
+            video.addEventListener('canplay', handleLoad);
+        }
+    }
+
+    // Optional: Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 576) {
+            if (video) video.style.opacity = '0';
+            if (mobileSprite) mobileSprite.style.opacity = '1';
+        } else {
+            if (mobileSprite) mobileSprite.style.opacity = '0';
+            if (video) video.style.opacity = '1';
+        }
+    });
 });
 
 
