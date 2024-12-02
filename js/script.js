@@ -204,13 +204,40 @@ class NavigationSystem {
         });
 
         if (this.elements.bottomNavDropdown) {
-            this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
-                this.elements.bottomNavDropdownContent.style.display = 'block';
-            });
+            const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-            this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
-                this.elements.bottomNavDropdownContent.style.display = 'none';
-            });
+            if (!isTouchDevice) {
+                this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
+                    this.elements.bottomNavDropdownContent.style.display = 'block';
+                });
+
+                this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
+                    this.elements.bottomNavDropdownContent.style.display = 'none';
+                });
+            } else {
+                this.elements.bottomNavDropdown.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (this.elements.bottomNavDropdownContent.style.display === 'block') {
+                        this.elements.bottomNavDropdownContent.style.display = 'none';
+                    } else {
+                        this.elements.bottomNavDropdownContent.style.display = 'block';
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!this.elements.bottomNavDropdown.contains(e.target)) {
+                        this.elements.bottomNavDropdownContent.style.display = 'none';
+                    }
+                });
+
+                if (this.elements.bottomNavDropdownContent) {
+                    this.elements.bottomNavDropdownContent.addEventListener('click', () => {
+                        this.elements.bottomNavDropdownContent.style.display = 'none';
+                    });
+                }
+            }
         }
     }
 
