@@ -171,7 +171,7 @@ font-family: 'Rockwell', serif;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 94%;
     background-image: url('../img/mobile-sprite/spritesheet-mobile.png');
     background-position: 0 0;
       background-size: 700% 100%; /* 700% because we have 7 frames */
@@ -1643,12 +1643,12 @@ font-family: 'Rockwell', serif;
 
     /*PORTRAITS*/
     .image-flex img {
-       width: calc(100% / 2);
+       width: calc(100% / 3);
    }
    .image-wrapper {
-       width: calc(100% / 2);
+       width: calc(100% / 3);
        background: #ededed;
-       position: relative; /* Add this */
+       position: relative;
    }
    .image-wrapper img {
        width: 100%;
@@ -1739,18 +1739,21 @@ font-family: 'Rockwell', serif;
     }
 
 
-    .image-flex img {
-            width: 100%;
-        }
-        .image-wrapper {
-            width: 100%;
-            background: #ededed;
-            position: relative; /* Add this */
-        }
-        .image-wrapper img {
-            width: 100%;
-            height: auto;
-        }
+
+
+/*PORTRAITS*/
+.image-flex img {
+    width: calc(100% / 2);
+}
+.image-wrapper {
+    width: calc(100% / 2);
+    background: #ededed;
+    position: relative;
+}
+.image-wrapper img {
+    width: 100%;
+    height: auto;
+}
         .loading-spinner {
             position: absolute;
             left: 50%;
@@ -1784,7 +1787,7 @@ font-family: 'Rockwell', serif;
         padding: 0.4rem 0.75rem;
     }
 
-/*PORTRAITS*/
+
 
 
 
