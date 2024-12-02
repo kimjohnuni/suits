@@ -120,6 +120,9 @@ font-family: 'Rockwell Nova', sans-serif;
     will-change: transform;
     opacity: 1;
     transition: opacity 0.8s ease-in-out;
+    background-color: #000000; /* Add your preferred color here */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .preloader {
