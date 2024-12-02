@@ -3,28 +3,36 @@ const mobileSprite = document.querySelector('.mobile-sprite');
 const preloader = document.querySelector('.video-preloader');
 let alreadyLoaded = false;
 
-// Initial state is handled by CSS now
-// preloader is already visible with opacity 1
-
 const handleLoad = () => {
     if (alreadyLoaded) return;
     alreadyLoaded = true;
 
     if (window.innerWidth <= 576) {
-        // Mobile sprite handling
-        const img = new Image();
-        img.onload = () => {
-            preloader.style.opacity = '0';
-            mobileSprite.style.opacity = '1';
-            setTimeout(() => {
-                preloader.style.display = 'none';
-            }, 800);
-        };
+        // Make sure mobileSprite exists before proceeding
+        if (mobileSprite) {
+            // Wait for sprite to be ready
+            const spriteUrl = window.getComputedStyle(mobileSprite)
+                .backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
 
-        // Get the sprite's background image URL
-        const spriteUrl = window.getComputedStyle(mobileSprite)
-            .backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
-        img.src = spriteUrl;
+            if (spriteUrl) {
+                const img = new Image();
+                img.onload = () => {
+                    preloader.style.opacity = '0';
+                    mobileSprite.style.opacity = '1';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 800);
+                };
+                img.src = spriteUrl;
+            } else {
+                // Fallback if sprite URL isn't found
+                preloader.style.opacity = '0';
+                mobileSprite.style.opacity = '1';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 800);
+            }
+        }
     } else {
         // Desktop video handling
         preloader.style.opacity = '0';
@@ -35,17 +43,34 @@ const handleLoad = () => {
     }
 };
 
-if (window.innerWidth <= 576) {
-    // Mobile handling
-    handleLoad();
-} else {
-    // Desktop video handling
-    if (video) {
-        video.preload = 'auto';
-        if (video.readyState >= 3) {
+// Make sure elements are loaded before running logic
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.innerWidth <= 576) {
             handleLoad();
         } else {
-            video.addEventListener('canplay', handleLoad);
+            if (video) {
+                video.preload = 'auto';
+                if (video.readyState >= 3) {
+                    handleLoad();
+                } else {
+                    video.addEventListener('canplay', handleLoad);
+                }
+            }
+        }
+    });
+} else {
+    // If DOM is already loaded, run immediately
+    if (window.innerWidth <= 576) {
+        handleLoad();
+    } else {
+        if (video) {
+            video.preload = 'auto';
+            if (video.readyState >= 3) {
+                handleLoad();
+            } else {
+                video.addEventListener('canplay', handleLoad);
+            }
         }
     }
 }
