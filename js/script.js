@@ -7,60 +7,54 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial state
     preloader.style.display = 'flex';
     preloader.style.opacity = '1';
-
-    // Initialize both elements with opacity 0
-    if (mobileSprite) mobileSprite.style.opacity = '0';
     if (video) video.style.opacity = '0';
+    if (mobileSprite) mobileSprite.style.opacity = '0';
 
     const handleLoad = () => {
         if (alreadyLoaded) return;
         alreadyLoaded = true;
 
-        // Ensure preloader is visible while loading
-        preloader.style.opacity = '1';
-        preloader.style.display = 'flex';
+        if (window.innerWidth <= 576) {
+            // Mobile sprite handling
+            const img = new Image();
+            img.onload = () => {
+                setTimeout(() => {
+                    preloader.style.opacity = '0';
+                    mobileSprite.style.opacity = '1';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 800);
+                }, 800);
+            };
 
-        setTimeout(() => {
-            preloader.style.opacity = '0';
-
-            // Handle mobile sprite
-            if (window.innerWidth <= 576 && mobileSprite) {
-                void mobileSprite.offsetWidth; // Force reflow
-                mobileSprite.style.opacity = '1';
-                if (video) video.style.opacity = '0';
-            }
-            // Handle desktop video
-            else if (window.innerWidth > 576 && video) {
-                void video.offsetWidth; // Force reflow
-                video.style.opacity = '1';
-                if (mobileSprite) mobileSprite.style.opacity = '0';
-            }
-
+            // Get the sprite's background image URL
+            const spriteUrl = window.getComputedStyle(mobileSprite)
+                .backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+            img.src = spriteUrl;
+        } else {
+            // Desktop video handling
             setTimeout(() => {
-                preloader.style.display = 'none';
+                preloader.style.opacity = '0';
+                if (video) video.style.opacity = '1';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 800);
             }, 800);
-        }, 800);
+        }
     };
 
-    // Mobile handling
-    if (window.innerWidth <= 576 && mobileSprite) {
-        const spriteImg = new Image();
-        spriteImg.src = mobileSprite.style.backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
-
-        if (spriteImg.complete) {
-            handleLoad();
-        } else {
-            spriteImg.onload = handleLoad;
-        }
-    }
-    // Desktop handling
-    else if (window.innerWidth > 576 && video) {
-        video.preload = 'auto';
-
-        if (video.readyState >= 3) {
-            handleLoad();
-        } else {
-            video.addEventListener('canplay', handleLoad);
+    if (window.innerWidth <= 576) {
+        // Mobile handling
+        handleLoad();
+    } else {
+        // Desktop video handling
+        if (video) {
+            video.preload = 'auto';
+            if (video.readyState >= 3) {
+                handleLoad();
+            } else {
+                video.addEventListener('canplay', handleLoad);
+            }
         }
     }
 
