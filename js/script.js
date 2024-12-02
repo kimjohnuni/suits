@@ -17,16 +17,15 @@ document.addEventListener('DOMContentLoaded', function() {
         preloader.style.opacity = '1';
         preloader.style.display = 'flex';
 
-        // Only start fade out after sprite is fully loaded
         setTimeout(() => {
             preloader.style.opacity = '0';
+            if (window.innerWidth <= 576) {
+                // Force a reflow before changing opacity
+                void mobileSprite.offsetWidth;
+                mobileSprite.style.opacity = '1';
+            }
             setTimeout(() => {
                 preloader.style.display = 'none';
-                if (window.innerWidth <= 576) {
-                    mobileSprite.style.opacity = '1';
-                } else {
-                    video.style.opacity = '1';
-                }
             }, 800);
         }, 800);
     };
