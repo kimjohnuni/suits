@@ -21,6 +21,15 @@ body {
     background-color: #fff;
 }
 
+::selection {
+    background: black;
+    color: white;
+}
+
+::-moz-selection {
+    background: black;
+    color: white;
+}
 
 .divider-container {
     height: 400px;
@@ -56,7 +65,7 @@ body {
 .navbar h1 {
 margin: 0;
 font-size: 36px;
-font-family: 'Rockwell', serif;
+font-family: 'Rockwell Nova', sans-serif;
 }
 
 
