@@ -176,6 +176,8 @@ font-family: 'Rockwell', serif;
     background-position: 0 0;
       background-size: 700% 100%; /* 700% because we have 7 frames */
     z-index: -1;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
 }
 
 @keyframes mobile-sprite-animation {
