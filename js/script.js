@@ -1,73 +1,64 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const video = document.querySelector('.background-video');
-    const mobileSprite = document.querySelector('.mobile-sprite');
-    const preloader = document.querySelector('.video-preloader');
-    let alreadyLoaded = false;
+const video = document.querySelector('.background-video');
+const mobileSprite = document.querySelector('.mobile-sprite');
+const preloader = document.querySelector('.video-preloader');
+let alreadyLoaded = false;
 
-    // Initial state
-    preloader.style.display = 'flex';
-    preloader.style.opacity = '1';
-    if (video) video.style.opacity = '0';
-    if (mobileSprite) mobileSprite.style.opacity = '0';
+// Initial state is handled by CSS now
+// preloader is already visible with opacity 1
 
-    const handleLoad = () => {
-        if (alreadyLoaded) return;
-        alreadyLoaded = true;
-
-        if (window.innerWidth <= 576) {
-            // Mobile sprite handling
-            const img = new Image();
-            img.onload = () => {
-                setTimeout(() => {
-                    preloader.style.opacity = '0';
-                    mobileSprite.style.opacity = '1';
-                    setTimeout(() => {
-                        preloader.style.display = 'none';
-                    }, 800);
-                }, 800);
-            };
-
-            // Get the sprite's background image URL
-            const spriteUrl = window.getComputedStyle(mobileSprite)
-                .backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
-            img.src = spriteUrl;
-        } else {
-            // Desktop video handling
-            setTimeout(() => {
-                preloader.style.opacity = '0';
-                if (video) video.style.opacity = '1';
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 800);
-            }, 800);
-        }
-    };
+const handleLoad = () => {
+    if (alreadyLoaded) return;
+    alreadyLoaded = true;
 
     if (window.innerWidth <= 576) {
-        // Mobile handling
-        handleLoad();
+        // Mobile sprite handling
+        const img = new Image();
+        img.onload = () => {
+            preloader.style.opacity = '0';
+            mobileSprite.style.opacity = '1';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 800);
+        };
+
+        // Get the sprite's background image URL
+        const spriteUrl = window.getComputedStyle(mobileSprite)
+            .backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+        img.src = spriteUrl;
     } else {
         // Desktop video handling
-        if (video) {
-            video.preload = 'auto';
-            if (video.readyState >= 3) {
-                handleLoad();
-            } else {
-                video.addEventListener('canplay', handleLoad);
-            }
+        preloader.style.opacity = '0';
+        if (video) video.style.opacity = '1';
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 800);
+    }
+};
+
+if (window.innerWidth <= 576) {
+    // Mobile handling
+    handleLoad();
+} else {
+    // Desktop video handling
+    if (video) {
+        video.preload = 'auto';
+        if (video.readyState >= 3) {
+            handleLoad();
+        } else {
+            video.addEventListener('canplay', handleLoad);
         }
     }
+}
 
-    // Optional: Handle window resize
-    window.addEventListener('resize', function() {
-        if (window.innerWidth <= 576) {
-            if (video) video.style.opacity = '0';
-            if (mobileSprite) mobileSprite.style.opacity = '1';
-        } else {
-            if (mobileSprite) mobileSprite.style.opacity = '0';
-            if (video) video.style.opacity = '1';
-        }
-    });
+// Optional: Handle window resize
+window.addEventListener('resize', function() {
+    if (window.innerWidth <= 576) {
+        if (video) video.style.opacity = '0';
+        if (mobileSprite) mobileSprite.style.opacity = '1';
+    } else {
+        if (mobileSprite) mobileSprite.style.opacity = '0';
+        if (video) video.style.opacity = '1';
+    }
 });
 
 
