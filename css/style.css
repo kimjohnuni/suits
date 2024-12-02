@@ -1711,7 +1711,7 @@ font-family: 'Rockwell Nova', sans-serif;
 
 @media screen and (max-width: 576px) {
     .navbar h1 {
-        font-size: 22px;
+        font-size: 20px;
         margin-top:5px;
     }
 
