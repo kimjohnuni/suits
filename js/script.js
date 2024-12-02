@@ -1,47 +1,46 @@
-//VIDEO PRELOADER
 document.addEventListener('DOMContentLoaded', function() {
     const video = document.querySelector('.background-video');
+    const mobileSprite = document.querySelector('.mobile-sprite');
     const preloader = document.querySelector('.video-preloader');
-    let alreadyLoaded = false; // Flag to prevent double loading
+    let alreadyLoaded = false;
 
-    // Initial state
-    preloader.style.display = 'flex';
-    preloader.style.opacity = '1';
-    video.style.opacity = '0';
-
-    // Function to handle the sequential fading
-    const handleVideoLoad = () => {
-        if (alreadyLoaded) return; // Prevent double loading
+    const handleLoad = () => {
+        if (alreadyLoaded) return;
         alreadyLoaded = true;
 
-        // First fade out preloader
+        // Remove fixed delay and fade out immediately
+        preloader.style.opacity = '0';
         setTimeout(() => {
-            preloader.style.opacity = '0';
-
-            // After preloader fades out, hide it and fade in video
-            setTimeout(() => {
-                preloader.style.display = 'none';
+            preloader.style.display = 'none';
+            if (window.innerWidth > 576) {
                 video.style.opacity = '1';
-            }, 1000); // Wait for preloader fade to complete
-        }, 2000); // Minimum display time for preloader
+            } else {
+                mobileSprite.style.opacity = '1';
+            }
+        }, 800); // Keep only transition duration
     };
 
-    // Check if video is already loaded
-    if (video.readyState >= 3) {
-        handleVideoLoad();
+    // Execute handleLoad immediately if assets are already loaded
+    if (window.innerWidth > 576) {
+        if (video.readyState >= 3) {
+            handleLoad();
+        } else {
+            video.addEventListener('canplaythrough', handleLoad, { once: true });
+        }
     } else {
-        video.addEventListener('canplaythrough', function onCanPlay() {
-            handleVideoLoad();
-            video.removeEventListener('canplaythrough', onCanPlay);
-        }, { once: true }); // Ensure event only fires once
+        // For mobile sprite, check if image is loaded
+        const spriteImg = new Image();
+        spriteImg.src = mobileSprite.style.backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+
+        if (spriteImg.complete) {
+            handleLoad();
+        } else {
+            spriteImg.onload = handleLoad;
+        }
     }
 
-    // Fallback in case video takes too long
-    setTimeout(() => {
-        if (preloader.style.display !== 'none') {
-            handleVideoLoad();
-        }
-    }, 5000); // Fallback timeout
+    // Shorter fallback timeout for local development
+    setTimeout(handleLoad, 2000);
 });
 
 
