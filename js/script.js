@@ -1,3 +1,35 @@
+// Function to handle all anchor clicks
+function handleAnchorClick(e) {
+    e.preventDefault();
+    const href = this.getAttribute('href');
+    if (href.startsWith('#')) {
+        const element = document.querySelector(href);
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth'
+            });
+            history.pushState('', '', window.location.pathname);
+        }
+    }
+}
+
+// Add click handlers to desktop menu
+document.querySelectorAll('.bottom-navbar a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', handleAnchorClick);
+});
+
+// Add click handlers to mobile menu
+document.querySelectorAll('.mobile-nav a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', handleAnchorClick);
+});
+
+
+
+
+
+
+
+
 const video = document.querySelector('.background-video');
 const mobileSprite = document.querySelector('.mobile-sprite');
 const preloader = document.querySelector('.video-preloader');
@@ -208,6 +240,28 @@ class NavigationSystem {
             e.stopPropagation();
             this.toggleDropdown();
         });
+
+        // Handle mobile bottom links
+        this.elements.mobileBottomLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    this.smoothScroll(href);
+                    this.closeMenu(); // This will close the mobile menu
+                }
+            });
+        });
+
+        // Handle bottom navbar dropdown links
+        if (this.elements.bottomNavDropdownContent) {
+            const dropdownLinks = this.elements.bottomNavDropdownContent.querySelectorAll('a');
+            dropdownLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    this.elements.bottomNavDropdownContent.style.display = 'none';
+                });
+            });
+        }
 
         document.addEventListener('click', (e) => {
             if (this.state.isMenuOpen && !this.elements.mobileNav.contains(e.target)) {
