@@ -1,79 +1,142 @@
 // Immediate preloader display
-// Show preloader immediately - before anything else loads
-document.write(`
-    <style>
-        .video-preloader {
-            display: flex !important;
-            opacity: 1 !important;
-        }
-    </style>
-`);
+// Immediate preloader display
+window.addEventListener('DOMContentLoaded', () => {
+    const preloader = document.querySelector('.video-preloader');
+    if (preloader) {
+        preloader.style.display = 'flex';
+        preloader.style.opacity = '1';
+    }
+});
 
-// Get elements
 const video = document.querySelector('.background-video');
 const mobileSprite = document.querySelector('.mobile-sprite');
 const preloader = document.querySelector('.video-preloader');
+let alreadyLoaded = false;
 
-// Handle mobile sprite loading
-const handleMobileLoad = () => {
-    const spriteUrl = window.getComputedStyle(mobileSprite).backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
-    const img = new Image();
+const handleLoad = () => {
+    if (alreadyLoaded) return;
+    alreadyLoaded = true;
 
-    img.onload = () => {
-        mobileSprite.style.display = 'block';
-        // Force a reflow
-        mobileSprite.offsetHeight;
-
-        setTimeout(() => {
-            preloader.classList.add('fade-transition');
-            setTimeout(() => {
-                mobileSprite.style.opacity = '1';
+    setTimeout(() => {
+        if (!preloader.classList.contains('fade-transition')) {
+            if (window.innerWidth <= 576) {
+                if (mobileSprite) {
+                    mobileSprite.style.display = 'block';
+                    mobileSprite.offsetHeight; // Force reflow
+                    setTimeout(() => {
+                        preloader.classList.add('fade-transition');
+                        setTimeout(() => {
+                            mobileSprite.style.opacity = '1';
+                            setTimeout(() => {
+                                preloader.style.display = 'none';
+                            }, 800);
+                        }, 400);
+                    }, 50);
+                }
+            } else {
+                preloader.classList.add('fade-transition');
+                if (video) video.style.opacity = '1';
                 setTimeout(() => {
                     preloader.style.display = 'none';
                 }, 800);
-            }, 400);
-        }, 50);
-    };
+            }
+        }
+    }, 5000);
 
-    img.src = spriteUrl;
-};
+    if (window.innerWidth <= 576) {
+        if (mobileSprite) {
+            const spriteUrl = window.getComputedStyle(mobileSprite)
+                .backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
 
-// Handle video loading
-const handleVideoLoad = () => {
-    setTimeout(() => {
+            if (spriteUrl) {
+                const img = new Image();
+                img.onload = () => {
+                    mobileSprite.style.display = 'block';
+                    mobileSprite.offsetHeight; // Force reflow
+                    setTimeout(() => {
+                        preloader.classList.add('fade-transition');
+                        setTimeout(() => {
+                            mobileSprite.style.opacity = '1';
+                            setTimeout(() => {
+                                preloader.style.display = 'none';
+                            }, 800);
+                        }, 400);
+                    }, 50);
+                };
+                img.src = spriteUrl;
+            } else {
+                mobileSprite.style.display = 'block';
+                mobileSprite.offsetHeight; // Force reflow
+                setTimeout(() => {
+                    preloader.classList.add('fade-transition');
+                    setTimeout(() => {
+                        mobileSprite.style.opacity = '1';
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                        }, 800);
+                    }, 400);
+                }, 50);
+            }
+        }
+    } else {
         preloader.classList.add('fade-transition');
-        video.style.opacity = '1';
+        if (video) video.style.opacity = '1';
         setTimeout(() => {
             preloader.style.display = 'none';
         }, 800);
-    }, 50);
+    }
 };
 
-// Initialize based on screen size
-if (window.innerWidth <= 576) {
-    video.style.display = 'none';
-    handleMobileLoad();
+// Make sure elements are loaded before running logic
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.innerWidth <= 576) {
+            handleLoad();
+        } else {
+            if (video) {
+                video.preload = 'auto';
+                if (video.readyState >= 3) {
+                    handleLoad();
+                } else {
+                    video.addEventListener('canplay', handleLoad);
+                }
+            }
+        }
+    });
 } else {
-    mobileSprite.style.display = 'none';
-    video.addEventListener('canplay', handleVideoLoad);
+    if (window.innerWidth <= 576) {
+        handleLoad();
+    } else {
+        if (video) {
+            video.preload = 'auto';
+            if (video.readyState >= 3) {
+                handleLoad();
+            } else {
+                video.addEventListener('canplay', handleLoad);
+            }
+        }
+    }
 }
 
-// Handle resize
-window.addEventListener('resize', () => {
+// Optional: Handle window resize
+window.addEventListener('resize', function() {
     if (window.innerWidth <= 576) {
-        video.style.opacity = '0';
-        video.style.display = 'none';
-        mobileSprite.style.display = 'block';
-        setTimeout(() => {
-            mobileSprite.style.opacity = '1';
-        }, 100);
+        if (video) video.style.opacity = '0';
+        if (mobileSprite) {
+            mobileSprite.style.display = 'block';
+            mobileSprite.offsetHeight; // Force reflow
+            setTimeout(() => {
+                mobileSprite.style.opacity = '1';
+            }, 100);
+        }
     } else {
-        mobileSprite.style.opacity = '0';
-        mobileSprite.style.display = 'none';
-        video.style.display = 'block';
-        setTimeout(() => {
-            video.style.opacity = '1';
-        }, 100);
+        if (mobileSprite) {
+            mobileSprite.style.opacity = '0';
+            setTimeout(() => {
+                mobileSprite.style.display = 'none';
+            }, 800);
+        }
+        if (video) video.style.opacity = '1';
     }
 });
 
