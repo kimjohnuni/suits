@@ -1,5 +1,11 @@
 // Immediate preloader display
 // Initialize preloader immediately
+(function() {
+    const preloader = document.querySelector('.video-preloader');
+    if (preloader) {
+        preloader.style.display = 'flex';
+        preloader.style.opacity = '1';
+    }
 document.addEventListener('DOMContentLoaded', () => {
     const preloader = document.querySelector('.video-preloader');
     if (preloader) {
