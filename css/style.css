@@ -120,7 +120,7 @@ font-family: 'Rockwell Nova', sans-serif;
     align-items: center;
     transform: translateZ(0);
     will-change: transform;
-    transition: opacity 0.8s ease-in-out;
+     transition: opacity 0.8s ease;
     background-color: #ffffff;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -190,7 +190,7 @@ font-family: 'Rockwell Nova', sans-serif;
       background-size: 700% 100%; /* 700% because we have 7 frames */
     z-index: -1;
     opacity: 0;
-    transition: opacity 0.8s ease-in-out;
+     transition: opacity 0.8s ease;
 }
 
 @keyframes mobile-sprite-animation {
