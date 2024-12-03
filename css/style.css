@@ -59,7 +59,7 @@ body {
     display: flex;
     align-items: center; /* Vertically center items */
     justify-content: center; /* Horizontally center items */
-    z-index: 999;
+    z-index: 10;
     padding: 0 20px;
 }
 .navbar h1 {
@@ -113,15 +113,14 @@ font-family: 'Rockwell Nova', sans-serif;
     top: 0;
     left: 0;
     z-index: 998;
-    opacity: 1 !important; /* Force immediate visibility */
-   visibility: visible;
-    display: flex !important;
+    display: flex;
     justify-content: center;
     align-items: center;
     transform: translateZ(0);
     will-change: transform;
-    transition: opacity 0.8s linear !important;
-    background-color: #ffffff;
+    opacity: 1;
+    transition: opacity 0.8s ease-in-out;
+    background-color: #000000; /* Add your preferred color here */
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
 }
@@ -190,19 +189,13 @@ font-family: 'Rockwell Nova', sans-serif;
       background-size: 700% 100%; /* 700% because we have 7 frames */
     z-index: -1;
     opacity: 0;
-    transition: opacity 0.8s linear !important;
+    transition: opacity 0.8s ease-in-out;
 }
 
 @keyframes mobile-sprite-animation {
     from { background-position: 0 0; }
     to { background-position: -700% 0; }  /* Changed from -600% to -700% */
 }
-
-.fade-transition {
-    opacity: 0 !important;
-    transition: opacity 0.8s ease !important;
-}
-
 
 
 
