@@ -263,6 +263,14 @@ font-family: 'Rockwell Nova', sans-serif;
     transition: bottom 0.3s ease-in-out;
 }
 
+.bottom-navbar a,
+.mobile-nav a {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 .menu {
     list-style-type: none;
     margin: 0;
