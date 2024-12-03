@@ -1,3 +1,12 @@
+// Immediate preloader display
+window.addEventListener('DOMContentLoaded', () => {
+    const preloader = document.querySelector('.video-preloader');
+    if (preloader) {
+        preloader.style.opacity = '1';
+        preloader.style.display = 'flex';
+    }
+});
+
 const video = document.querySelector('.background-video');
 const mobileSprite = document.querySelector('.mobile-sprite');
 const preloader = document.querySelector('.video-preloader');
