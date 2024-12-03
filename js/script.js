@@ -1,3 +1,5 @@
+
+/*
 const video = document.querySelector('.background-video');
 const mobileSprite = document.querySelector('.mobile-sprite');
 const preloader = document.querySelector('.video-preloader');
