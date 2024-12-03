@@ -1,18 +1,13 @@
 // Immediate preloader display
-// Initialize preloader immediately
+
+d// Immediate preloader display
 (function() {
     const preloader = document.querySelector('.video-preloader');
     if (preloader) {
         preloader.style.display = 'flex';
         preloader.style.opacity = '1';
     }
-document.addEventListener('DOMContentLoaded', () => {
-    const preloader = document.querySelector('.video-preloader');
-    if (preloader) {
-        preloader.style.display = 'flex';
-        preloader.style.opacity = '1';
-    }
-}, { once: true });
+})();
 
 const video = document.querySelector('.background-video');
 const mobileSprite = document.querySelector('.mobile-sprite');
