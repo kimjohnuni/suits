@@ -122,11 +122,16 @@ class NavigationSystem {
     }
 
     setupScrollHandler() {
+        let ticking = false;
         window.addEventListener('scroll', () => {
-            requestAnimationFrame(() => {
-                this.updateHeaderTextOnScroll();
-            });
-        });
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    this.updateHeaderTextOnScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
     }
 
     updateHeaderTextOnScroll() {
@@ -165,6 +170,10 @@ class NavigationSystem {
         window.addEventListener('resize', this.debounce(() => {
             this.state.isMobile = window.innerWidth <= 900;
         }, 250));
+
+        window.addEventListener('touchend', () => {
+            this.state.isScrolling = false;
+        });
 
         [...this.elements.bottomNavLinks, ...this.elements.allNavLinks].forEach(link => {
             link.addEventListener('click', (e) => {
@@ -223,37 +232,15 @@ class NavigationSystem {
         const headerHeight = document.querySelector('.navbar')?.offsetHeight || 0;
         const offset = 110;
         const targetPosition = targetElement.offsetTop - headerHeight - offset;
-        const startPosition = window.pageYOffset;
-        const distance = targetPosition - startPosition;
 
-        if (this.state.isMobile) {
-            const duration = 500;
-            const start = performance.now();
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
 
-            const scroll = (currentTime) => {
-                const elapsed = currentTime - start;
-                const progress = Math.min(elapsed / duration, 1);
-
-                window.scrollTo(0, startPosition + distance * progress);
-
-                if (progress < 1) {
-                    requestAnimationFrame(scroll);
-                } else {
-                    this.state.isScrolling = false;
-                }
-            };
-
-            requestAnimationFrame(scroll);
-        } else {
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-
-            setTimeout(() => {
-                this.state.isScrolling = false;
-            }, 300);
-        }
+        setTimeout(() => {
+            this.state.isScrolling = false;
+        }, 300);
     }
 
     debounce(func, wait) {
