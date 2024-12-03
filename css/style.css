@@ -6,7 +6,6 @@
 }
 
 html {
-    scroll-behavior: auto !important; /* Prevents conflicts with custom scroll */
 }
 
 html, body {
@@ -14,6 +13,7 @@ html, body {
   padding: 0;
   width: 100%;
   position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -444,6 +444,8 @@ font-family: 'Rockwell Nova', sans-serif;
     transition: transform 0.3s ease;
     visibility: hidden;
     z-index: 2000;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mobile-nav.active {
