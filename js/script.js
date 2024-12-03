@@ -100,6 +100,7 @@ window.addEventListener('resize', function() {
 
 
 /*MOBILE MENU*/
+/*
 class NavigationSystem {
     constructor() {
         this.state = {
@@ -241,6 +242,8 @@ class NavigationSystem {
 document.addEventListener('DOMContentLoaded', () => {
     new NavigationSystem();
 });
+
+*/
 
 
 
