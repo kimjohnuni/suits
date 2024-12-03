@@ -1,6 +1,6 @@
 // Immediate preloader display
 
-d// Immediate preloader display
+// Immediate preloader display
 (function() {
     const preloader = document.querySelector('.video-preloader');
     if (preloader) {
