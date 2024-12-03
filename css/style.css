@@ -115,7 +115,7 @@ font-family: 'Rockwell Nova', sans-serif;
     z-index: 998;
     opacity: 1 !important; /* Force immediate visibility */
    visibility: visible;
-    display: flex;
+    display: flex !important;
     justify-content: center;
     align-items: center;
     transform: translateZ(0);
