@@ -1,5 +1,7 @@
 // Immediate preloader display
 // Immediate preloader display
+
+/*
 window.addEventListener('DOMContentLoaded', () => {
     const preloader = document.querySelector('.video-preloader');
     if (preloader) {
