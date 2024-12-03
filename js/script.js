@@ -7,6 +7,21 @@ const handleLoad = () => {
     if (alreadyLoaded) return;
     alreadyLoaded = true;
 
+    setTimeout(() => {
+        if (preloader.style.opacity !== '0') {
+            // Force hide preloader and show content if loading takes too long
+            preloader.style.opacity = '0';
+            if (window.innerWidth <= 576) {
+                mobileSprite.style.opacity = '1';
+            } else {
+                if (video) video.style.opacity = '1';
+            }
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 800);
+        }
+    }, 5000); // 5 second timeout
+
     if (window.innerWidth <= 576) {
         // Make sure mobileSprite exists before proceeding
         if (mobileSprite) {
@@ -632,6 +647,10 @@ document.addEventListener('DOMContentLoaded', function() {
 const contactInputBoxes = document.querySelectorAll('.contact-input-box, .contact-message-box');
 const contactSendButton = document.querySelector('.contact-send-button');
 
+// Initialize EmailJS
+emailjs.init('-whovk6aQzcWIuoo8');
+
+// Add focus effects to input boxes
 contactInputBoxes.forEach(inputBox => {
     inputBox.addEventListener('focus', function() {
         this.classList.add('focused');
@@ -644,6 +663,7 @@ contactInputBoxes.forEach(inputBox => {
     });
 });
 
+// Check if all inputs are filled
 function checkInputs() {
     let allFilled = true;
     contactInputBoxes.forEach(input => {
@@ -654,6 +674,7 @@ function checkInputs() {
     contactSendButton.disabled = !allFilled;
 }
 
+// Add input check listeners
 contactInputBoxes.forEach(input => {
     input.addEventListener('keyup', checkInputs);
     input.addEventListener('change', checkInputs);
@@ -663,13 +684,37 @@ contactInputBoxes.forEach(input => {
 document.getElementById('contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+    // Basic email validation
+    const emailInput = this.querySelector('input[name="user_email"]');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailInput.value)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+
+    // Show loading state
+    contactSendButton.disabled = true;
+    contactSendButton.textContent = 'SENDING';
+
+    emailjs.sendForm('service_1m3kke9', 'template_d3vrshc', this)
         .then(() => {
+            // Success
             console.log('SUCCESS!');
             this.reset();
             contactSendButton.disabled = true;
+            contactSendButton.textContent = 'SEND';
+            alert('Message sent successfully!');
+
+            // Remove focused class from all inputs
+            contactInputBoxes.forEach(input => {
+                input.classList.remove('focused');
+            });
         }, (error) => {
+            // Error
             console.log('FAILED...', error);
+            contactSendButton.disabled = false;
+            contactSendButton.textContent = 'SEND';
+            alert('Failed to send message. Please try again.');
         });
 });
 
