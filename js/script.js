@@ -100,8 +100,8 @@ class NavigationSystem {
         this.state = {
             isMenuOpen: false,
             isDropdownOpen: false,
-            isMobile: window.innerWidth <= 900,
-            isScrolling: false
+            isScrolling: false,
+            isMobile: window.innerWidth <= 900
         };
 
         this.elements = {
@@ -110,15 +110,21 @@ class NavigationSystem {
             dropdown: document.querySelector('.mobile-nav__dropdown'),
             dropdownTrigger: document.querySelector('.mobile-nav__dropdown-trigger'),
             dropdownContent: document.querySelector('.mobile-nav__dropdown-content'),
-            allNavLinks: document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a'),
             bottomNavLinks: document.querySelectorAll('.bottom-navbar .menu a'),
             bottomNavDropdown: document.querySelector('.bottom-navbar .dropdown'),
             bottomNavDropdownContent: document.querySelector('.bottom-navbar .dropdown-content'),
             headerText: document.querySelector('#navbar-text'),
+            allNavLinks: document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a'),
             mobileBottomLinks: document.querySelectorAll('.mobile-nav__bottom-buttons a')
         };
 
         this.init();
+
+        // Add cleanup event listener
+        window.addEventListener('beforeunload', () => {
+            document.body.style.overflow = '';
+            this.state.isScrolling = false;
+        });
     }
 
     init() {
@@ -128,15 +134,26 @@ class NavigationSystem {
     }
 
     setupScrollHandler() {
+        let ticking = false;
         window.addEventListener('scroll', () => {
-            requestAnimationFrame(() => {
-                this.updateHeaderTextOnScroll();
-            });
-        });
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    this.updateHeaderTextOnScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+
+            if (this.state.isScrolling) {
+                setTimeout(() => {
+                    this.state.isScrolling = false;
+                }, 1000);
+            }
+        }, { passive: true });
     }
 
     updateHeaderTextOnScroll() {
-        const scrollPosition = window.scrollY;
+        const scrollPosition = window.pageYOffset;
         const sections = {
             'artist-statement': "ARTIST STATEMENT",
             'busan-section': "BUSAN",
@@ -206,19 +223,6 @@ class NavigationSystem {
             });
         });
 
-        this.elements.mobileBottomLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                const href = link.getAttribute('href');
-                if (href.startsWith('#')) {
-                    e.preventDefault();
-                    this.smoothScroll(href);
-                    if (this.state.isMenuOpen) {
-                        this.closeMenu();
-                    }
-                }
-            });
-        });
-
         if (this.elements.bottomNavDropdown) {
             const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
@@ -247,14 +251,12 @@ class NavigationSystem {
                         this.elements.bottomNavDropdownContent.style.display = 'none';
                     }
                 });
-
-                if (this.elements.bottomNavDropdownContent) {
-                    this.elements.bottomNavDropdownContent.addEventListener('click', () => {
-                        this.elements.bottomNavDropdownContent.style.display = 'none';
-                    });
-                }
             }
         }
+
+        window.addEventListener('touchend', () => {
+            this.state.isScrolling = false;
+        });
     }
 
     setupMobileNav() {
@@ -278,14 +280,12 @@ class NavigationSystem {
         this.elements.mobileNav.style.visibility = 'visible';
         this.elements.mobileNav.style.transform = 'scale(1)';
         this.elements.hamburger.classList.add('active');
-        document.body.style.overflow = 'hidden';
     }
 
     closeMenu() {
         this.state.isMenuOpen = false;
         this.elements.mobileNav.style.transform = 'scale(0)';
         this.elements.hamburger.classList.remove('active');
-        document.body.style.overflow = '';
         this.closeDropdown();
 
         setTimeout(() => {
@@ -315,44 +315,16 @@ class NavigationSystem {
 
     smoothScroll(targetId) {
         const targetElement = document.querySelector(targetId);
-        if (!targetElement || this.state.isScrolling) return;
-
-        this.state.isScrolling = true;
+        if (!targetElement) return;
 
         const headerHeight = document.querySelector('.navbar')?.offsetHeight || 0;
         const offset = 110;
         const targetPosition = targetElement.offsetTop - headerHeight - offset;
-        const startPosition = window.pageYOffset;
-        const distance = targetPosition - startPosition;
 
-        if (this.state.isMobile) {
-            const duration = 500;
-            const start = performance.now();
-
-            const scroll = (currentTime) => {
-                const elapsed = currentTime - start;
-                const progress = Math.min(elapsed / duration, 1);
-
-                window.scrollTo(0, startPosition + distance * progress);
-
-                if (progress < 1) {
-                    requestAnimationFrame(scroll);
-                } else {
-                    this.state.isScrolling = false;
-                }
-            };
-
-            requestAnimationFrame(scroll);
-        } else {
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-
-            setTimeout(() => {
-                this.state.isScrolling = false;
-            }, 300);
-        }
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
     }
 
     debounce(func, wait) {
