@@ -103,7 +103,6 @@ window.addEventListener('resize', function() {
 class NavigationSystem {
     constructor() {
         this.state = {
-            isScrolling: false,
             isMobile: window.innerWidth <= 900
         };
 
@@ -124,20 +123,15 @@ class NavigationSystem {
     }
 
     setupScrollHandler() {
-        let ticking = false;
         window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    this.updateHeaderTextOnScroll();
-                    ticking = false;
-                });
-                ticking = true;
-            }
+            requestAnimationFrame(() => {
+                this.updateHeaderTextOnScroll();
+            });
         }, { passive: true });
     }
 
     updateHeaderTextOnScroll() {
-        const scrollPosition = window.scrollY;
+        const scrollPosition = window.pageYOffset;
         const sections = {
             'artist-statement': "ARTIST STATEMENT",
             'busan-section': "BUSAN",
@@ -172,10 +166,6 @@ class NavigationSystem {
         window.addEventListener('resize', this.debounce(() => {
             this.state.isMobile = window.innerWidth <= 900;
         }, 250));
-
-        window.addEventListener('touchend', () => {
-            this.state.isScrolling = false;
-        });
 
         [...this.elements.bottomNavLinks, ...this.elements.allNavLinks].forEach(link => {
             link.addEventListener('click', (e) => {
@@ -227,9 +217,7 @@ class NavigationSystem {
 
     smoothScroll(targetId) {
         const targetElement = document.querySelector(targetId);
-        if (!targetElement || this.state.isScrolling) return;
-
-        this.state.isScrolling = true;
+        if (!targetElement) return;
 
         const headerHeight = document.querySelector('.navbar')?.offsetHeight || 0;
         const offset = 110;
@@ -239,10 +227,6 @@ class NavigationSystem {
             top: targetPosition,
             behavior: 'smooth'
         });
-
-        setTimeout(() => {
-            this.state.isScrolling = false;
-        }, 300);
     }
 
     debounce(func, wait) {
