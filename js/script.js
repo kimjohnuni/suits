@@ -251,13 +251,9 @@ class NavigationSystem {
     setupMobileNav() {
         if (this.elements.mobileNav) {
             this.elements.mobileNav.style.display = 'block';
-            void this.elements.mobileNav.offsetHeight;
+            void this.elements.mobileNav.offsetHeight; // Force reflow
             this.elements.mobileNav.style.transform = 'scale(0)';
             this.elements.mobileNav.style.visibility = 'hidden';
-            // Initialize dropdown content as hidden
-            if (this.elements.dropdownContent) {
-                this.elements.dropdownContent.style.display = 'none';
-            }
         }
     }
 
@@ -271,7 +267,7 @@ class NavigationSystem {
 
     openMenu() {
         this.state.isMenuOpen = true;
-        void this.elements.mobileNav.offsetHeight;
+        void this.elements.mobileNav.offsetHeight; // Force reflow
         this.elements.mobileNav.style.visibility = 'visible';
         this.elements.mobileNav.style.transform = 'scale(1)';
         this.elements.hamburger.classList.add('active');
@@ -280,7 +276,7 @@ class NavigationSystem {
 
     closeMenu() {
         this.state.isMenuOpen = false;
-        void this.elements.mobileNav.offsetHeight;
+        void this.elements.mobileNav.offsetHeight; // Force reflow
         this.elements.mobileNav.style.transform = 'scale(0)';
         this.elements.hamburger.classList.remove('active');
         document.body.style.overflow = '';
@@ -304,19 +300,11 @@ class NavigationSystem {
     openDropdown() {
         this.state.isDropdownOpen = true;
         this.elements.dropdown.classList.add('active');
-        void this.elements.mobileNav.offsetHeight;
-        if (this.elements.dropdownContent) {
-            this.elements.dropdownContent.style.display = 'block';
-        }
     }
 
     closeDropdown() {
         this.state.isDropdownOpen = false;
         this.elements.dropdown.classList.remove('active');
-        void this.elements.mobileNav.offsetHeight;
-        if (this.elements.dropdownContent) {
-            this.elements.dropdownContent.style.display = 'none';
-        }
     }
 
     smoothScroll(targetId) {
