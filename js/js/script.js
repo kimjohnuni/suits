@@ -1,3 +1,146 @@
+// Immediate preloader display
+// Immediate preloader display
+// Immediate preloader display
+// Immediate preloader display
+window.addEventListener('DOMContentLoaded', () => {
+    const preloader = document.querySelector('.video-preloader');
+    if (preloader) {
+        preloader.style.display = 'flex';
+        preloader.style.opacity = '1';
+    }
+});
+
+const video = document.querySelector('.background-video');
+const mobileSprite = document.querySelector('.mobile-sprite');
+const preloader = document.querySelector('.video-preloader');
+let alreadyLoaded = false;
+
+const handleLoad = () => {
+    if (alreadyLoaded) return;
+    alreadyLoaded = true;
+
+    setTimeout(() => {
+        if (preloader.style.opacity !== '0') {
+            if (window.innerWidth <= 576) {
+                if (mobileSprite) {
+                    mobileSprite.style.display = 'block';
+                    setTimeout(() => {
+                        preloader.style.opacity = '0';
+                        setTimeout(() => {
+                            mobileSprite.style.opacity = '1';
+                        }, 400);
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                        }, 800);
+                    }, 100);
+                }
+            } else {
+                preloader.style.opacity = '0';
+                if (video) video.style.opacity = '1';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 800);
+            }
+        }
+    }, 5000);
+
+    if (window.innerWidth <= 576) {
+        if (mobileSprite) {
+            const spriteUrl = window.getComputedStyle(mobileSprite)
+                .backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+
+            if (spriteUrl) {
+                const img = new Image();
+                img.onload = () => {
+                    mobileSprite.style.display = 'block';
+                    setTimeout(() => {
+                        preloader.style.opacity = '0';
+                        setTimeout(() => {
+                            mobileSprite.style.opacity = '1';
+                        }, 400);
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                        }, 800);
+                    }, 100);
+                };
+                img.src = spriteUrl;
+            } else {
+                mobileSprite.style.display = 'block';
+                setTimeout(() => {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        mobileSprite.style.opacity = '1';
+                    }, 400);
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 800);
+                }, 100);
+            }
+        }
+    } else {
+        preloader.style.opacity = '0';
+        if (video) video.style.opacity = '1';
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 800);
+    }
+};
+
+// Make sure elements are loaded before running logic
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.innerWidth <= 576) {
+            handleLoad();
+        } else {
+            if (video) {
+                video.preload = 'auto';
+                if (video.readyState >= 3) {
+                    handleLoad();
+                } else {
+                    video.addEventListener('canplay', handleLoad);
+                }
+            }
+        }
+    });
+} else {
+    if (window.innerWidth <= 576) {
+        handleLoad();
+    } else {
+        if (video) {
+            video.preload = 'auto';
+            if (video.readyState >= 3) {
+                handleLoad();
+            } else {
+                video.addEventListener('canplay', handleLoad);
+            }
+        }
+    }
+}
+
+// Optional: Handle window resize
+window.addEventListener('resize', function() {
+    if (window.innerWidth <= 576) {
+        if (video) video.style.opacity = '0';
+        if (mobileSprite) {
+            mobileSprite.style.display = 'block';
+            setTimeout(() => {
+                mobileSprite.style.opacity = '1';
+            }, 100);
+        }
+    } else {
+        if (mobileSprite) {
+            mobileSprite.style.opacity = '0';
+            setTimeout(() => {
+                mobileSprite.style.display = 'none';
+            }, 800);
+        }
+        if (video) video.style.opacity = '1';
+    }
+});
+
+
+
+
 
 
 
@@ -129,19 +272,47 @@ class NavigationSystem {
         });
 
         if (this.elements.bottomNavDropdown) {
-            this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
-                this.elements.bottomNavDropdownContent.style.display = 'block';
-            });
+            const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-            this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
-                this.elements.bottomNavDropdownContent.style.display = 'none';
-            });
+            if (!isTouchDevice) {
+                this.elements.bottomNavDropdown.addEventListener('mouseenter', () => {
+                    this.elements.bottomNavDropdownContent.style.display = 'block';
+                });
+
+                this.elements.bottomNavDropdown.addEventListener('mouseleave', () => {
+                    this.elements.bottomNavDropdownContent.style.display = 'none';
+                });
+            } else {
+                this.elements.bottomNavDropdown.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (this.elements.bottomNavDropdownContent.style.display === 'block') {
+                        this.elements.bottomNavDropdownContent.style.display = 'none';
+                    } else {
+                        this.elements.bottomNavDropdownContent.style.display = 'block';
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!this.elements.bottomNavDropdown.contains(e.target)) {
+                        this.elements.bottomNavDropdownContent.style.display = 'none';
+                    }
+                });
+
+                if (this.elements.bottomNavDropdownContent) {
+                    this.elements.bottomNavDropdownContent.addEventListener('click', () => {
+                        this.elements.bottomNavDropdownContent.style.display = 'none';
+                    });
+                }
+            }
         }
     }
 
     setupMobileNav() {
         if (this.elements.mobileNav) {
             this.elements.mobileNav.style.display = 'block';
+            void this.elements.mobileNav.offsetHeight; // Force reflow
             this.elements.mobileNav.style.transform = 'scale(0)';
             this.elements.mobileNav.style.visibility = 'hidden';
         }
@@ -157,6 +328,7 @@ class NavigationSystem {
 
     openMenu() {
         this.state.isMenuOpen = true;
+        void this.elements.mobileNav.offsetHeight; // Force reflow
         this.elements.mobileNav.style.visibility = 'visible';
         this.elements.mobileNav.style.transform = 'scale(1)';
         this.elements.hamburger.classList.add('active');
@@ -165,6 +337,7 @@ class NavigationSystem {
 
     closeMenu() {
         this.state.isMenuOpen = false;
+        void this.elements.mobileNav.offsetHeight; // Force reflow
         this.elements.mobileNav.style.transform = 'scale(0)';
         this.elements.hamburger.classList.remove('active');
         document.body.style.overflow = '';
@@ -373,11 +546,59 @@ document.addEventListener('DOMContentLoaded', function() {
     let isDragging = false;
     let touchStartedOnIndicator = false;
 
-    // Keep your existing exhibitionItems.forEach and generateImageContent functions the same
+    // Function to generate modal content
+    function generateModalContent(item) {
+        const title = item.dataset.title;
+        const description = item.dataset.description;
+        const modalWrapper = modal.querySelector('.exhibition-modal-content-wrapper');
+        const exhibitionId = item.dataset.exhibitionId;
 
+        let imagesHTML = '';
+        let imageIndex = 1;
+
+        while (item.dataset[`image${imageIndex}`]) {
+            // Check for specific image pairs
+            if (
+                (exhibitionId === 'pwk' && imageIndex === 1) ||
+                (exhibitionId === 'artbusan' && imageIndex === 2) ||
+                (exhibitionId === 'agnesb' && imageIndex === 1) ||
+                (exhibitionId === 'factory' && imageIndex === 15)
+            ) {
+                imagesHTML += `<div class="pwk-image-pair">
+                    <img src="${item.dataset[`image${imageIndex}`]}" alt="${title} - Image ${imageIndex}">
+                    <img src="${item.dataset[`image${imageIndex + 1}`]}" alt="${title} - Image ${imageIndex + 1}">
+                </div>`;
+                imageIndex += 2;
+            } else {
+                imagesHTML += `<img src="${item.dataset[`image${imageIndex}`]}" alt="${title} - Image ${imageIndex}">`;
+                imageIndex++;
+            }
+        }
+
+        modalWrapper.innerHTML = `
+            <div class="pwk-content-text">
+                <h2>${title}</h2>
+                <p>${description}</p>
+            </div>
+            <div class="pwk-content-images">
+                ${imagesHTML}
+            </div>
+        `;
+    }
+
+    // Add click event listeners to exhibition items
+    exhibitionItems.forEach(item => {
+        item.addEventListener('click', () => {
+            generateModalContent(item);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    // Close button event listener
     closeBtn.addEventListener('click', closeModal);
 
-    // New touch handling specifically for the pull-down indicator
+    // Touch handling for pull-down indicator
     pullDownIndicator.addEventListener('touchstart', e => {
         startY = e.touches[0].clientY;
         touchStartedOnIndicator = true;
@@ -385,10 +606,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     modalContent.addEventListener('touchstart', e => {
-        // Check if touch started in the top 60px of the modal
         const touchY = e.touches[0].clientY;
         const modalRect = modalContent.getBoundingClientRect();
-        const topThreshold = modalRect.top + 60; // Adjust this value as needed
+        const topThreshold = modalRect.top + 60;
 
         if (touchY <= topThreshold) {
             startY = e.touches[0].clientY;
@@ -406,9 +626,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const diff = currentY - startY;
         const wrapper = modal.querySelector('.exhibition-modal-content-wrapper');
 
-        // Only allow pull-down when touch started on indicator
         if (wrapper.scrollTop <= 0 && diff > 0) {
-            e.preventDefault(); // Prevent default scrolling
+            e.preventDefault();
             isDragging = true;
             modalContent.style.transform = `translateY(${Math.min(diff * 0.5, 150)}px)`;
         } else {
@@ -441,6 +660,20 @@ document.addEventListener('DOMContentLoaded', function() {
             modalContent.removeEventListener('transitionend', handler);
         });
     }
+
+    // Optional: Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Optional: Close modal with escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
 });
 
 
@@ -454,6 +687,10 @@ document.addEventListener('DOMContentLoaded', function() {
 const contactInputBoxes = document.querySelectorAll('.contact-input-box, .contact-message-box');
 const contactSendButton = document.querySelector('.contact-send-button');
 
+// Initialize EmailJS
+emailjs.init('-whovk6aQzcWIuoo8');
+
+// Add focus effects to input boxes
 contactInputBoxes.forEach(inputBox => {
     inputBox.addEventListener('focus', function() {
         this.classList.add('focused');
@@ -466,6 +703,7 @@ contactInputBoxes.forEach(inputBox => {
     });
 });
 
+// Check if all inputs are filled
 function checkInputs() {
     let allFilled = true;
     contactInputBoxes.forEach(input => {
@@ -476,6 +714,7 @@ function checkInputs() {
     contactSendButton.disabled = !allFilled;
 }
 
+// Add input check listeners
 contactInputBoxes.forEach(input => {
     input.addEventListener('keyup', checkInputs);
     input.addEventListener('change', checkInputs);
@@ -485,13 +724,37 @@ contactInputBoxes.forEach(input => {
 document.getElementById('contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+    // Basic email validation
+    const emailInput = this.querySelector('input[name="user_email"]');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailInput.value)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+
+    // Show loading state
+    contactSendButton.disabled = true;
+    contactSendButton.textContent = 'SENDING';
+
+    emailjs.sendForm('service_1m3kke9', 'template_d3vrshc', this)
         .then(() => {
+            // Success
             console.log('SUCCESS!');
             this.reset();
             contactSendButton.disabled = true;
+            contactSendButton.textContent = 'SEND';
+            alert('Message sent successfully!');
+
+            // Remove focused class from all inputs
+            contactInputBoxes.forEach(input => {
+                input.classList.remove('focused');
+            });
         }, (error) => {
+            // Error
             console.log('FAILED...', error);
+            contactSendButton.disabled = false;
+            contactSendButton.textContent = 'SEND';
+            alert('Failed to send message. Please try again.');
         });
 });
 
