@@ -248,7 +248,7 @@ class NavigationSystem {
                 if (href.startsWith('#')) {
                     e.preventDefault();
                     this.smoothScroll(href);
-                    this.closeMenu(); // This will close the mobile menu
+                    this.closeMenu();
                 }
             });
         });
@@ -260,6 +260,13 @@ class NavigationSystem {
                 link.addEventListener('click', () => {
                     this.elements.bottomNavDropdownContent.style.display = 'none';
                 });
+            });
+
+            // Add touch event handling for iPad
+            document.addEventListener('touchstart', (e) => {
+                if (!this.elements.bottomNavDropdown.contains(e.target)) {
+                    this.elements.bottomNavDropdownContent.style.display = 'none';
+                }
             });
         }
 
