@@ -284,6 +284,7 @@ class NavigationSystem {
     setupMobileNav() {
         if (this.elements.mobileNav) {
             this.elements.mobileNav.style.display = 'block';
+            void this.elements.mobileNav.offsetHeight; // Force reflow
             this.elements.mobileNav.style.transform = 'scale(0)';
             this.elements.mobileNav.style.visibility = 'hidden';
         }
@@ -299,6 +300,7 @@ class NavigationSystem {
 
     openMenu() {
         this.state.isMenuOpen = true;
+        void this.elements.mobileNav.offsetHeight; // Force reflow
         this.elements.mobileNav.style.visibility = 'visible';
         this.elements.mobileNav.style.transform = 'scale(1)';
         this.elements.hamburger.classList.add('active');
@@ -307,6 +309,7 @@ class NavigationSystem {
 
     closeMenu() {
         this.state.isMenuOpen = false;
+        void this.elements.mobileNav.offsetHeight; // Force reflow
         this.elements.mobileNav.style.transform = 'scale(0)';
         this.elements.hamburger.classList.remove('active');
         document.body.style.overflow = '';
