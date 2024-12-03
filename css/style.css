@@ -113,12 +113,13 @@ font-family: 'Rockwell Nova', sans-serif;
     top: 0;
     left: 0;
     z-index: 998;
+    opacity: 1 !important; /* Force immediate visibility */
+   visibility: visible;
     display: flex;
     justify-content: center;
     align-items: center;
     transform: translateZ(0);
     will-change: transform;
-    opacity: 1;
     transition: opacity 0.8s ease-in-out;
     background-color: #ffffff;
     backface-visibility: hidden;
