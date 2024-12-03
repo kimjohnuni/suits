@@ -274,18 +274,24 @@ class NavigationSystem {
     }
 
     openMenu() {
+        this.state.scrollPosition = window.pageYOffset;
         this.state.isMenuOpen = true;
         this.elements.mobileNav.style.visibility = 'visible';
         this.elements.mobileNav.style.transform = 'scale(1)';
         this.elements.hamburger.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${this.state.scrollPosition}px`;
+        document.body.style.width = '100%';
     }
 
     closeMenu() {
         this.state.isMenuOpen = false;
         this.elements.mobileNav.style.transform = 'scale(0)';
         this.elements.hamburger.classList.remove('active');
-        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, this.state.scrollPosition);
         this.closeDropdown();
 
         setTimeout(() => {
