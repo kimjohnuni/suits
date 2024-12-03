@@ -157,7 +157,8 @@ class NavigationSystem {
             isMenuOpen: false,
             isDropdownOpen: false,
             isMobile: window.innerWidth <= 900,
-            isScrolling: false
+            isScrolling: false,
+            previousOverflowState: ''
         };
 
         this.elements = {
@@ -312,6 +313,7 @@ class NavigationSystem {
             }
         }
     }
+
     setupMobileNav() {
         if (this.elements.mobileNav) {
             this.elements.mobileNav.style.display = 'block';
@@ -329,6 +331,7 @@ class NavigationSystem {
     }
 
     openMenu() {
+        this.state.previousOverflowState = document.body.style.overflow;
         this.state.isMenuOpen = true;
         this.elements.mobileNav.style.visibility = 'visible';
         this.elements.mobileNav.style.transform = 'scale(1)';
@@ -340,7 +343,7 @@ class NavigationSystem {
         this.state.isMenuOpen = false;
         this.elements.mobileNav.style.transform = 'scale(0)';
         this.elements.hamburger.classList.remove('active');
-        document.body.style.overflow = '';
+        document.body.style.overflow = this.state.previousOverflowState || 'auto';
         this.closeDropdown();
 
         setTimeout(() => {
@@ -371,6 +374,10 @@ class NavigationSystem {
     smoothScroll(targetId) {
         const targetElement = document.querySelector(targetId);
         if (!targetElement || this.state.isScrolling) return;
+
+        if (this.state.isMenuOpen) {
+            this.closeMenu();
+        }
 
         this.state.isScrolling = true;
 
