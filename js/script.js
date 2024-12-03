@@ -1,15 +1,3 @@
-// Immediate preloader display
-// Immediate preloader display
-
-
-window.addEventListener('DOMContentLoaded', () => {
-    const preloader = document.querySelector('.video-preloader');
-    if (preloader) {
-        preloader.style.display = 'flex';
-        preloader.style.opacity = '1';
-    }
-});
-
 const video = document.querySelector('.background-video');
 const mobileSprite = document.querySelector('.mobile-sprite');
 const preloader = document.querySelector('.video-preloader');
@@ -19,69 +7,35 @@ const handleLoad = () => {
     if (alreadyLoaded) return;
     alreadyLoaded = true;
 
-    setTimeout(() => {
-        if (!preloader.classList.contains('fade-transition')) {
-            if (window.innerWidth <= 576) {
-                if (mobileSprite) {
-                    mobileSprite.style.display = 'block';
-                    mobileSprite.offsetHeight; // Force reflow
-                    setTimeout(() => {
-                        preloader.classList.add('fade-transition');
-                        setTimeout(() => {
-                            mobileSprite.style.opacity = '1';
-                            setTimeout(() => {
-                                preloader.style.display = 'none';
-                            }, 800);
-                        }, 400);
-                    }, 50);
-                }
-            } else {
-                preloader.classList.add('fade-transition');
-                if (video) video.style.opacity = '1';
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 800);
-            }
-        }
-    }, 5000);
-
     if (window.innerWidth <= 576) {
+        // Make sure mobileSprite exists before proceeding
         if (mobileSprite) {
+            // Wait for sprite to be ready
             const spriteUrl = window.getComputedStyle(mobileSprite)
                 .backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
 
             if (spriteUrl) {
                 const img = new Image();
                 img.onload = () => {
-                    mobileSprite.style.display = 'block';
-                    mobileSprite.offsetHeight; // Force reflow
+                    preloader.style.opacity = '0';
+                    mobileSprite.style.opacity = '1';
                     setTimeout(() => {
-                        preloader.classList.add('fade-transition');
-                        setTimeout(() => {
-                            mobileSprite.style.opacity = '1';
-                            setTimeout(() => {
-                                preloader.style.display = 'none';
-                            }, 800);
-                        }, 400);
-                    }, 50);
+                        preloader.style.display = 'none';
+                    }, 800);
                 };
                 img.src = spriteUrl;
             } else {
-                mobileSprite.style.display = 'block';
-                mobileSprite.offsetHeight; // Force reflow
+                // Fallback if sprite URL isn't found
+                preloader.style.opacity = '0';
+                mobileSprite.style.opacity = '1';
                 setTimeout(() => {
-                    preloader.classList.add('fade-transition');
-                    setTimeout(() => {
-                        mobileSprite.style.opacity = '1';
-                        setTimeout(() => {
-                            preloader.style.display = 'none';
-                        }, 800);
-                    }, 400);
-                }, 50);
+                    preloader.style.display = 'none';
+                }, 800);
             }
         }
     } else {
-        preloader.classList.add('fade-transition');
+        // Desktop video handling
+        preloader.style.opacity = '0';
         if (video) video.style.opacity = '1';
         setTimeout(() => {
             preloader.style.display = 'none';
@@ -106,6 +60,7 @@ if (document.readyState === 'loading') {
         }
     });
 } else {
+    // If DOM is already loaded, run immediately
     if (window.innerWidth <= 576) {
         handleLoad();
     } else {
@@ -124,20 +79,9 @@ if (document.readyState === 'loading') {
 window.addEventListener('resize', function() {
     if (window.innerWidth <= 576) {
         if (video) video.style.opacity = '0';
-        if (mobileSprite) {
-            mobileSprite.style.display = 'block';
-            mobileSprite.offsetHeight; // Force reflow
-            setTimeout(() => {
-                mobileSprite.style.opacity = '1';
-            }, 100);
-        }
+        if (mobileSprite) mobileSprite.style.opacity = '1';
     } else {
-        if (mobileSprite) {
-            mobileSprite.style.opacity = '0';
-            setTimeout(() => {
-                mobileSprite.style.display = 'none';
-            }, 800);
-        }
+        if (mobileSprite) mobileSprite.style.opacity = '0';
         if (video) video.style.opacity = '1';
     }
 });
@@ -157,8 +101,7 @@ class NavigationSystem {
             isMenuOpen: false,
             isDropdownOpen: false,
             isMobile: window.innerWidth <= 900,
-            isScrolling: false,
-            previousOverflowState: ''
+            isScrolling: false
         };
 
         this.elements = {
@@ -331,7 +274,6 @@ class NavigationSystem {
     }
 
     openMenu() {
-        this.state.previousOverflowState = document.body.style.overflow;
         this.state.isMenuOpen = true;
         this.elements.mobileNav.style.visibility = 'visible';
         this.elements.mobileNav.style.transform = 'scale(1)';
@@ -343,7 +285,7 @@ class NavigationSystem {
         this.state.isMenuOpen = false;
         this.elements.mobileNav.style.transform = 'scale(0)';
         this.elements.hamburger.classList.remove('active');
-        document.body.style.overflow = this.state.previousOverflowState || 'auto';
+        document.body.style.overflow = '';
         this.closeDropdown();
 
         setTimeout(() => {
@@ -374,10 +316,6 @@ class NavigationSystem {
     smoothScroll(targetId) {
         const targetElement = document.querySelector(targetId);
         if (!targetElement || this.state.isScrolling) return;
-
-        if (this.state.isMenuOpen) {
-            this.closeMenu();
-        }
 
         this.state.isScrolling = true;
 
@@ -741,7 +679,7 @@ document.getElementById('contact-form').addEventListener('submit', function(even
 
     // Show loading state
     contactSendButton.disabled = true;
-    contactSendButton.textContent = 'SENDING';
+    contactSendButton.textContent = 'SENDING...';
 
     emailjs.sendForm('service_1m3kke9', 'template_d3vrshc', this)
         .then(() => {
