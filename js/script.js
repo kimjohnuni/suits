@@ -1,13 +1,18 @@
 // Immediate preloader display
+// Show preloader immediately - before anything else loads
+document.write(`
+    <style>
+        .video-preloader {
+            display: flex !important;
+            opacity: 1 !important;
+        }
+    </style>
+`);
 
 // Get elements
 const video = document.querySelector('.background-video');
 const mobileSprite = document.querySelector('.mobile-sprite');
 const preloader = document.querySelector('.video-preloader');
-
-// Show preloader immediately
-preloader.style.display = 'flex';
-preloader.style.opacity = '1';
 
 // Handle mobile sprite loading
 const handleMobileLoad = () => {
@@ -16,13 +21,18 @@ const handleMobileLoad = () => {
 
     img.onload = () => {
         mobileSprite.style.display = 'block';
+        // Force a reflow
+        mobileSprite.offsetHeight;
+
         setTimeout(() => {
-            preloader.style.opacity = '0';
-            mobileSprite.style.opacity = '1';
+            preloader.classList.add('fade-transition');
             setTimeout(() => {
-                preloader.style.display = 'none';
-            }, 800);
-        }, 100);
+                mobileSprite.style.opacity = '1';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 800);
+            }, 400);
+        }, 50);
     };
 
     img.src = spriteUrl;
@@ -31,12 +41,12 @@ const handleMobileLoad = () => {
 // Handle video loading
 const handleVideoLoad = () => {
     setTimeout(() => {
-        preloader.style.opacity = '0';
+        preloader.classList.add('fade-transition');
         video.style.opacity = '1';
         setTimeout(() => {
             preloader.style.display = 'none';
         }, 800);
-    }, 100);
+    }, 50);
 };
 
 // Initialize based on screen size
