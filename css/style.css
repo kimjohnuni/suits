@@ -198,6 +198,11 @@ font-family: 'Rockwell Nova', sans-serif;
     to { background-position: -700% 0; }  /* Changed from -600% to -700% */
 }
 
+.fade-transition {
+    opacity: 0 !important;
+    transition: opacity 0.8s ease !important;
+}
+
 
 
 
