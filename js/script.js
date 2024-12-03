@@ -17,28 +17,41 @@ const handleLoad = () => {
             if (spriteUrl) {
                 const img = new Image();
                 img.onload = () => {
+                    // First, fade out the preloader
+                    preloader.style.transition = 'opacity 0.8s ease';
                     preloader.style.opacity = '0';
-                    mobileSprite.style.opacity = '1';
+
+                    // Wait for preloader to fade out, then fade in the mobile sprite
                     setTimeout(() => {
                         preloader.style.display = 'none';
+                        mobileSprite.style.transition = 'opacity 0.8s ease';
+                        mobileSprite.style.opacity = '1';
                     }, 800);
                 };
                 img.src = spriteUrl;
             } else {
                 // Fallback if sprite URL isn't found
+                preloader.style.transition = 'opacity 0.8s ease';
                 preloader.style.opacity = '0';
-                mobileSprite.style.opacity = '1';
+
                 setTimeout(() => {
                     preloader.style.display = 'none';
+                    mobileSprite.style.transition = 'opacity 0.8s ease';
+                    mobileSprite.style.opacity = '1';
                 }, 800);
             }
         }
     } else {
         // Desktop video handling
+        preloader.style.transition = 'opacity 0.8s ease';
         preloader.style.opacity = '0';
-        if (video) video.style.opacity = '1';
+
         setTimeout(() => {
             preloader.style.display = 'none';
+            if (video) {
+                video.style.transition = 'opacity 0.8s ease';
+                video.style.opacity = '1';
+            }
         }, 800);
     }
 };
