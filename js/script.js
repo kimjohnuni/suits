@@ -679,7 +679,9 @@ const contactInputBoxes = document.querySelectorAll('.contact-input-box, .contac
 const contactSendButton = document.querySelector('.contact-send-button');
 
 // Initialize EmailJS
-emailjs.init('-whovk6aQzcWIuoo8');
+emailjs.init({
+    publicKey: '-whovk6aQzcWIuoo8'
+});
 
 // Add focus effects to input boxes
 contactInputBoxes.forEach(inputBox => {
@@ -727,7 +729,7 @@ document.getElementById('contact-form').addEventListener('submit', function(even
     contactSendButton.disabled = true;
     contactSendButton.textContent = 'SENDING...';
 
-    emailjs.sendForm('service_1m3kke9', 'template_d3vrshc', this)
+    emailjs.sendForm('service_sylkt7o', 'template_d3vrshc', this)
         .then(() => {
             // Success
             console.log('SUCCESS!');
@@ -748,7 +750,7 @@ document.getElementById('contact-form').addEventListener('submit', function(even
             alert('Failed to send message. Please try again.');
         });
 });
-
+});
 
 
 
