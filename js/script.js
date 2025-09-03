@@ -678,16 +678,15 @@ document.addEventListener('DOMContentLoaded', function() {
 const contactInputBoxes = document.querySelectorAll('.contact-input-box, .contact-message-box');
 const contactSendButton = document.querySelector('.contact-send-button');
 
-// Initialize EmailJS (Updated syntax)
-emailjs.init({
-    publicKey: '-whovk6aQzcWIuoo8'
-});
+// Initialize EmailJS
+emailjs.init('-whovk6aQzcWIuoo8');
 
 // Add focus effects to input boxes
 contactInputBoxes.forEach(inputBox => {
     inputBox.addEventListener('focus', function() {
         this.classList.add('focused');
     });
+
     inputBox.addEventListener('blur', function() {
         if (this.value === '') {
             this.classList.remove('focused');
@@ -712,7 +711,7 @@ contactInputBoxes.forEach(input => {
     input.addEventListener('change', checkInputs);
 });
 
-// EmailJS form submission (Updated syntax)
+// EmailJS form submission
 document.getElementById('contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -728,15 +727,15 @@ document.getElementById('contact-form').addEventListener('submit', function(even
     contactSendButton.disabled = true;
     contactSendButton.textContent = 'SENDING...';
 
-    // Updated sendForm syntax - pass the form element directly
     emailjs.sendForm('service_1m3kke9', 'template_d3vrshc', this)
-        .then((response) => {
+        .then(() => {
             // Success
-            console.log('SUCCESS!', response.status, response.text);
+            console.log('SUCCESS!');
             this.reset();
             contactSendButton.disabled = true;
             contactSendButton.textContent = 'SEND';
             alert('Message sent successfully!');
+
             // Remove focused class from all inputs
             contactInputBoxes.forEach(input => {
                 input.classList.remove('focused');
@@ -749,7 +748,6 @@ document.getElementById('contact-form').addEventListener('submit', function(even
             alert('Failed to send message. Please try again.');
         });
 });
-
 
 
 
