@@ -677,12 +677,10 @@ document.addEventListener('DOMContentLoaded', function() {
 //CONTACT Form
 const contactInputBoxes = document.querySelectorAll('.contact-input-box, .contact-message-box');
 const contactSendButton = document.querySelector('.contact-send-button');
-
 // Initialize EmailJS (Updated syntax)
 emailjs.init({
     publicKey: '-whovk6aQzcWIuoo8'
 });
-
 // Add focus effects to input boxes
 contactInputBoxes.forEach(inputBox => {
     inputBox.addEventListener('focus', function() {
@@ -694,7 +692,6 @@ contactInputBoxes.forEach(inputBox => {
         }
     });
 });
-
 // Check if all inputs are filled
 function checkInputs() {
     let allFilled = true;
@@ -705,29 +702,24 @@ function checkInputs() {
     });
     contactSendButton.disabled = !allFilled;
 }
-
 // Add input check listeners
 contactInputBoxes.forEach(input => {
     input.addEventListener('keyup', checkInputs);
     input.addEventListener('change', checkInputs);
 });
-
 // EmailJS form submission (Updated syntax)
 document.getElementById('contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
-
     // Basic email validation
-    const emailInput = this.querySelector('input[name="user_email"]');
+    const emailInput = this.querySelector('input[name="email"]');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailInput.value)) {
         alert('Please enter a valid email address');
         return;
     }
-
     // Show loading state
     contactSendButton.disabled = true;
     contactSendButton.textContent = 'SENDING...';
-
     // Updated sendForm syntax - pass the form element directly
     emailjs.sendForm('service_sylkt7o', 'template_d3vrshc', this)
         .then((response) => {
@@ -748,10 +740,6 @@ document.getElementById('contact-form').addEventListener('submit', function(even
             contactSendButton.textContent = 'SEND';
             alert('Failed to send message. Please try again.');
         });
-
-
-
-
 });
 
 
