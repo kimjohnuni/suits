@@ -716,7 +716,7 @@ document.getElementById('contact-form').addEventListener('submit', function(even
     event.preventDefault();
 
     // Basic email validation
-    const emailInput = this.querySelector('input[name="user_email"]');
+    const emailInput = this.querySelector('input[name="email"]');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailInput.value)) {
         alert('Please enter a valid email address');
