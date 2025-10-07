@@ -733,7 +733,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Show loading state
             contactSendButton.disabled = true;
-            contactSendButton.textContent = 'SENDING...';
+            contactSendButton.textContent = 'SENDING';
 
             // Send email using your credentials
             emailjs.sendForm('service_2t7fwpx', 'template_d3vrshc', this)
