@@ -675,350 +675,87 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 //CONTACT Form
-const contactInputBoxes = document.querySelectorAll('.contact-input-box, .contact-message-box');
-const contactSendButton = document.querySelector('.contact-send-button');
+document.addEventListener('DOMContentLoaded', function() {
+    const contactInputBoxes = document.querySelectorAll('.contact-input-box, .contact-message-box');
+    const contactSendButton = document.querySelector('.contact-send-button');
+    const contactForm = document.getElementById('contact-form');
 
-// Initialize EmailJS
-emailjs.init('-whovk6aQzcWIuoo8');
+    // Initialize EmailJS with your public key
+    emailjs.init('-whovk6aQzcWIuoo8');
 
-// Add focus effects to input boxes
-contactInputBoxes.forEach(inputBox => {
-    inputBox.addEventListener('focus', function() {
-        this.classList.add('focused');
+    // Add focus effects to input boxes
+    contactInputBoxes.forEach(inputBox => {
+        inputBox.addEventListener('focus', function() {
+            this.classList.add('focused');
+        });
+
+        inputBox.addEventListener('blur', function() {
+            if (this.value === '') {
+                this.classList.remove('focused');
+            }
+        });
     });
 
-    inputBox.addEventListener('blur', function() {
-        if (this.value === '') {
-            this.classList.remove('focused');
-        }
-    });
-});
+    // Check if all inputs are filled
+    function checkInputs() {
+        let allFilled = true;
+        contactInputBoxes.forEach(input => {
+            if (input.value.trim() === '') {
+                allFilled = false;
+            }
+        });
+        contactSendButton.disabled = !allFilled;
+    }
 
-// Check if all inputs are filled
-function checkInputs() {
-    let allFilled = true;
+    // Add input check listeners
     contactInputBoxes.forEach(input => {
-        if (input.value.trim() === '') {
-            allFilled = false;
-        }
+        input.addEventListener('keyup', checkInputs);
+        input.addEventListener('change', checkInputs);
+        input.addEventListener('input', checkInputs);
     });
-    contactSendButton.disabled = !allFilled;
-}
 
-// Add input check listeners
-contactInputBoxes.forEach(input => {
-    input.addEventListener('keyup', checkInputs);
-    input.addEventListener('change', checkInputs);
-});
+    // Check initial state on page load
+    checkInputs();
 
-// EmailJS form submission
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault();
+    // EmailJS form submission
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-    // Basic email validation
-    const emailInput = this.querySelector('input[name="user_email"]');
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailInput.value)) {
-        alert('Please enter a valid email address');
-        return;
-    }
+            // Basic email validation
+            const emailInput = this.querySelector('input[name="user_email"]');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // Show loading state
-    contactSendButton.disabled = true;
-    contactSendButton.textContent = 'SENDING...';
+            if (!emailInput || !emailRegex.test(emailInput.value)) {
+                alert('Please enter a valid email address');
+                return;
+            }
 
-    emailjs.sendForm('service_1m3kke9', 'template_d3vrshc', this)
-        .then(() => {
-            // Success
-            console.log('SUCCESS!');
-            this.reset();
+            // Show loading state
             contactSendButton.disabled = true;
-            contactSendButton.textContent = 'SEND';
-            alert('Message sent successfully!');
+            contactSendButton.textContent = 'SENDING...';
 
-            // Remove focused class from all inputs
-            contactInputBoxes.forEach(input => {
-                input.classList.remove('focused');
-            });
-        }, (error) => {
-            // Error
-            console.log('FAILED...', error);
-            contactSendButton.disabled = false;
-            contactSendButton.textContent = 'SEND';
-            alert('Failed to send message. Please try again.');
+            // Send email using your credentials
+            emailjs.sendForm('service_2t7fwpx', 'template_d3vrshc', this)
+                .then(() => {
+                    // Success
+                    console.log('SUCCESS!');
+                    contactForm.reset();
+                    contactSendButton.disabled = true;
+                    contactSendButton.textContent = 'SEND';
+                    alert('Message sent successfully!');
+
+                    // Remove focused class from all inputs
+                    contactInputBoxes.forEach(input => {
+                        input.classList.remove('focused');
+                    });
+                }, (error) => {
+                    // Error
+                    console.log('FAILED...', error);
+                    contactSendButton.disabled = false;
+                    contactSendButton.textContent = 'SEND';
+                    alert('Failed to send message. Please try again.');
+                });
         });
+    }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-//SCALE HEADER
-/*
-document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll("[id]");
-    const navbarText = document.getElementById("navbar-text");
-    const mobileNav = document.querySelector('.mobile-nav');
-    const hamburger = document.querySelector('.mobile-nav__hamburger');
-    let lastKnownSection = '';
-    let isMenuClick = false;
-
-    if (!navbarText || !hamburger || !mobileNav) return;
-
-    // Mobile menu toggle
-    hamburger.addEventListener('click', () => {
-        mobileNav.classList.toggle('active');
-        hamburger.setAttribute('aria-expanded',
-            hamburger.getAttribute('aria-expanded') === 'false' ? 'true' : 'false'
-        );
-    });
-
-    // Mobile dropdown toggle
-    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
-    if (dropdownTrigger) {
-        dropdownTrigger.addEventListener('click', (e) => {
-            e.preventDefault();
-            const dropdownContent = e.target.closest('.mobile-nav__dropdown').querySelector('.mobile-nav__dropdown-content');
-            if (dropdownContent) {
-                dropdownContent.classList.toggle('show');
-            }
-        });
-    }
-
-    const newTextMap = {
-        'home': "SUITMAN'S PORTRAITS",
-        'artist-statement': "ARTIST STATEMENT",
-        'busan-section': "BUSAN",
-        'hongkong-section': "HONG KONG",
-        'iceland-section': "ICELAND",
-        'myanmar-section': "MYANMAR",
-        'peru-section': "PERU",
-        'manila-section': "MANILA",
-        'seoul-section': "SEOUL",
-        'singapore-section': "SINGAPORE",
-        'tibet-section': "TIBET",
-        'otherworks-section': "OTHER WORKS",
-        'exhibition-section': "EXHIBITIONS",
-        'contact-section': "CONTACT"
-    };
-
-    function updateNavbarTextOnScroll() {
-        if (isMenuClick) return;
-
-        let currentSectionId = '';
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-
-            if (window.pageYOffset >= sectionTop - 200 && window.pageYOffset < sectionTop + sectionHeight - 200) {
-                currentSectionId = section.getAttribute('id');
-            }
-        });
-
-        if (currentSectionId && currentSectionId !== lastKnownSection) {
-            lastKnownSection = currentSectionId;
-            navbarText.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            navbarText.style.transform = 'scale(0)';
-            navbarText.style.opacity = '0';
-
-            setTimeout(() => {
-                navbarText.innerText = newTextMap[currentSectionId] || "SUITMAN'S PORTRAITS";
-                navbarText.style.transform = 'scale(1)';
-                navbarText.style.opacity = '1';
-            }, 300);
-        }
-    }
-
-    window.addEventListener('scroll', () => {
-        if (!isMenuClick) {
-            updateNavbarTextOnScroll();
-        }
-    });
-
-    const handleMenuClick = (event) => {
-        event.preventDefault();
-        const targetId = event.target.getAttribute('href');
-        if (targetId && targetId !== '#') {
-            isMenuClick = true;
-
-            // Initial animation (scale down)
-            navbarText.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            navbarText.style.transform = 'scale(0)';
-            navbarText.style.opacity = '0';
-
-            const targetElement = document.querySelector(targetId);
-            lastKnownSection = targetId.substring(1);
-
-            // Start scrolling
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-
-            // Use the scrollend event to detect when scrolling stops
-            document.addEventListener('scrollend', function onScrollEnd() {
-                setTimeout(() => {
-                    navbarText.innerText = newTextMap[lastKnownSection] || "SUITMAN'S PORTRAITS";
-                    navbarText.style.transform = 'scale(1)';
-                    navbarText.style.opacity = '1';
-                    isMenuClick = false;
-                    document.removeEventListener('scrollend', onScrollEnd);
-                }, 100);
-            }, { once: true });
-
-            // Close mobile menu if open
-            mobileNav.classList.remove('active');
-            hamburger.setAttribute('aria-expanded', 'false');
-        }
-    };
-
-    // Desktop menu click handlers
-    document.querySelectorAll('.menu a, .dropdown-content a').forEach(item => {
-        item.addEventListener('click', handleMenuClick);
-    });
-
-    // Mobile menu click handlers
-    document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a').forEach(item => {
-        item.addEventListener('click', handleMenuClick);
-    });
-
-    // Initial call to set correct text on page load
-    updateNavbarTextOnScroll();
-});
-*/
-
-
-
-
-/*FADE HEADER
-document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll("[id]");
-    const navbarText = document.getElementById("navbar-text");
-    const mobileNav = document.querySelector('.mobile-nav');
-    const hamburger = document.querySelector('.mobile-nav__hamburger');
-    let lastKnownSection = '';
-    let isMenuClick = false;
-
-    if (!navbarText || !hamburger || !mobileNav) return;
-
-    // Mobile menu toggle
-    hamburger.addEventListener('click', () => {
-        mobileNav.classList.toggle('active');
-        hamburger.setAttribute('aria-expanded',
-            hamburger.getAttribute('aria-expanded') === 'false' ? 'true' : 'false'
-        );
-    });
-
-    // Mobile dropdown toggle
-    const dropdownTrigger = document.querySelector('.mobile-nav__dropdown-trigger');
-    if (dropdownTrigger) {
-        dropdownTrigger.addEventListener('click', (e) => {
-            e.preventDefault();
-            const dropdownContent = e.target.closest('.mobile-nav__dropdown').querySelector('.mobile-nav__dropdown-content');
-            if (dropdownContent) {
-                dropdownContent.classList.toggle('show');
-            }
-        });
-    }
-
-    const newTextMap = {
-        'home': "SUITMAN'S PORTRAITS",
-        'artist-statement': "ARTIST STATEMENT",
-        'busan-section': "BUSAN",
-        'hongkong-section': "HONG KONG",
-        'iceland-section': "ICELAND",
-        'myanmar-section': "MYANMAR",
-        'peru-section': "PERU",
-        'manila-section': "MANILA",
-        'seoul-section': "SEOUL",
-        'singapore-section': "SINGAPORE",
-        'tibet-section': "TIBET",
-        'otherworks-section': "OTHER WORKS",
-        'exhibition-section': "EXHIBITIONS",
-        'contact-section': "CONTACT"
-    };
-
-    function updateNavbarTextOnScroll() {
-        if (isMenuClick) return;
-
-        let currentSectionId = '';
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-
-            if (window.pageYOffset >= sectionTop - 200 && window.pageYOffset < sectionTop + sectionHeight - 200) {
-                currentSectionId = section.getAttribute('id');
-            }
-        });
-
-        if (currentSectionId && currentSectionId !== lastKnownSection) {
-            lastKnownSection = currentSectionId;
-            navbarText.style.transition = 'opacity 0.3s ease';
-            navbarText.style.opacity = '0';
-
-            setTimeout(() => {
-                navbarText.innerText = newTextMap[currentSectionId] || "SUITMAN'S PORTRAITS";
-                navbarText.style.opacity = '1';
-            }, 300);
-        }
-    }
-
-    window.addEventListener('scroll', () => {
-        if (!isMenuClick) {
-            updateNavbarTextOnScroll();
-        }
-    });
-
-    const handleMenuClick = (event) => {
-        event.preventDefault();
-        const targetId = event.target.getAttribute('href');
-        if (targetId && targetId !== '#') {
-            isMenuClick = true;
-
-            // Initial fade out
-            navbarText.style.transition = 'opacity 0.3s ease';
-            navbarText.style.opacity = '0';
-
-            const targetElement = document.querySelector(targetId);
-            lastKnownSection = targetId.substring(1);
-
-            // Start scrolling
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-
-            // Use the scrollend event to detect when scrolling stops
-            document.addEventListener('scrollend', function onScrollEnd() {
-                setTimeout(() => {
-                    navbarText.innerText = newTextMap[lastKnownSection] || "SUITMAN'S PORTRAITS";
-                    navbarText.style.opacity = '1';
-                    isMenuClick = false;
-                    document.removeEventListener('scrollend', onScrollEnd);
-                }, 100);
-            }, { once: true });
-
-            // Close mobile menu if open
-            mobileNav.classList.remove('active');
-            hamburger.setAttribute('aria-expanded', 'false');
-        }
-    };
-
-    // Desktop menu click handlers
-    document.querySelectorAll('.menu a, .dropdown-content a').forEach(item => {
-        item.addEventListener('click', handleMenuClick);
-    });
-
-    // Mobile menu click handlers
-    document.querySelectorAll('.mobile-nav__item, .mobile-nav__dropdown-content a').forEach(item => {
-        item.addEventListener('click', handleMenuClick);
-    });
-
-    // Initial call to set correct text on page load
-    updateNavbarTextOnScroll();
-});
-*/
