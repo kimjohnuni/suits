@@ -2,11 +2,14 @@
 const bottomNavbar = document.querySelector('.bottom-navbar');
 if (bottomNavbar) {
     bottomNavbar.style.opacity = '0';
-    bottomNavbar.style.transition = 'opacity 0.6s ease';
+    bottomNavbar.style.transition = 'opacity 0.8s ease';
     window.addEventListener('load', () => {
-        bottomNavbar.style.opacity = '1';
+        setTimeout(() => {
+            bottomNavbar.style.opacity = '1';
+        }, 1500);
     });
 }
+
 
 // Function to handle all anchor clicks with native smooth scroll
 function handleAnchorClick(e) {
