@@ -18,12 +18,11 @@ function revealNavbars() {
 }
 
 Promise.all([
-    document.fonts.load('700 16px "Rockwell Nova"'),
-    document.fonts.load('400 16px "Rockwell Nova"')
+    document.fonts.load('400 16px "Rockwell Nova"'),
+    document.fonts.load('700 16px "Rockwell Nova"')
 ]).then(() => {
     setTimeout(revealNavbars, 300);
 }).catch(() => {
-    // If font fails to load for any reason, still show the navbars
     setTimeout(revealNavbars, 300);
 });
 
