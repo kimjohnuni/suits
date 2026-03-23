@@ -911,9 +911,12 @@ body {
 .exhibition-video-wrap {
     flex: 1;
     max-width: 600px;
+    box-sizing: border-box;
+}
+
+.exhibition-video-border {
     background-color: black;
     padding: 15px;
-    box-sizing: border-box;
 }
 
 .exhibition-video-aspect {
@@ -935,6 +938,7 @@ body {
     margin-top: 8px;
     line-height: 1.4;
 }
+
 
 
 
