@@ -62,18 +62,16 @@ body {
     z-index: 10;
     padding: 0 20px;
 }
+
 .navbar h1 {
-margin: 0;
-font-size: 36px;
-font-family: 'Rockwell Nova', sans-serif;
+    margin: 0;
+    font-size: 36px;
+    font-family: 'Rockwell Nova', sans-serif;
 }
-
-
 
 .mobile-nav, .mobile-nav__hamburger {
     display: none;
 }
-
 
 .artist-statement-logo {
     transform: translate(-50%, 100%);
@@ -171,9 +169,8 @@ font-family: 'Rockwell Nova', sans-serif;
     transition: opacity 0.8s ease;
 }
 
-
 .mobile-sprite {
-  display: none;
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -191,7 +188,6 @@ font-family: 'Rockwell Nova', sans-serif;
     from { background-position: 0 0; }
     to { background-position: -700% 0; }
 }
-
 
 .exhibition-image-preloader {
     width: 100%;
@@ -482,7 +478,6 @@ font-family: 'Rockwell Nova', sans-serif;
     text-decoration: none;
 }
 
-
 .busan-portraits,
 .hongkong-portraits,
 .iceland-portraits,
@@ -761,17 +756,17 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 .other-works-modal-content {
-   position: fixed;
-   left: 5px;
-   right: 5px;
-   bottom: 0;
-   height: calc(100% - 80px);
-   background: white;
-   transform: translateY(100%);
-   opacity: 0;
-   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-   border-radius: 30px 30px 0 0;
-   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 5px;
+    right: 5px;
+    bottom: 0;
+    height: calc(100% - 80px);
+    background: white;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    border-radius: 30px 30px 0 0;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .other-works-modal.active .other-works-modal-content {
@@ -914,17 +909,23 @@ font-family: 'Rockwell Nova', sans-serif;
 .exhibition-video-wrap {
     flex: 1;
     max-width: 350px;
-    position: relative;
     background-color: black;
     padding: 15px;
+    box-sizing: border-box;
+}
+
+.exhibition-video-aspect {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
 }
 
 .exhibition-video-wrap iframe {
     position: absolute;
-    top: 15px;
-    left: 15px;
-    width: calc(100% - 30px);
-    height: calc(100% - 30px);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .exhibition-modal {
