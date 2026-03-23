@@ -1,14 +1,26 @@
-// Fade in bottom navbar on window load
 const bottomNavbar = document.querySelector('.bottom-navbar');
-if (bottomNavbar) {
-    bottomNavbar.style.opacity = '0';
-    bottomNavbar.style.transition = 'opacity 0.8s ease';
-    window.addEventListener('load', () => {
+const navbar = document.querySelector('.navbar');
+
+if (bottomNavbar) bottomNavbar.style.opacity = '0';
+if (navbar) navbar.style.opacity = '0';
+
+if (bottomNavbar || navbar) {
+    const transition = 'opacity 0.8s ease';
+
+    document.fonts.ready.then(() => {
         setTimeout(() => {
-            bottomNavbar.style.opacity = '1';
-        }, 1500);
+            if (bottomNavbar) {
+                bottomNavbar.style.transition = transition;
+                bottomNavbar.style.opacity = '1';
+            }
+            if (navbar) {
+                navbar.style.transition = transition;
+                navbar.style.opacity = '1';
+            }
+        }, 300);
     });
 }
+
 
 
 // Function to handle all anchor clicks with native smooth scroll
