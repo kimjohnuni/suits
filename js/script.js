@@ -4,22 +4,29 @@ const navbar = document.querySelector('.navbar');
 if (bottomNavbar) bottomNavbar.style.opacity = '0';
 if (navbar) navbar.style.opacity = '0';
 
-if (bottomNavbar || navbar) {
-    const transition = 'opacity 0.8s ease';
+const transition = 'opacity 0.8s ease';
 
-    document.fonts.ready.then(() => {
-        setTimeout(() => {
-            if (bottomNavbar) {
-                bottomNavbar.style.transition = transition;
-                bottomNavbar.style.opacity = '1';
-            }
-            if (navbar) {
-                navbar.style.transition = transition;
-                navbar.style.opacity = '1';
-            }
-        }, 300);
-    });
+function revealNavbars() {
+    if (bottomNavbar) {
+        bottomNavbar.style.transition = transition;
+        bottomNavbar.style.opacity = '1';
+    }
+    if (navbar) {
+        navbar.style.transition = transition;
+        navbar.style.opacity = '1';
+    }
 }
+
+Promise.all([
+    document.fonts.load('700 16px "Rockwell Nova"'),
+    document.fonts.load('400 16px "Rockwell Nova"')
+]).then(() => {
+    setTimeout(revealNavbars, 300);
+}).catch(() => {
+    // If font fails to load for any reason, still show the navbars
+    setTimeout(revealNavbars, 300);
+});
+
 
 
 
