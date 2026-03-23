@@ -37,7 +37,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Optional: add background or border */
     background-color: #fff;
 }
 
@@ -58,8 +57,8 @@ body {
     background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(4px);
     display: flex;
-    align-items: center; /* Vertically center items */
-    justify-content: center; /* Horizontally center items */
+    align-items: center;
+    justify-content: center;
     z-index: 10;
     padding: 0 20px;
 }
@@ -95,9 +94,6 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 /* Video Background */
-
-
-
 
 /* Video styles */
 .video-container {
@@ -185,7 +181,7 @@ font-family: 'Rockwell Nova', sans-serif;
     height: 94%;
     background-image: url('../img/mobile-sprite/spritesheet-mobile.png');
     background-position: 0 0;
-      background-size: 700% 100%; /* 700% because we have 7 frames */
+    background-size: 700% 100%;
     z-index: -1;
     opacity: 0;
     transition: opacity 0.8s ease;
@@ -193,10 +189,8 @@ font-family: 'Rockwell Nova', sans-serif;
 
 @keyframes mobile-sprite-animation {
     from { background-position: 0 0; }
-    to { background-position: -700% 0; }  /* Changed from -600% to -700% */
+    to { background-position: -700% 0; }
 }
-
-
 
 
 .exhibition-image-preloader {
@@ -221,7 +215,6 @@ font-family: 'Rockwell Nova', sans-serif;
     animation: frameAnimation 2s steps(1) infinite;
 }
 
-/* Preloader frame animation */
 @keyframes frameAnimation {
     0% { background-image: url('../img/frame1.svg'); }
     12.5% { background-image: url('../img/preloader/frame2.svg'); }
@@ -233,13 +226,6 @@ font-family: 'Rockwell Nova', sans-serif;
     87.5% { background-image: url('../img/preloader/frame8.svg'); }
     100% { background-image: url('../img/preloader/frame1.svg'); }
 }
-
-
-
-
-
-
-
 
 
 /* Bottom Navigation */
@@ -348,7 +334,7 @@ font-family: 'Rockwell Nova', sans-serif;
 /* Dropdown Styles */
 .dropdown {
     position: relative;
-    z-index: 1000; /* Add this */
+    z-index: 1000;
 }
 
 .dropdown-content {
@@ -364,7 +350,6 @@ font-family: 'Rockwell Nova', sans-serif;
     -webkit-backdrop-filter: blur(6px);
     border-radius: 10px;
     box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-
     z-index: 1001;
     transition: opacity 0.3s, visibility 0.3s;
     pointer-events: none;
@@ -396,22 +381,17 @@ font-family: 'Rockwell Nova', sans-serif;
     border-bottom-right-radius: 10px;
 }
 
-
-/* Modified hover effect for dropdown items */
 .dropdown-content a:hover {
     background-color: rgba(255, 255, 0, 0.8);
 }
-
-/* Add this to ensure dropdown items don't inherit main menu hover styles */
-
 
 .menu .dropdown .dropdown-content a:hover {
     background-color: rgba(255, 255, 0, 0.8);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
+
 @media (hover: hover) and (pointer: fine) {
-    /* Desktop hover behavior */
     .dropdown:hover .dropdown-content {
         visibility: visible;
         opacity: 1;
@@ -421,7 +401,6 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 @media (hover: none) or (pointer: coarse) {
-    /* Touch device behavior */
     .dropdown-content {
         display: none;
         visibility: visible;
@@ -433,9 +412,6 @@ font-family: 'Rockwell Nova', sans-serif;
         display: block;
     }
 }
-
-
-
 
 
 /* Hamburger Menu */
@@ -508,13 +484,6 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 
-
-
-
-
-
-
-
 .busan-portraits,
 .hongkong-portraits,
 .iceland-portraits,
@@ -524,7 +493,7 @@ font-family: 'Rockwell Nova', sans-serif;
 .seoul-portraits,
 .singapore-portraits,
 .tibet-portraits {
-    scroll-margin-top: 150px;  /* Adjust this value based on your needs */
+    scroll-margin-top: 150px;
 }
 
 .statement-container {
@@ -536,7 +505,7 @@ font-family: 'Rockwell Nova', sans-serif;
 .statement-text {
     width: 100%;
     max-width: 1400px;
-    margin: 15px auto 0; /* Changed from 30px to 15px */
+    margin: 15px auto 0;
     font-size: clamp(16px, 2vw, 20px);
     line-height: 1.6;
 }
@@ -550,12 +519,12 @@ font-family: 'Rockwell Nova', sans-serif;
     font-weight: 700;
     width: 100%;
     max-width: 1400px;
-    margin: 0 auto 0; /* Changed from 15px to 0 */
+    margin: 0 auto 0;
     font-size: clamp(30px, 5vw, 36px);
 }
 
-.statement-container h2:nth-of-type(2) {  /* Targets the "ABOUT" heading */
-    margin-top: 100px;  /* Adjust this value to increase/decrease space */
+.statement-container h2:nth-of-type(2) {
+    margin-top: 100px;
 }
 
 .statement-text p {
@@ -583,14 +552,15 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 .artist-statement-links p {
-    margin-bottom: 30px; /* Increase this value for more space between links */
+    margin-bottom: 30px;
 }
 
 .artist-statement-info h3 {
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
+
 .artist-statement-links {
-    margin-bottom: 100px; /* Increase this value for more white space at the bottom */
+    margin-bottom: 100px;
 }
 
 .main-logo,
@@ -613,17 +583,12 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 
-
-
-
-
 /*PORTRAITS*/
 .portrait-placeholder {
-    background-color: lightgrey; /* Placeholder color */
+    background-color: lightgrey;
     position: relative;
-    width: 100%; /* Full width of the wrapper */
+    width: 100%;
     display: block;
-    /* Initial height will be set dynamically via JavaScript */
 }
 
 .image-flex {
@@ -703,24 +668,23 @@ font-family: 'Rockwell Nova', sans-serif;
 
 .flag-image {
     display: flex;
-    margin-top:50px;
+    margin-top: 50px;
     justify-content: center;
     align-items: center;
-    height: 200px;  /* You can adjust the height of the container */
+    height: 200px;
 }
 
 .flag-image img {
-  margin-top:30px;
+    margin-top: 30px;
     width: 100px;
-    height: auto;  /* Optional: keeps the aspect ratio of the image */
+    height: auto;
 }
-
 
 
 /*OTHER WORKS*/
 
 #otherworks-section {
-    padding: 0 50px 0 50px; /* Added 100px top padding */
+    padding: 0 50px 0 50px;
     box-sizing: border-box;
 }
 
@@ -759,7 +723,7 @@ font-family: 'Rockwell Nova', sans-serif;
 
 .other-works-gallery-item figcaption {
     font-family: 'Rockwell Nova', bold;
-    font-weight:bold;
+    font-weight: bold;
     margin-top: 4px;
     text-align: left;
     font-size: .8em;
@@ -769,10 +733,8 @@ font-family: 'Rockwell Nova', sans-serif;
     font-family: 'Rockwell Nova', sans-serif;
     font-size: 1.8em;
     text-align: left;
-    margin-bottom: 100px; /* Add some space between text and image */
+    margin-bottom: 100px;
 }
-
-
 
 
 /* Modal Styles */
@@ -844,11 +806,9 @@ font-family: 'Rockwell Nova', sans-serif;
 
 .other-works-modal.closing {
     background-color: rgba(0, 0, 0, 0);
-    visibility: visible; /* Keep visible during closing animation */
+    visibility: visible;
 }
 
-
-/*MODAL CONTENT WRAPPER*/
 .other-works-modal-content-wrapper {
     display: flex;
     gap: 40px;
@@ -859,7 +819,6 @@ font-family: 'Rockwell Nova', sans-serif;
     overflow-y: auto;
     overscroll-behavior-y: contain;
 }
-
 
 .other-works-modal-image {
     flex: 2;
@@ -881,15 +840,14 @@ font-family: 'Rockwell Nova', sans-serif;
 .other-works-modal-info h2 {
     font-family: 'Rockwell Nova', bold;
     margin-bottom: 20px;
-    font-size: 14px; /* Reduced from default */
-
+    font-size: 14px;
 }
 
 .other-works-modal-info p {
-  font-family: 'Rockwell Nova';
+    font-family: 'Rockwell Nova';
     margin-bottom: 12px;
     line-height: 1.4;
-    font-size: 12px; /* Reduced from default */
+    font-size: 12px;
 }
 
 .other-works-modal-info .label {
@@ -903,9 +861,8 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 .other-works-modal-info span {
-    display: inline-block; /* Add this to ensure spans show up */
+    display: inline-block;
 }
-
 
 
 /*EXHIBITIONS*/
@@ -946,6 +903,32 @@ font-family: 'Rockwell Nova', sans-serif;
     cursor: pointer;
 }
 
+/* Exhibition Videos */
+.exhibition-video-row {
+    display: flex;
+    gap: 40px;
+    padding: 60px 40px 80px;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.exhibition-video-wrap {
+    flex: 1;
+    max-width: 600px;
+    position: relative;
+    padding-top: 56.25%;
+}
+
+.exhibition-video-wrap iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
 .exhibition-modal {
     position: fixed;
     top: 0;
@@ -961,7 +944,7 @@ font-family: 'Rockwell Nova', sans-serif;
 .exhibition-modal-inner {
     height: 100%;
     overflow-y: auto;
-    padding: 60px 5px 0px; /* Adjusted padding */
+    padding: 60px 5px 0px;
 }
 
 .exhibition-modal.active {
@@ -975,7 +958,7 @@ font-family: 'Rockwell Nova', sans-serif;
     left: 5px;
     right: 5px;
     bottom: 0;
-    height: calc(100vh - 20px); /* Changed from 80px to 20px */
+    height: calc(100vh - 20px);
     max-height: 100vh;
     background: white;
     transform: translateY(100%);
@@ -1104,8 +1087,6 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 
-
-
 /*EXHIBITION PWK*/
 .pwk-content-text {
     flex: 1;
@@ -1115,65 +1096,52 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 .pwk-content-text h2 {
-  font-family: 'Rockwell Nova', sans-serif;
-  font-weight:bold;
+    font-family: 'Rockwell Nova', sans-serif;
+    font-weight: bold;
     margin-bottom: 15px;
     font-size: 24px;
 }
 
 .pwk-content-text p {
-  font-family: 'Raleway', sans-serif;
+    font-family: 'Raleway', sans-serif;
     line-height: 1.5;
     margin-bottom: 20px;
 }
 
-
-
 .pwk-content-images {
-  flex: 2;
-  max-width: 70%;
-  height: 100%;
-  overflow-y: auto;
-  padding-right: 10px;
+    flex: 2;
+    max-width: 70%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 10px;
 }
 
 .pwk-content-images > img {
-  width: calc(100% + 10px); /* Stretch to cover the padding */
-  height: auto;
-  margin-bottom: 10px;
-  display: block;
-  margin-left: -10px; /* Pull back by the full padding amount */
+    width: calc(100% + 10px);
+    height: auto;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: -10px;
 }
 
 .pwk-image-pair {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  width: calc(100% + 10px); /* Match the width of single images */
-  margin-left: -10px; /* Align with the left edge */
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    width: calc(100% + 10px);
+    margin-left: -10px;
 }
 
 .pwk-image-pair img {
-  width: calc(50% - 5px); /* Account for the gap */
-  height: auto;
+    width: calc(50% - 5px);
+    height: auto;
 }
 
 .pwk-image-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
-
-.pwk-image-stack img {
-  width:
-}
-
-
-
-
-
-
-
 
 
 /*CONTACT*/
@@ -1182,7 +1150,7 @@ font-family: 'Rockwell Nova', sans-serif;
     display: flex;
     position: relative;
     width: 100%;
-    margin-top:200px;
+    margin-top: 200px;
 }
 
 .contact-img {
@@ -1358,9 +1326,6 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 
-
-
-
 /*FOOTER*/
 .site-footer {
     background-color: #fff;
@@ -1385,18 +1350,7 @@ font-family: 'Rockwell Nova', sans-serif;
 }
 
 
-
-
-
-
-
-
-
 @media screen and (max-width: 900px) {
-  /*
-    :root {
-        overscroll-behavior: none;
-    }*/
 
     .main-logo,
     .artist-statement-logo,
@@ -1410,14 +1364,13 @@ font-family: 'Rockwell Nova', sans-serif;
     .singapore-logo,
     .tibet-logo {
         left: 20px;
-        top: 10%; /* Changed from 30% to 20% to raise it higher */
+        top: 10%;
         transform: translateY(-50%);
         text-align: left;
     }
 
     .hamburger {
         display: flex;
-
     }
 
     .bottom-navbar {
@@ -1431,236 +1384,211 @@ font-family: 'Rockwell Nova', sans-serif;
         transition: all 0.3s ease;
     }
 
-
-
-
-
-
-
     .social-icons {
         font-size: 30px;
         position: absolute;
         right: 20px;
     }
 
+    .bottom-navbar {
+        display: none;
+    }
 
+    .mobile-nav__hamburger {
+        display: flex;
+        position: fixed;
+        bottom: env(safe-area-inset-bottom, 30px);
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid black;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        justify-content: center;
+        align-items: center;
+        z-index: 2001;
+        -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
+    }
 
+    .mobile-nav__hamburger i {
+        font-size: 24px;
+        color: #000;
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+    }
 
+    .mobile-nav__hamburger .menu-icon,
+    .mobile-nav__hamburger .close-icon {
+        position: absolute;
+        transition: all 0.3s ease;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
+    .mobile-nav__hamburger .menu-icon {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+        visibility: visible;
+        position: absolute;
+    }
 
+    .mobile-nav__hamburger .close-icon {
+        opacity: 0;
+        transform: rotate(-180deg) scale(0);
+        visibility: hidden;
+        position: absolute;
+    }
 
+    .mobile-nav__hamburger.active .menu-icon {
+        opacity: 0;
+        transform: rotate(180deg) scale(0);
+        visibility: hidden;
+        position: absolute;
+    }
 
-    /* Mobile Menu Styles */
+    .mobile-nav__hamburger.active .close-icon {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+        visibility: visible;
+        position: absolute;
+    }
 
-        .bottom-navbar {
-            display: none;
-        }
+    .mobile-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        display: block;
+        transition: all 0.3s ease-in-out;
+        z-index: 2000;
+        transform: scale(0);
+        transform-origin: center center;
+    }
 
-        .mobile-nav__hamburger {
-    display: flex;
-    position: fixed;
-    bottom: env(safe-area-inset-bottom, 30px);
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid black;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    justify-content: center;
-    align-items: center;
-    z-index: 2001;
-    -webkit-tap-highlight-color: transparent;
-    cursor: pointer;
-}
+    .mobile-nav.active {
+        transform: scale(1);
+        visibility: visible;
+    }
 
-.mobile-nav__hamburger i {
-    font-size: 24px;
-    color: #000;
-    touch-action: manipulation;
-    -webkit-touch-callout: none;
-}
+    .mobile-nav__wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        padding: 2rem;
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+        gap: 20px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        max-height: calc(100dvh - env(safe-area-inset-bottom));
+    }
 
-.mobile-nav__hamburger .menu-icon,
-.mobile-nav__hamburger .close-icon {
-    position: absolute;
-    transition: all 0.3s ease;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    .mobile-nav__dropdown {
+        width: 100%;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
 
-.mobile-nav__hamburger .menu-icon {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-    visibility: visible;
-    position: absolute;
-}
+    .mobile-nav__dropdown-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 24px;
+        font-family: 'Rockwell Nova', sans-serif;
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
 
-.mobile-nav__hamburger .close-icon {
-    opacity: 0;
-    transform: rotate(-180deg) scale(0);
-    visibility: hidden;
-    position: absolute;
-}
+    .mobile-nav__dropdown-content {
+        position: static;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        background: none;
+        box-shadow: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease-out;
+        opacity: 0;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
 
-.mobile-nav__hamburger.active .menu-icon {
-    opacity: 0;
-    transform: rotate(180deg) scale(0);
-    visibility: hidden;
-    position: absolute;
-}
+    .mobile-nav__dropdown.active .mobile-nav__dropdown-content {
+        max-height: 500px;
+        opacity: 1;
+        transition: all 0.3s ease-in;
+        margin-top: 30px;
+    }
 
-.mobile-nav__hamburger.active .close-icon {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-    visibility: visible;
-    position: absolute;
-}
+    .mobile-nav__dropdown-content a {
+        padding: 8px 0;
+        width: 100%;
+        text-align: center;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.2s ease-out;
+        font-size: 20px;
+        font-family: 'Rockwell Nova', sans-serif;
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
 
-.mobile-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    display: block;
-    transition: all 0.3s ease-in-out;
-    z-index: 2000;
-    transform: scale(0);
-    transform-origin: center center;
-}
+    .mobile-nav__dropdown.active .mobile-nav__dropdown-content a {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.2s;
+    }
 
-.mobile-nav.active {
-    transform: scale(1);
-    visibility: visible;
-}
+    .mobile-nav__dropdown-trigger i {
+        transition: transform 0.3s ease;
+    }
 
-.mobile-nav__wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    padding: 2rem;
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
-    gap: 20px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    max-height: calc(100dvh - env(safe-area-inset-bottom));
-}
+    .mobile-nav__dropdown.active .mobile-nav__dropdown-trigger i {
+        transform: rotate(180deg);
+    }
 
-.mobile-nav__dropdown {
-    width: 100%;
-    text-align: center;
-    transition: all 0.3s ease;
-}
+    .mobile-nav__item {
+        font-family: 'Rockwell Nova', sans-serif;
+        font-size: 24px;
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
 
-.mobile-nav__dropdown-trigger {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 24px;
-    font-family: 'Rockwell Nova', sans-serif;
-    color: black;
-    font-weight: bold;
-    text-decoration: none;
-}
+    .mobile-nav__bottom-buttons ul {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        list-style: none;
+        padding: 0;
+    }
 
-.mobile-nav__dropdown-content {
-    position: static;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    background: none;
-    box-shadow: none;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.3s ease-out;
-    opacity: 0;
-    padding-bottom: env(safe-area-inset-bottom);
-}
+    .mobile-nav__bottom-buttons li {
+        display: inline-block;
+    }
 
-.mobile-nav__dropdown.active .mobile-nav__dropdown-content {
-    max-height: 500px;
-    opacity: 1;
-    transition: all 0.3s ease-in;
-    margin-top:30px;
-}
-
-.mobile-nav__dropdown-content a {
-    padding: 8px 0;
-    width: 100%;
-    text-align: center;
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.2s ease-out;
-    font-size: 20px;
-    font-family: 'Rockwell Nova', sans-serif;
-    color: black;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.mobile-nav__dropdown.active .mobile-nav__dropdown-content a {
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0);
-    transition-delay: 0.2s;
-}
-
-.mobile-nav__dropdown-trigger i {
-    transition: transform 0.3s ease;
-}
-
-.mobile-nav__dropdown.active .mobile-nav__dropdown-trigger i {
-    transform: rotate(180deg);
-}
-
-.mobile-nav__item {
-    font-family: 'Rockwell Nova', sans-serif;
-    font-size: 24px;
-    color: black;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.mobile-nav__bottom-buttons ul {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    list-style: none;
-    padding: 0;
-}
-
-.mobile-nav__bottom-buttons li {
-    display: inline-block;
-}
-
-.mobile-nav__bottom-buttons img {
-    width: 60px;
-    height: 60px;
-}
-
-
-
-
-
-
-
-
-
-
+    .mobile-nav__bottom-buttons img {
+        width: 60px;
+        height: 60px;
+    }
 
     /*ARTIST STATEMENT*/
     .statement-container {
@@ -1668,45 +1596,31 @@ font-family: 'Rockwell Nova', sans-serif;
         padding: 50px 20px;
     }
 
-
-
-
-
-
-
-
-
     /*PORTRAITS*/
     .image-flex img {
-       width: calc(100% / 3);
-   }
-   .image-wrapper {
-       width: calc(100% / 3);
-       background: #ededed;
-       position: relative;
-   }
-   .image-wrapper img {
-       width: 100%;
-       height: auto;
-   }
-   .loading-spinner {
-       position: absolute;
-       left: 50%;
-       top: 50%;
-       transform: translate(-50%, -50%);
-   }
-
-   .portrait-placeholder {
-         width: 100%;
-         position: relative;
-     }
-
-
-
-
+        width: calc(100% / 3);
+    }
+    .image-wrapper {
+        width: calc(100% / 3);
+        background: #ededed;
+        position: relative;
+    }
+    .image-wrapper img {
+        width: 100%;
+        height: auto;
+    }
+    .loading-spinner {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .portrait-placeholder {
+        width: 100%;
+        position: relative;
+    }
 
     /*OTHER WORKS*/
-
     .other-works-gallery-item {
         width: 250px;
     }
@@ -1716,31 +1630,18 @@ font-family: 'Rockwell Nova', sans-serif;
         height: 167px;
     }
 
-
-
-
     /*EXHIBITIONS*/
-
     .exhibition-item {
         flex: 0 1 calc(33.333% - 14px);
     }
-
 }
-
-
-
-
-
-
-
 
 
 @media screen and (max-width: 576px) {
     .navbar h1 {
         font-size: 20px;
-        margin-top:5px;
+        margin-top: 5px;
     }
-
 
     .social-icons {
         font-size: 30px;
@@ -1750,14 +1651,11 @@ font-family: 'Rockwell Nova', sans-serif;
         margin-left: 2px;
     }
 
+    /*ARTIST STATEMENT*/
+    .artist-statement-links {
+        margin-bottom: 0;
+    }
 
-
-
-/*ARTIST STATEMENT*/
-
-.artist-statement-links {
-  margin-bottom:0;
-}
     .statement-container {
         width: calc(100% - 40px);
         padding: 30px 20px;
@@ -1773,37 +1671,31 @@ font-family: 'Rockwell Nova', sans-serif;
         margin: 0 auto 20px;
     }
 
-
-
-
-/*PORTRAITS*/
-.image-flex img {
-    width: calc(100% / 2);
-}
-.image-wrapper {
-    width: calc(100% / 2);
-    background: #ededed;
-    position: relative;
-}
-.image-wrapper img {
-    width: 100%;
-    height: auto;
-}
-        .loading-spinner {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .portrait-placeholder {
+    /*PORTRAITS*/
+    .image-flex img {
+        width: calc(100% / 2);
+    }
+    .image-wrapper {
+        width: calc(100% / 2);
+        background: #ededed;
+        position: relative;
+    }
+    .image-wrapper img {
+        width: 100%;
+        height: auto;
+    }
+    .loading-spinner {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .portrait-placeholder {
         width: 100%;
         position: relative;
     }
 
-
-
-
-/*Mobile Menu*/
+    /*Mobile Menu*/
     .mobile-nav__wrapper {
         padding: 1rem;
     }
@@ -1822,21 +1714,15 @@ font-family: 'Rockwell Nova', sans-serif;
         padding: 0.4rem 0.75rem;
     }
 
-
-
-
-
-
-/*OTHER WORKS*/
-.other-works-description {
-  text-align: center;
-font-size: 1.4em;
-margin-bottom:60px;
+    /*OTHER WORKS*/
+    .other-works-description {
+        text-align: center;
+        font-size: 1.4em;
+        margin-bottom: 60px;
     }
 
-    /*OTHER WORKS*/
     .other-works-image {
-      padding-bottom: 20px;
+        padding-bottom: 20px;
     }
 
     .other-works-gallery-container {
@@ -1854,23 +1740,22 @@ margin-bottom:60px;
     }
 
     .other-works-modal-content-wrapper {
-        display: block; /* Change to block instead of flex */
+        display: block;
         overscroll-behavior-y: contain;
     }
 
     .other-works-modal-info {
-       display: block; /* Ensure block display */
-       width: 100%;
-   }
-
+        display: block;
+        width: 100%;
+    }
 
     .other-works-modal-image {
         max-width: 100%;
-        margin-bottom: 10px; /* Add space below image */
+        margin-bottom: 10px;
     }
 
     #otherworks-section {
-        padding: 0 20px 0 20px; /* Added 100px top padding */
+        padding: 0 20px 0 20px;
         box-sizing: border-box;
     }
 
@@ -1896,81 +1781,77 @@ margin-bottom:60px;
         z-index: 1003;
     }
 
-
-
-
-  /*EXHIBITIONS*/
-  .exhibition-item {
+    /*EXHIBITIONS*/
+    .exhibition-item {
         flex: 0 1 100%;
-        padding: 0; /* Remove padding in mobile view */
+        padding: 0;
     }
 
     .exhibition-gallery {
-        padding: 0 20px; /* Adjusted padding for mobile */
+        padding: 0 20px;
     }
 
+    /* Exhibition Videos - Mobile */
+    .exhibition-video-row {
+        flex-direction: column;
+        padding: 40px 20px 80px;
+        gap: 30px;
+    }
+
+    .exhibition-video-wrap {
+        max-width: 100%;
+    }
 
     .exhibition-modal-content {
-      overflow-y: auto;
-      position: relative;
-      overscroll-behavior-y: contain;
-      height: calc(100vh - 20px); /* Added to maintain consistency */
-  }
+        overflow-y: auto;
+        position: relative;
+        overscroll-behavior-y: contain;
+        height: calc(100vh - 20px);
+    }
 
-   .exhibition-modal-content-wrapper {
-       display: block;
-       padding: 60px 20px 50px 20px;
-       overscroll-behavior-y: contain;
-   }
+    .exhibition-modal-content-wrapper {
+        display: block;
+        padding: 60px 20px 50px 20px;
+        overscroll-behavior-y: contain;
+    }
 
-   .exhibition-modal-inner {
-    padding: 60px 5px 0px; /* Adjusted padding */
-}
+    .exhibition-modal-inner {
+        padding: 60px 5px 0px;
+    }
 
-   .pwk-content-text {
-       position: relative; /* Override sticky positioning */
-       max-width: 100%;
-   }
+    .pwk-content-text {
+        position: relative;
+        max-width: 100%;
+    }
 
-   .pwk-content-images {
-       max-width: 100%;
-       overflow-y: visible; /* Remove separate scroll */
-       height: auto;
-       padding: 0;
-       padding-bottom: 100px;
-   }
+    .pwk-content-images {
+        max-width: 100%;
+        overflow-y: visible;
+        height: auto;
+        padding: 0;
+        padding-bottom: 100px;
+    }
 
-   .pwk-content-text h2 {
-     margin-top: 50px;
-   }
+    .pwk-content-text h2 {
+        margin-top: 50px;
+    }
 
-   .pwk-content-text p {
-       margin-bottom: 60px;
-   }
-
-
-
-
-
-
-
+    .pwk-content-text p {
+        margin-bottom: 60px;
+    }
 
     /* CONTACT*/
-
-    .contact-wrapper img{
-      display:none;
+    .contact-wrapper img {
+        display: none;
     }
 
     .contact-fields-wrapper {
-      margin-left:0;
+        margin-left: 0;
+        padding-top: 0;
     }
 
-    .contact-fields-wrapper {
-      padding-top:0;
-    }
-
-/*MOBILE SPRITE*/
-.background-video {
+    /*MOBILE SPRITE*/
+    .background-video {
         display: none;
     }
 
@@ -1978,5 +1859,4 @@ margin-bottom:60px;
         display: block;
         animation: mobile-sprite-animation 3s steps(7) infinite;
     }
-
 }
