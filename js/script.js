@@ -1,3 +1,13 @@
+// Fade in bottom navbar on window load
+const bottomNavbar = document.querySelector('.bottom-navbar');
+if (bottomNavbar) {
+    bottomNavbar.style.opacity = '0';
+    bottomNavbar.style.transition = 'opacity 0.6s ease';
+    window.addEventListener('load', () => {
+        bottomNavbar.style.opacity = '1';
+    });
+}
+
 // Function to handle all anchor clicks with native smooth scroll
 function handleAnchorClick(e) {
     e.preventDefault();
