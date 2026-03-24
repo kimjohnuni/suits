@@ -896,27 +896,12 @@ body {
     cursor: pointer;
 }
 
-/* Exhibition Videos */
-/* Exhibition Videos */
-.exhibition-video-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 80px;
-    padding: 20px 40px 80px;
-    justify-content: center;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.exhibition-video-wrap {
-    flex: 1;
-    max-width: 600px;
-    box-sizing: border-box;
-}
-
+/* Exhibition Modal Videos */
 .exhibition-video-border {
     background-color: black;
     padding: 15px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
 .exhibition-video-aspect {
@@ -925,22 +910,13 @@ body {
     padding-top: 56.25%;
 }
 
-.exhibition-video-wrap iframe {
+.exhibition-video-aspect iframe {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
 }
-
-.exhibition-video-caption {
-    font-family: 'Rockwell Nova', sans-serif;
-    margin-top: 8px;
-    line-height: 1.4;
-}
-
-
-
 
 .exhibition-modal {
     position: fixed;
@@ -1801,17 +1777,6 @@ body {
 
     .exhibition-gallery {
         padding: 0 20px;
-    }
-
-    /* Exhibition Videos - Mobile */
-    .exhibition-video-row {
-        flex-direction: column;
-        padding: 0 20px 80px;
-        gap: 80px;
-    }
-
-    .exhibition-video-wrap {
-        max-width: 100%;
     }
 
     .exhibition-modal-content {
