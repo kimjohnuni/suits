@@ -26,9 +26,6 @@ Promise.all([
     setTimeout(revealNavbars, 300);
 });
 
-
-
-
 // Function to handle all anchor clicks with native smooth scroll
 function handleAnchorClick(e) {
     e.preventDefault();
@@ -542,12 +539,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        const videoMap = {
+            'factory': 'https://player.vimeo.com/video/48772091',
+            'tngt': 'https://player.vimeo.com/video/48739179'
+        };
+
+        const videoHTML = videoMap[exhibitionId] ? `
+            <div class="exhibition-video-border">
+                <div class="exhibition-video-aspect">
+                    <iframe
+                        src="${videoMap[exhibitionId]}"
+                        frameborder="0"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        ` : '';
+
         modalWrapper.innerHTML = `
             <div class="pwk-content-text">
                 <h2>${title}</h2>
                 <p>${description}</p>
             </div>
             <div class="pwk-content-images">
+                ${videoHTML}
                 ${imagesHTML}
             </div>
         `;
